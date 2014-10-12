@@ -8,11 +8,9 @@
 
 class PduSource : public QThread
 {
-private:
+protected:
     QMutex observer_mutex;
     std::vector<PduObserver*> observers;
-
-protected:
     void notifyObservers(KDIS::KOCTET *raw_data, KDIS::KUINT32 size);
 
 public:

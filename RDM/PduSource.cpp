@@ -86,13 +86,22 @@ void PduSource::notifyObservers(KDIS::KOCTET *raw_data,
 void PduSource::registerPduObserver(PduObserver *obs)
 {
     observer_mutex.lock();
-    observers.push_back(obs);
+    try
+    {
+        observers.push_back(obs);
+    }
+    catch(std::exception &e)
+    {
+        std::cerr << "registerPduObserver exception:" << e.what() << std::endl;
+    }
+
     observer_mutex.unlock();
 }
 
 void PduSource::removePduObserver(PduObserver *obs)
 {
     observer_mutex.lock();
-    std::remove(observers.begin(), observers.end(), obs);
+    observers.erase(std::remove(observers.begin(), observers.end(), obs),
+                    observers.end());
     observer_mutex.unlock();
 }

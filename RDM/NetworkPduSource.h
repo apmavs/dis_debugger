@@ -16,10 +16,10 @@
 
 class NetworkPduSource : public PduSource
 {
-private:
+protected:
     const static uint32_t MAX_BUFFER_SIZE;
 
-    std::string network_address;
+    std::string address;
     uint32_t port;
     KDIS::NETWORK::Connection connection;
 

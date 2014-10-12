@@ -7,11 +7,10 @@
 const uint32_t NetworkPduSource::MAX_BUFFER_SIZE = 100;
 
 NetworkPduSource::NetworkPduSource(std::string ifaceAddr, uint32_t ifacePort) :
-    connection(network_address, ifacePort)
+    connection(ifaceAddr, ifacePort)
 {
-    network_address = ifaceAddr;
+    address = ifaceAddr;
     port = ifacePort;
-    std::cout << "NetworkPduSource constructed" << std::endl;
 }
 
 NetworkPduSource::~NetworkPduSource()
@@ -31,7 +30,7 @@ bool NetworkPduSource::addMulticastGroup(std::string multicastAddr)
     {
         connection.AddMulticastAddress(multicastAddr);
     }
-    catch(std::exception & e)
+    catch(KDIS::KException &e)
     {
         std::cerr << "NetworkPduSource: Failed to add multicast " <<
                      multicastAddr << std::endl <<
@@ -64,7 +63,6 @@ bool NetworkPduSource::removeMulticastGroup(std::string multicastAddr)
 
 void NetworkPduSource::run()
 {
-    std::cout << "NetworkPduSource run called" << std::endl;
     KDIS::KOCTET raw_buffer[MAX_PDU_SIZE];
     try
     {
