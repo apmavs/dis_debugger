@@ -28,8 +28,6 @@ public:
     NetworkPduSource(std::string ifaceAddr, uint32_t ifacePort = 6993);
     ~NetworkPduSource();
 
-    bool addMulticastGroup(std::string multicastAddr);
-    bool removeMulticastGroup(std::string multicastAddr);
     virtual void run();
 };
 

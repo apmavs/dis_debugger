@@ -22,45 +22,6 @@ NetworkPduSource::~NetworkPduSource()
     }
 }
 
-bool NetworkPduSource::addMulticastGroup(std::string multicastAddr)
-{
-    bool retVal = true;
-
-    try
-    {
-        connection.AddMulticastAddress(multicastAddr);
-    }
-    catch(KDIS::KException &e)
-    {
-        std::cerr << "NetworkPduSource: Failed to add multicast " <<
-                     multicastAddr << std::endl <<
-                     e.what() << std::endl;
-        retVal = false;
-    }
-
-    return retVal;
-}
-
-bool NetworkPduSource::removeMulticastGroup(std::string multicastAddr)
-{
-    bool retVal = true;
-
-    try
-    {
-        connection.RemoveMulticastAddress(multicastAddr);
-    }
-
-    catch(std::exception & e)
-    {
-        std::cerr << "NetworkPduSource: Failed to remove multicast " <<
-                     multicastAddr << std::endl <<
-                     e.what() << std::endl;
-        retVal = false;
-    }
-
-    return retVal;
-}
-
 void NetworkPduSource::run()
 {
     KDIS::KOCTET raw_buffer[MAX_PDU_SIZE];

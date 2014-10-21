@@ -91,27 +91,3 @@ TEST(NetSourceTest, ObserverListTest)
     EXPECT_EQ(0, net_source.getObservers()->size());
 }
 
-TEST(NetSourceTest, MulticastAddTest)
-{
-    NetworkPduSourceTestClass net_source("192.168.0.255");
-
-    std::vector<std::string> mcastAddresses;
-    mcastAddresses.push_back("224.1.1.1");
-
-    // Test adding multicast addresses
-    std::vector<std::string>::iterator it = mcastAddresses.begin();
-    for(it; it != mcastAddresses.end(); it++)
-    {
-        bool added = net_source.addMulticastGroup(*it);
-        EXPECT_EQ(true, added);
-    }
-
-    // Test removing multicast addresses
-    it = mcastAddresses.begin();
-    for(it; it != mcastAddresses.end(); it++)
-    {
-        bool removed = net_source.removeMulticastGroup(*it);
-        EXPECT_EQ(true, removed);
-    }
-}
-
