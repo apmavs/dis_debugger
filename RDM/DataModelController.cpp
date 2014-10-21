@@ -4,7 +4,7 @@
 
 DataModelController::DataModelController()
 {
-    pdu_source = new NetworkPduSource("192.168.0.255");
+    pdu_source = new NetworkPduSource("127.0.0.1");
     pdu_source->registerPduObserver(this);
     pdu_source->start();
 }
