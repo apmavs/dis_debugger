@@ -1,7 +1,7 @@
 #include <auto_ptr.h>
 #include "NetworkPduSource.h"
-#include "Extras/PDU_Factory.h"
-#include "PDU/Header.h"
+#include "KDIS/Extras/PDU_Factory.h"
+#include "KDIS/PDU/Header.h"
 
 // Max PDUs to store from network
 const uint32_t NetworkPduSource::MAX_BUFFER_SIZE = 100;

@@ -4,7 +4,7 @@
 #include "PduSource.h"
 
 // KDIS includes
-#include "Extras/PDU_Factory.h"
+#include "KDIS/Extras/PDU_Factory.h"
 
 PduSource::PduSource()
 {

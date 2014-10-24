@@ -12,7 +12,7 @@
 #include "PduObserver.h"
 
 // KDIS includes
-#include "Network/Connection.h"
+#include "KDIS/Network/Connection.h"
 
 class NetworkPduSource : public PduSource
 {

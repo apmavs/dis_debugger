@@ -16,11 +16,17 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-INCLUDEPATH += ../../KDIS/include \
-    ../RDM
+win32 {
+    kdis_lib_path = "C:/Program Files (x86)/KDIS/lib"
+    INCLUDEPATH += "C:/Program Files (x86)/KDIS/include"
+    DEPENDPATH += "C:/Program Files (x86)/KDIS/include"
+}
 
-LIBS += ../../build-dis_receive-Desktop_Qt_5_3_MinGW_32bit-Release/RDM/release/librdm.a
-LIBS += ../../KDIS/lib/libkdis.a
-LIBS += -lws2_32
+INCLUDEPATH += ../RDM
+
+PRE_TARGETDEPS += $$kdis_lib_path/libkdis.a
+LIBS += ../../build/RDM/release/librdm.a
+LIBS += $$kdis_lib_path/libkdis.a
+win32:LIBS += -lws2_32
 
 SOURCES += main.cpp

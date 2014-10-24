@@ -18,18 +18,17 @@ TEMPLATE = lib
 
 CONFIG += staticlib
 
-INCLUDEPATH += ../../KDIS/include
-
 SOURCES += NetworkPduSource.cpp \
     DataModelController.cpp \
     PduSource.cpp
-
-
-LIBS += "../../KDIS/lib/libkdis.a"
-LIBS += "-lws2_32"
 
 HEADERS += \
     NetworkPduSource.h \
     DataModelController.h \
     PduSource.h \
     PduObserver.h
+
+win32 {
+    INCLUDEPATH += "C:/Program Files (x86)/KDIS/include"
+    LIBS += "-lws2_32"
+}

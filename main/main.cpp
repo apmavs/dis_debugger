@@ -6,7 +6,7 @@
 
 // KDIS includes
 #include "NetworkPduSource.h"
-#include "Network/Connection.h" // A cross platform connection class.
+#include "KDIS/Network/Connection.h" // A cross platform connection class.
 
 using namespace std;
 using namespace KDIS;
