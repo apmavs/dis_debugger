@@ -11,6 +11,7 @@ private:
 
 public:
     DataModelController();
+    virtual ~DataModelController();
 
     virtual void notifyPdu(KDIS::PDU::Data_PDU pdu);
     virtual void notifyPdu(KDIS::PDU::Set_Data_PDU pdu);

@@ -26,7 +26,7 @@ protected:
 
 public:
     NetworkPduSource(std::string ifaceAddr, uint32_t ifacePort = 6993);
-    ~NetworkPduSource();
+    virtual ~NetworkPduSource();
 
     virtual void run();
 };
