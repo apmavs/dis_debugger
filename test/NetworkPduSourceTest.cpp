@@ -1,3 +1,5 @@
+#include <QThread>
+
 #include "NetworkPduSource.h"
 #include "PduObserver.h"
 
@@ -15,6 +17,7 @@ public:
         NetworkPduSource(addr) {}
     NetworkPduSourceTestClass(std::string addr, uint32_t p) :
         NetworkPduSource(addr, p) {}
+    virtual ~NetworkPduSourceTestClass(){}
 
     void testNotifyObservers(KDIS::KOCTET *raw_data, KDIS::KUINT32 size)
     {
@@ -24,10 +27,16 @@ public:
 
 class PduObserverTestClass : public PduObserver
 {
-public:
+private:
     int DataPduCount;
     int SetDataPduCount;
     int EntityStatePduCount;
+
+    KDIS::PDU::Data_PDU last_data_pdu;
+    KDIS::PDU::Set_Data_PDU last_set_data_pdu;
+    KDIS::PDU::Entity_State_PDU last_entity_state_pdu;
+
+public:
 
     PduObserverTestClass()
     {
@@ -36,19 +45,28 @@ public:
         EntityStatePduCount = 0;
     }
 
+    virtual ~PduObserverTestClass(){}
+
+    int getDataPduCount(){ return DataPduCount; }
+    int getSetDataPduCount(){ return SetDataPduCount; }
+    int getEntityStatePduCount(){ return EntityStatePduCount; }
+
     void notifyPdu(KDIS::PDU::Data_PDU pdu)
     {
         DataPduCount++;
+        last_data_pdu = pdu;
     }
 
     void notifyPdu(KDIS::PDU::Set_Data_PDU pdu)
     {
         SetDataPduCount++;
+        last_set_data_pdu = pdu;
     }
 
     void notifyPdu(KDIS::PDU::Entity_State_PDU pdu)
     {
         EntityStatePduCount++;
+        last_entity_state_pdu = pdu;
     }
 };
 
@@ -68,15 +86,17 @@ TEST(NetSourceTest, CreateTest)
 TEST(NetSourceTest, ObserverListTest)
 {
     const int NUM_OBSERVERS = 50000;
-    PduObserverTestClass testObservers[NUM_OBSERVERS];
+    PduObserverTestClass *testObservers[NUM_OBSERVERS];
     NetworkPduSourceTestClass net_source("192.168.0.255");
 
     // Add observers
     for(int obsNum = 0; obsNum < NUM_OBSERVERS; obsNum++)
     {
         EXPECT_EQ(obsNum, net_source.getObservers()->size());
-        try{
-        net_source.registerPduObserver(&testObservers[obsNum]);
+        try
+        {
+            testObservers[obsNum] = new PduObserverTestClass();
+            net_source.registerPduObserver(testObservers[obsNum]);
         }
         catch(std::exception e){}
     }
@@ -86,8 +106,65 @@ TEST(NetSourceTest, ObserverListTest)
     for(int obsNum = 0; obsNum < NUM_OBSERVERS; obsNum++)
     {
         EXPECT_EQ((NUM_OBSERVERS - obsNum), net_source.getObservers()->size());
-        net_source.removePduObserver(&testObservers[obsNum]);
+        net_source.removePduObserver(testObservers[obsNum]);
+        delete testObservers[obsNum];
     }
     EXPECT_EQ(0, net_source.getObservers()->size());
 }
 
+
+void networkRxTest(std::string iface, int port)
+{
+    int NUM_PDUS = 500;
+
+    NetworkPduSourceTestClass net_source(iface, port);
+    PduObserverTestClass *obs = new PduObserverTestClass();
+
+    net_source.registerPduObserver(obs);
+    net_source.start();
+
+    // Send some PDUs out over the network
+    KDIS::NETWORK::Connection testTx(iface, port);
+    for(int pduNum = 0; pduNum < NUM_PDUS; pduNum++)
+    {
+        KDIS::PDU::Data_PDU dataPdu;
+        KDIS::PDU::Set_Data_PDU setDataPdu;
+        KDIS::PDU::Entity_State_PDU entityStatePdu;
+
+        testTx.Send(dataPdu.Encode());
+        testTx.Send(setDataPdu.Encode());
+        testTx.Send(entityStatePdu.Encode());
+        QThread::msleep(5);
+    }
+
+    int MAX_WAIT = NUM_PDUS;
+    for(int checkIt = 0; checkIt < MAX_WAIT; checkIt++)
+    {
+        if((obs->getDataPduCount() == NUM_PDUS) &&
+           (obs->getSetDataPduCount() == NUM_PDUS) &&
+           (obs->getEntityStatePduCount() == NUM_PDUS))
+        {
+            break; // Received all pdus sent
+        }
+        QThread::msleep(10);
+    }
+
+    EXPECT_EQ(NUM_PDUS, obs->getDataPduCount());
+    EXPECT_EQ(NUM_PDUS, obs->getSetDataPduCount());
+    EXPECT_EQ(NUM_PDUS, obs->getEntityStatePduCount());
+
+    net_source.terminate();
+    delete obs;
+}
+
+// Test adding and removing observers
+TEST(NetSourceTest, PduRx192Test)
+{
+    networkRxTest("192.168.0.255", 5544);
+}
+
+// Test adding and removing observers
+TEST(NetSourceTest, PduRxLoopbackTest)
+{
+    networkRxTest("127.0.0.1", 6993);
+}
