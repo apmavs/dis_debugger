@@ -11,6 +11,8 @@ NetworkPduSource::NetworkPduSource(std::string ifaceAddr, uint32_t ifacePort) :
 {
     address = ifaceAddr;
     port = ifacePort;
+    connection.SetBlockingModeEnabled(true);
+    moveToThread(this);
 }
 
 NetworkPduSource::~NetworkPduSource()
@@ -24,6 +26,8 @@ NetworkPduSource::~NetworkPduSource()
 
 void NetworkPduSource::run()
 {
+    if(isRunning())
+        setPriority(QThread::HighPriority);
     KDIS::KOCTET raw_buffer[MAX_PDU_SIZE];
     try
     {
