@@ -1,0 +1,43 @@
+Download QT installer and install, select MinGW 4.8.2 checkbox
+Download and install CMake
+Download KDIS v.2.8.0
+Download gtest-1.7.0
+
+Extract KDIS
+In KDIS, create directory called "build"
+
+Right click Computer->Properties->Advanced system settings. Advanced tab->Environment Variables
+Under System variables, edit "Path". Add the following to the end ";C:\Program Files (x86)\CMake\bin;C:\Qt\5.3\mingw482_32\bin;C:\Qt\Tools\mingw482_32\bin"
+
+Open CMake
+For "where is the source code:" select the extracted KDIS
+For "Where to build the binaries:" select the KDIS/build you created
+Click Configure, select "MinGW Makefiles"
+Check the "Advanced" box
+Add to CMAKE_CXX_STANDARD_LIBRARIES and CMAKE_C_STANDARD_LIBRARIES: "-lws2_32"
+Click Configure
+Click Generate
+
+Open a command prompt
+cd to the KDIS/build you created
+mingw32-make
+<takes a while>
+mingw32-make install
+If install fails, make sure you open command prompt as administrator
+
+In QT: Tools->options->Version Control->Git
+Set "Prepend to PATH:" to your Git/bin directory
+This allows you to use git a little with QT, but I would set up the repository from git bash.
+
+Extract gtest-1.7.0, create a build directory inside of it
+Open Cmake
+For "where is the source code:" select the extracted gtest
+For "Where to build the binaries:" select the gtest/build you created
+Click Configure, select "MinGW Makefiles"
+Click Generate
+
+Open the command prompt
+cd to the gtest/build you created
+mingw32-make all
+Copy gtest-1.7.0/include/gtest to directory that dis_debugger is in
+Copy 2 gtest libraries from gtest-1.7.0/build to copied gtest directory
