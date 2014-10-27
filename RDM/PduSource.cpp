@@ -10,6 +10,10 @@ PduSource::PduSource()
 {
 }
 
+PduSource::~PduSource()
+{
+}
+
 void PduSource::notifyObservers(KDIS::KOCTET *raw_data,
                                        KDIS::KUINT32 size)
 {

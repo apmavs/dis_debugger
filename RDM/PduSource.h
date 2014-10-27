@@ -15,6 +15,7 @@ protected:
 
 public:
     PduSource();
+    virtual ~PduSource();
 
     void registerPduObserver(PduObserver *obs);
     void removePduObserver(PduObserver *obs);

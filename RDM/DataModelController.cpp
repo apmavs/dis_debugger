@@ -9,6 +9,12 @@ DataModelController::DataModelController()
     pdu_source->start();
 }
 
+DataModelController::~DataModelController()
+{
+    pdu_source->terminate();
+    delete pdu_source;
+}
+
 void DataModelController::notifyPdu(KDIS::PDU::Data_PDU pdu)
 {
     std::cout << std::endl;
