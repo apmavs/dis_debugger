@@ -17,16 +17,21 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 win32 {
-    kdis_lib_path = "C:/Program Files (x86)/KDIS/lib"
-    INCLUDEPATH += "C:/Program Files (x86)/KDIS/include"
-    DEPENDPATH += "C:/Program Files (x86)/KDIS/include"
+    kdis_lib_path = C:/Program Files (x86)/KDIS/lib
+    kdis_inc_path = C:/Program Files (x86)/KDIS/include
 }
 
-INCLUDEPATH += ../RDM
+QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
 
-PRE_TARGETDEPS += $$kdis_lib_path/libkdis.a
+INCLUDEPATH += ../RDM
+INCLUDEPATH += $$quote($$kdis_inc_path)
+DEPENDPATH += ../RDM
+DEPENDPATH += $$quote($$kdis_inc_path)
+
+
+PRE_TARGETDEPS += $$quote($$kdis_lib_path)/libkdis.a
 LIBS += ../../build/RDM/release/librdm.a
-LIBS += $$kdis_lib_path/libkdis.a
+LIBS += $$quote($$kdis_lib_path/libkdis.a)
 win32:LIBS += -lws2_32
 
 SOURCES += main.cpp
