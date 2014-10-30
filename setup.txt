@@ -15,6 +15,7 @@ For "Where to build the binaries:" select the KDIS/build you created
 Click Configure, select "MinGW Makefiles"
 Check the "Advanced" box
 Add to CMAKE_CXX_STANDARD_LIBRARIES and CMAKE_C_STANDARD_LIBRARIES: "-lws2_32"
+Find the defined DIS_VERSION and change it to 6!!!!
 Click Configure
 Click Generate
 
