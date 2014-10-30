@@ -27,7 +27,6 @@ QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
 INCLUDEPATH += $$quote($$kdis_inc_path)
 DEPENDPATH += $$quote($$kdis_inc_path)
 
-#INCLUDEPATH += ../../KDIS/include
 INCLUDEPATH += ../RDM
 
 LIBS += -L../../gtest

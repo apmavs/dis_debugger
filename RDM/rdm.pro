@@ -18,7 +18,7 @@ win32:kdis_inc_path = C:/Program Files (x86)/KDIS/include
 
 QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
 
-INCLUDEPATH += $$kdis_inc_path
+INCLUDEPATH += $$quote($$kdis_inc_path)
 
 TEMPLATE = lib
 
