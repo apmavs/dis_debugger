@@ -1,0 +1,67 @@
+<DatumDefinitions>
+   <DatumInfo source="FixedDatum" id="123456" type="uint32" offset="0" size="4" byte_order="network">
+      <Name>Barometric altitude</Name>
+      <Category>Indicators,Altitude,Barometric</Category>
+      <Description>Barometric altitude in feet</Description>
+      <UnitClass>length</UnitClass>
+      <Unit>feet</Unit>
+      <MinValue>-1000.0</MinValue>
+      <MaxValue>100000.0</MaxValue>
+   </DatumInfo>
+   <DatumInfo source="FixedDatum" id="123457" type="uint32" offset="0" size="4" byte_order="network">
+      <Name>Autopilot Attitude Switch</Name>
+      <Category>Switches,Autopilot,Attitude</Category>
+      <Description>Position of autopilot attitude switch</Description>
+      <EnumType>AutopilotAttiudeSwitchPosition</EnumType>
+   </DatumInfo>
+   <DatumInfo source="VariableDatum" id="123457" type="uint32" offset="0" size="4" byte_order="network">
+      <Name>Mode 1 Code</Name>
+      <Category>Radios,IFF,Mode 1 Code</Category>
+      <Description>Mode 1 IFF Code</Description>
+      <UnitClass>integer</UnitClass>
+      <MinValue>0</MinValue>
+      <MaxValue>63</MaxValue>
+   </DatumInfo>
+   <DatumInfo source="VariableDatum" id="123457" type="uint32" offset="4" size="4" byte_order="network">
+      <Name>Mode 2 Code</Name>
+      <Category>Radios,IFF,Mode 2 Code</Category>
+      <Description>Mode 2 IFF Code</Description>
+      <UnitClass>integer</UnitClass>
+      <MinValue>0</MinValue>
+     <MaxValue>4095</MaxValue>
+   </DatumInfo>
+   <DatumInfo source="VariableDatum" id="123459" type="double" offset="0" size="8" byte_order="network">
+      <Name>Designated latitude</Name>
+      <Category>Equipment,Targeting Pod,Laser Designator,Spot Latitude</Category>
+      <Description>Latitude of laser designator spot</Description>
+      <UnitClass>latlon</UnitClass>
+      <Unit>degrees</Unit>
+      <MinValue>-90.0</MinValue>
+      <MaxValue>90.0</MaxValue>
+   </DatumInfo>
+</DatumDefinitions>
+<UnitDefinitions>
+   <EnumType name="AutopilotAttitudeSwitchPosition">
+      <Value name="OFF" value="-1" />
+      <Value name="ALT_HOLD" value="0" />
+      <Value name="ATT_HOLD" value="1" />
+   </EnumType>
+   <UnitClass name="latlon" default="degrees">
+      <Unit name="degrees"   format="%.6f deg" factor="1.0" />
+      <Unit name="radians"   format="%.6f rad" factor="0.0174532925" />
+      <Unit name="DD MM.MMM" format_script="
+          deg = Math.floor(x);
+          min = (x - deg) * 60.0;
+          return deg + \"°\" + min.toFixed(3) + \"'\"" />
+   </UnitClass>
+   <UnitClass name="length" default="meters">
+      <Unit name="meters"     format="%.3f m"  factor="1.0" />
+      <Unit name="kilometers" format="%.3f km" factor="0.001" />
+      <Unit name="feet"       format="%.3f ft" factor="0.3048" />
+   </UnitClass>
+   <UnitClass name="integer" default="base10">
+      <Unit name="base10" format="%d" />
+      <Unit name="octal"  format="0%o" />
+      <Unit name="hex"    format="0x%x" />
+   </UnitClass>
+</UnitDefinitions>

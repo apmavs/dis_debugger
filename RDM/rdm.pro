@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core
+QT       += core xml
 
 QT       -= gui
 
@@ -18,7 +18,7 @@ win32:kdis_inc_path = C:/Program Files (x86)/KDIS/include
 
 QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
 
-INCLUDEPATH += $$kdis_inc_path
+INCLUDEPATH += $$quote($$kdis_inc_path)
 
 TEMPLATE = lib
 
@@ -30,7 +30,13 @@ SOURCES += NetworkPduSource.cpp \
     DatumDef.cpp \
     DatumIdentifier.cpp \
     DatumValue.cpp \
-    DatumInfo.cpp
+    DatumInfo.cpp \
+    VehicleMetadataLoader.cpp \
+    PduDeconstructor.cpp \
+    PduDef.cpp \
+    ComplexDef.cpp \
+    DatumDefId.cpp \
+    BaseDef.cpp
 
 HEADERS += \
     NetworkPduSource.h \
@@ -40,7 +46,13 @@ HEADERS += \
     DatumDef.h \
     DatumIdentifier.h \
     DatumValue.h \
-    DatumInfo.h
+    DatumInfo.h \
+    VehicleMetadataLoader.h \
+    PduDeconstructor.h \
+    PduDef.h \
+    ComplexDef.h \
+    DatumDefId.h \
+    BaseDef.h
 
 win32 {
     LIBS += "-lws2_32"

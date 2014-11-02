@@ -17,7 +17,8 @@ using namespace NETWORK;
 
 int main()
 {
-    volatile DataModelController *controller = new DataModelController();
+    DataModelController *controller = new DataModelController();
+    controller->loadMetadataXml("dis_definitions.xml");
 
     while(true)
         QThread::msleep(1000);

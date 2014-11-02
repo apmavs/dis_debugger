@@ -7,12 +7,20 @@ DataModelController::DataModelController()
     pdu_source = new NetworkPduSource("127.0.0.1");
     pdu_source->registerPduObserver(this);
     pdu_source->start();
+
+    deconstructor = new PduDeconstructor();
 }
 
 DataModelController::~DataModelController()
 {
     pdu_source->terminate();
     delete pdu_source;
+    delete deconstructor;
+}
+
+bool DataModelController::loadMetadataXml(std::string filename)
+{
+    return deconstructor->loadXml(filename);
 }
 
 void DataModelController::notifyPdu(KDIS::PDU::Data_PDU pdu)

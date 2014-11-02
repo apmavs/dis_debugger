@@ -70,6 +70,12 @@ public:
     }
 };
 
+TEST(NetSourceTest, ObserverDeleteTest)
+{
+    PduObserverTestClass *o = new PduObserverTestClass();
+    delete o;
+}
+
 TEST(NetSourceTest, CreateTest)
 {
     uint32_t port = 1234;

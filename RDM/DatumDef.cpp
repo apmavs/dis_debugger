@@ -3,7 +3,21 @@
 #include "KDIS/DataTypes/EntityIdentifier.h"
 #include "KDIS/PDU/Header.h"
 
-void DatumDef::setEntity(KDIS::PDU::Header pdu, DatumIdentifier id)
+void DatumDef::initializeMembers()
+{
+    length      = 0;
+    offset      = 0;
+    type        = "";
+    unit        = "";
+    unit_class  = "";
+    name        = "";
+    category    = "";
+    description = "";
+    minimum     = "";
+    maximum     = "";
+}
+
+void DatumDef::setEntity(KDIS::PDU::Header* pdu, DatumInfo* datum)
 {
     uint16_t site   = 0;
     uint16_t app    = 0;
@@ -12,9 +26,9 @@ void DatumDef::setEntity(KDIS::PDU::Header pdu, DatumIdentifier id)
     KDIS::KUINT16 headerSize = KDIS::PDU::Header::HEADER6_PDU_SIZE;
     KDIS::KUINT16 entityIdSize = KDIS::DATA_TYPE::EntityIdentifier::ENTITY_IDENTIFER_SIZE;
     KDIS::KUINT16 minSize = headerSize + entityIdSize;
-    if(pdu.GetPDULength() >= minSize)
+    if(pdu->GetPDULength() >= minSize)
     {
-        const KDIS::KOCTET *rawData = pdu.Encode().GetBufferPtr();
+        const KDIS::KOCTET *rawData = pdu->Encode().GetBufferPtr();
         rawData += headerSize; // Move past header
         site = *((uint16_t *)rawData);
         rawData += 2;
@@ -23,9 +37,16 @@ void DatumDef::setEntity(KDIS::PDU::Header pdu, DatumIdentifier id)
         entity = *((uint16_t *)rawData);
     }
 
+    DatumIdentifier id;
     id.setSite(site);
     id.setApp(app);
     id.setEntity(entity);
+    datum->setId(id);
+}
+
+void DatumDef::setDefinitionId(DatumDefId id)
+{
+    definition_id = id;
 }
 
 void DatumDef::setLength(uint32_t l)
@@ -38,6 +59,11 @@ void DatumDef::setOffset(uint32_t o)
     offset = o;
 }
 
+void DatumDef::setByteOrder(std::string o)
+{
+    byte_order = o;
+}
+
 void DatumDef::setType(std::string t)
 {
     type = t;
@@ -46,6 +72,11 @@ void DatumDef::setType(std::string t)
 void DatumDef::setUnit(std::string u)
 {
     unit = u;
+}
+
+void DatumDef::setUnitClass(std::string u)
+{
+    unit_class = u;
 }
 
 void DatumDef::setName(std::string n)
@@ -71,4 +102,9 @@ void DatumDef::setMin(QByteArray m)
 void DatumDef::setMax(QByteArray m)
 {
     maximum = m;
+}
+
+DatumDefId DatumDef::getDefinitionId()
+{
+    return definition_id;
 }
