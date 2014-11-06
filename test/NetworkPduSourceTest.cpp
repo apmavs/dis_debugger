@@ -32,9 +32,7 @@ private:
     int SetDataPduCount;
     int EntityStatePduCount;
 
-    KDIS::PDU::Data_PDU last_data_pdu;
-    KDIS::PDU::Set_Data_PDU last_set_data_pdu;
-    KDIS::PDU::Entity_State_PDU last_entity_state_pdu;
+    KDIS::PDU::Header last_pdu;
 
 public:
 
@@ -51,22 +49,16 @@ public:
     int getSetDataPduCount(){ return SetDataPduCount; }
     int getEntityStatePduCount(){ return EntityStatePduCount; }
 
-    void notifyPdu(KDIS::PDU::Data_PDU pdu)
+    virtual void notifyPdu(KDIS::PDU::Header pdu)
     {
-        DataPduCount++;
-        last_data_pdu = pdu;
-    }
-
-    void notifyPdu(KDIS::PDU::Set_Data_PDU pdu)
-    {
-        SetDataPduCount++;
-        last_set_data_pdu = pdu;
-    }
-
-    void notifyPdu(KDIS::PDU::Entity_State_PDU pdu)
-    {
-        EntityStatePduCount++;
-        last_entity_state_pdu = pdu;
+        uint8_t type = pdu.GetPDUType();
+        if(type == KDIS::DATA_TYPE::ENUMS::Entity_State_PDU_Type)
+            EntityStatePduCount++;
+        else if(type == KDIS::DATA_TYPE::ENUMS::Data_PDU_Type)
+            DataPduCount++;
+        else if(type == KDIS::DATA_TYPE::ENUMS::Set_Data_PDU_Type)
+            SetDataPduCount++;
+        last_pdu = pdu;
     }
 };
 

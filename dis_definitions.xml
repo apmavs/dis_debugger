@@ -1,4 +1,9 @@
 <DatumDefinitions>
+   <DatumInfo source="EntityState" type="string" offset="129" size="11" byte_order="network">
+      <Name>Entity Marking</Name>
+      <Category>Name</Category>
+      <Description>Name of entity</Description>
+   </DatumInfo>
    <DatumInfo source="FixedDatum" id="123456" type="uint32" offset="0" size="4" byte_order="network">
       <Name>Barometric altitude</Name>
       <Category>Indicators,Altitude,Barometric</Category>

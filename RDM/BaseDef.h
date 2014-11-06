@@ -7,8 +7,9 @@ class BaseDef : public DatumDef
 {
 public:
     BaseDef();
+    virtual ~BaseDef();
 
-    virtual std::vector<DatumInfo> getDatums(KDIS::PDU::Header* pdu);
+    virtual void getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo>* datums);
 };
 
 #endif // BASEDEF_H

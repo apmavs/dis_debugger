@@ -3,6 +3,10 @@
 #include "KDIS/DataTypes/EntityIdentifier.h"
 #include "KDIS/PDU/Header.h"
 
+DatumDef::~DatumDef()
+{
+}
+
 void DatumDef::initializeMembers()
 {
     length      = 0;
@@ -15,9 +19,10 @@ void DatumDef::initializeMembers()
     description = "";
     minimum     = "";
     maximum     = "";
+    my_id       = generateId();
 }
 
-void DatumDef::setEntity(KDIS::PDU::Header* pdu, DatumInfo* datum)
+void DatumDef::setDatumInfoId(KDIS::PDU::Header* pdu, DatumInfo* datum)
 {
     uint16_t site   = 0;
     uint16_t app    = 0;
@@ -41,7 +46,16 @@ void DatumDef::setEntity(KDIS::PDU::Header* pdu, DatumInfo* datum)
     id.setSite(site);
     id.setApp(app);
     id.setEntity(entity);
+    id.setDatumId(my_id);
     datum->setId(id);
+}
+
+// Assign a different ID to each datum definition
+uint32_t DatumDef::generateId()
+{
+    static uint32_t lastId = 0;
+    lastId++;
+    return lastId;
 }
 
 void DatumDef::setDefinitionId(DatumDefId id)
@@ -104,7 +118,3 @@ void DatumDef::setMax(QByteArray m)
     maximum = m;
 }
 
-DatumDefId DatumDef::getDefinitionId()
-{
-    return definition_id;
-}

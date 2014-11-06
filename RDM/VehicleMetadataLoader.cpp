@@ -8,7 +8,7 @@ VehicleMetadataLoader::VehicleMetadataLoader(std::string filename)
     file_error_detected = false;
 
     // Open XML file
-    QFile f("dis_definitions.xml");
+    QFile f(QString::fromStdString(filename));
     if(!f.open(QIODevice::ReadOnly))
     {
         std::cerr << "VehicleMetadataLoader: Unable to open: " << filename << std::endl;
@@ -21,6 +21,10 @@ VehicleMetadataLoader::VehicleMetadataLoader(std::string filename)
     }
 }
 
+VehicleMetadataLoader::~VehicleMetadataLoader()
+{
+}
+
 bool VehicleMetadataLoader::errorDetected()
 {
     return file_error_detected;
@@ -28,65 +32,67 @@ bool VehicleMetadataLoader::errorDetected()
 
 std::map<uint8_t, PduDef*> VehicleMetadataLoader::getDefinitions()
 {
+    std::map<uint8_t, PduDef*> pduDefs;
+
     // Parse contents of opened XML file
     QDomElement root = xml_doc.documentElement();
     while(!root.isNull())
     {
         if(root.tagName() == "DatumDefinitions")
         {
-            createDatumDefinitions(root);
+            createDatumDefinitions(root, &pduDefs);
         }
         root = root.nextSibling().toElement();
     }
 
 
-    return datum_defs;
+    return pduDefs;
 }
 
 
-void VehicleMetadataLoader::createDatumDefinitions(QDomElement e)
+void VehicleMetadataLoader::createDatumDefinitions(QDomElement e,
+                                          std::map<uint8_t, PduDef*>* defs)
 {
     e = e.firstChild().toElement();
     while(!e.isNull())
     {
-        std::cout << "createDatumDefinitions:" << e.tagName().toStdString() << std::endl;
         QString source, id;
         source    = e.attribute("source", "UNKNOWN");
         id        = e.attribute("id", "UNKNOWN");
 
         if(source == "EntityState")
         {
-            PduDef* def = createEntityStateDefinition(e);
+            BaseDef* def = new BaseDef();
             populateDatumInfo(e, def);
-            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::EntityStateUpdate_PDU_Type);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Entity_State_PDU_Type, defs);
         }
         else if(source == "FixedDatum")
         {
             uint32_t fixedId = id.toUInt();
             // Fixed datums can come in Data or SetData PDUs
-            PduDef* def = createDataDefinition(e);
+            BaseDef* def = new BaseDef();
             populateDatumInfo(e, def);
             def->definition_id.setFixedType(fixedId);
-            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Data_PDU_Type);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Data_PDU_Type, defs);
 
-            def = createSetDataDefinition(e);
+            def = new BaseDef();
             populateDatumInfo(e, def);
             def->definition_id.setFixedType(fixedId);
-            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Set_Data_PDU_Type);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Set_Data_PDU_Type, defs);
         }
         else if(source == "VariableDatum")
         {
             uint32_t varId = id.toUInt();
             // Variable datums can come in Data or SetData PDUs
-            PduDef* def = createDataDefinition(e);
+            BaseDef* def = new BaseDef();
             populateDatumInfo(e, def);
             def->definition_id.setVariableType(varId);
-            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Data_PDU_Type);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Data_PDU_Type, defs);
 
-            def = createSetDataDefinition(e);
+            def = new BaseDef();
             populateDatumInfo(e, def);
             def->definition_id.setVariableType(varId);
-            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Set_Data_PDU_Type);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Set_Data_PDU_Type, defs);
         }
         else
         {
@@ -98,22 +104,7 @@ void VehicleMetadataLoader::createDatumDefinitions(QDomElement e)
     }
 }
 
-PduDef* VehicleMetadataLoader::createEntityStateDefinition(QDomElement e)
-{
-    std::cout << "createEntityStateDefinition" << std::endl;
-}
-
-PduDef* VehicleMetadataLoader::createDataDefinition(QDomElement e)
-{
-    std::cout << "createDataDefinition" << std::endl;
-}
-
-PduDef* VehicleMetadataLoader::createSetDataDefinition(QDomElement e)
-{
-    std::cout << "createSetDataDefinition" << std::endl;
-}
-
-void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, PduDef* pduDef)
+void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, DatumDef* def)
 {
     // Parse attributes
     QString source, id, varType, offset, size, byteOrder;
@@ -125,10 +116,10 @@ void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, PduDe
     byteOrder = singleDatumInfo.attribute("byte_order", "network");
 
 
-    pduDef->setType(varType.toStdString());
-    pduDef->setOffset(offset.toUInt());
-    pduDef->setLength(size.toUInt());
-    pduDef->setByteOrder(byteOrder.toStdString());
+    def->setType(varType.toStdString());
+    def->setOffset(offset.toUInt());
+    def->setLength(size.toUInt());
+    def->setByteOrder(byteOrder.toStdString());
 
     std::cout << "Source:" << source.toStdString() << std::endl;
     std::cout << "ID:" << id.toStdString() << std::endl;
@@ -179,17 +170,18 @@ void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, PduDe
     std::cout << "EnumType: " << enumType.toStdString() << std::endl;
 }
 
-void VehicleMetadataLoader::addDefToPduDef(PduDef* def, uint8_t pduType)
+void VehicleMetadataLoader::addDefToPduDef(BaseDef* def, uint8_t pduType,
+                                          std::map<uint8_t, PduDef*>* defs)
 {
     PduDef* mainDef;
-    if(datum_defs.count(pduType) > 0)
+    if(defs->count(pduType) > 0)
     {
-        mainDef = datum_defs[pduType];
+        mainDef = (*defs)[pduType];
     }
     else
     {
         mainDef = new PduDef();
-        datum_defs[pduType] = mainDef;
+        (*defs)[pduType] = mainDef;
     }
     mainDef->add(def);
 }

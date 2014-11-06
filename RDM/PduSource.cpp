@@ -8,17 +8,22 @@
 
 PduSource::PduSource()
 {
+    unknown_pdu_count = 0;
 }
 
 PduSource::~PduSource()
 {
+    if(unknown_pdu_count > 0)
+    {
+        std::cerr << "Received " << unknown_pdu_count << " unknown pdus" <<
+                     std::endl;
+    }
 }
 
 void PduSource::notifyObservers(KDIS::KOCTET *raw_data,
                                        KDIS::KUINT32 size)
 {
     KDIS::UTILS::PDU_Factory factory;
-    bool unknownPdu = false;
     std::auto_ptr<KDIS::PDU::Header> pHeader;
     try
     {
@@ -26,8 +31,8 @@ void PduSource::notifyObservers(KDIS::KOCTET *raw_data,
     }
     catch(std::exception &e)
     {
-        std::cerr << "notifyObservers exception getting header:"
-                  << e.what() << std::endl;
+        //std::cerr << "notifyObservers exception getting header:"
+        //          << e.what() << std::endl;
     }
 
     if(pHeader.get())
@@ -62,7 +67,7 @@ void PduSource::notifyObservers(KDIS::KOCTET *raw_data,
             }
             else
             {
-                unknownPdu = true;
+                unknown_pdu_count++;
             }
         }
         catch(std::exception &e)
@@ -76,14 +81,7 @@ void PduSource::notifyObservers(KDIS::KOCTET *raw_data,
     }
     else
     {
-        unknownPdu = true;
-    }
-
-    if(unknownPdu)
-    {
-        std::cerr << "Received an unknown PDU:";
-        KDIS::KDataStream stream(raw_data, size);
-        std::cerr << stream.GetAsString() << std::endl;
+        unknown_pdu_count++;
     }
 }
 

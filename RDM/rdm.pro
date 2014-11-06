@@ -52,7 +52,8 @@ HEADERS += \
     PduDef.h \
     ComplexDef.h \
     DatumDefId.h \
-    BaseDef.h
+    BaseDef.h \
+    DatumObserver.h
 
 win32 {
     LIBS += "-lws2_32"

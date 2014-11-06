@@ -38,7 +38,7 @@ void DatumIdentifier::setEntity(uint16_t e)
     entity = e;
 }
 
-void DatumIdentifier::setDatum(uint32_t d)
+void DatumIdentifier::setDatumId(uint32_t d)
 {
     datum_id = d;
 }

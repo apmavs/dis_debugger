@@ -15,6 +15,7 @@
 class DatumDef
 {
 protected:
+    uint32_t my_id;
     uint32_t length; // bytes
     uint32_t offset; // bytes
     std::string byte_order;
@@ -28,9 +29,11 @@ protected:
     QByteArray maximum;
 
     void initializeMembers();
-    void setEntity(KDIS::PDU::Header* pdu, DatumInfo* datum);
+    void setDatumInfoId(KDIS::PDU::Header* pdu, DatumInfo* datum);
+    uint32_t generateId();
 
 public:
+    virtual ~DatumDef();
     DatumDefId definition_id;
     void setDefinitionId(DatumDefId id);
     void setLength(uint32_t l); // in bytes
@@ -45,9 +48,7 @@ public:
     void setMin(QByteArray m);
     void setMax(QByteArray m);
 
-    DatumDefId getDefinitionId();
-
-    virtual std::vector<DatumInfo> getDatums(KDIS::PDU::Header* pdu) = 0;
+    virtual void getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo>* datums) = 0;
 };
 
 #endif // DATUMDEF_H

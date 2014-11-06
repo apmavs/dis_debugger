@@ -5,24 +5,31 @@ PduDef::PduDef()
     initializeMembers();
 }
 
+PduDef::~PduDef()
+{
+    std::vector<DatumDef*>::iterator it;
+    for(it = base_defs.begin(); it != base_defs.end(); it++)
+    {
+        delete (*it);
+    }
+}
+
 void PduDef::add(DatumDef* d)
 {
     base_defs.push_back(d);
 }
 
-std::vector<DatumInfo> PduDef::getDatums(KDIS::PDU::Header* pdu)
+void PduDef::getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo>* datums)
 {
-    std::vector<DatumInfo> datums;
     std::vector<DatumDef*>::iterator it;
-   for(it = base_defs.begin(); it != base_defs.end(); it++)
-   {
-       std::vector<DatumInfo> subdatums = (*it)->getDatums(pdu);
-       std::vector<DatumInfo>::iterator itSub;
-       for(itSub = subdatums.begin(); itSub != subdatums.end(); itSub++)
-       {
-           datums.push_back(*itSub);
-       }
-   }
+    for(it = base_defs.begin(); it != base_defs.end(); it++)
+    {
+        (*it)->getDatums(pdu, size, datums);
+    }
 
-   return datums;
+    std::vector<DatumInfo>::iterator datumIt;
+    for(datumIt = datums->begin(); datumIt != datums->end(); datumIt++)
+    {
+        setDatumInfoId(pdu, &(*datumIt));
+    }
 }
