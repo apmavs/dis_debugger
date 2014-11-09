@@ -1,4 +1,5 @@
 #include "DatumInfo.h"
+#include <iostream>
 
 DatumInfo::DatumInfo()
 {
@@ -12,46 +13,60 @@ DatumInfo::DatumInfo()
 
 DatumInfo::~DatumInfo()
 {
+    std::vector<DatumValue*>::iterator it;
+    for(it = values.begin(); it != values.end(); it++)
+    {
+        DatumValue* v = (*it);
+        delete v;
+    }
     delete mutex;
 }
 
-DatumInfo & DatumInfo::operator=(const DatumInfo& copyVal)
+DatumInfo* DatumInfo::createDatum(std::string type, QByteArray value)
 {
-    identifier  = copyVal.getId();
-    type        = copyVal.getType();
-    unit        = copyVal.getUnit();
-    name        = copyVal.getName();
-    category    = copyVal.getCategory();
-    description = copyVal.getDescription();
-    values      = copyVal.getHistory();
-    mutex     = new QMutex();
-
-    return *this;
+    DatumInfo* datum = new DatumInfo();
+    datum->type = type;
+    datum->addValue(-1.0, value); // TODO: Add timestamp
+    return datum;
 }
 
-DatumInfo::DatumInfo(const DatumInfo& copyVal)
+double DatumInfo::getLastTimestamp()
 {
-    identifier  = copyVal.getId();
-    type        = copyVal.getType();
-    unit        = copyVal.getUnit();
-    name        = copyVal.getName();
-    category    = copyVal.getCategory();
-    description = copyVal.getDescription();
-    values      = copyVal.getHistory();
-    mutex     = new QMutex();
+    double time = -1.0;
+
+    mutex->lock();
+    // Get most current value if any values exist
+    std::vector<DatumValue*>::reverse_iterator it = values.rbegin();
+    if(it != values.rend())
+        time = (*it)->getTimestamp();
+    mutex->unlock();
+
+    return time;
+}
+
+QByteArray DatumInfo::getLastRawValue()
+{
+    QByteArray val = NULL;
+
+    mutex->lock();
+    // Get most current value if any values exist
+    std::vector<DatumValue*>::reverse_iterator it = values.rbegin();
+    if(it != values.rend())
+        val = (*it)->getRawData();
+    mutex->unlock();
+
+    return val;
+}
+
+bool DatumInfo::hasSameId(DatumInfo* rhs)
+{
+    return (identifier == rhs->identifier);
 }
 
 void DatumInfo::setId(DatumIdentifier id)
 {
     mutex->lock();
     identifier = id;
-    mutex->unlock();
-}
-
-void DatumInfo::setType(std::string t)
-{
-    mutex->lock();
-    type = t;
     mutex->unlock();
 }
 
@@ -146,55 +161,88 @@ std::string DatumInfo::getDescription() const
     return d;
 }
 
-DatumValue DatumInfo::getValue()
+// Get the most recent value
+std::string DatumInfo::getValue()
 {
-    double time = -1.0;
-    QByteArray data;
+    std::string data;
 
     mutex->lock();
     // Get most current value if any values exist
-    std::map<double, DatumValue>::reverse_iterator it = values.rbegin();
+    std::vector<DatumValue*>::reverse_iterator it = values.rbegin();
     if(it != values.rend())
+        data = (*it)->getValue();
+
+    mutex->unlock();
+
+    return data;
+}
+
+std::map<double, std::string> DatumInfo::getHistory() const
+{
+    std::map<double, std::string> retVec;
+
+    mutex->lock();
+    std::vector<DatumValue*>::const_iterator it;
+    for(it = values.begin(); it != values.end(); it++)
     {
-        time = it->second.getTimestamp();
-        data = it->second.getValue();
+        DatumValue* val = (*it);
+        retVec[val->getTimestamp()] = val->getValue();
     }
     mutex->unlock();
 
-    return DatumValue(time, data);
+    return retVec;
 }
 
-std::map<double, DatumValue> DatumInfo::getHistory() const
+bool DatumInfo::addValue(double time, QByteArray value)
 {
-    std::map<double, DatumValue> retMap;
+    bool valueChanged = false;
+    DatumValue* newVal;
 
     mutex->lock();
-    retMap = values;
+    if(type == "uint8" )        newVal = new Uint8Value();
+    else if(type == "uint16")   newVal = new Uint16Value();
+    else if(type == "uint32")   newVal = new Uint32Value();
+    else if(type == "uint64")   newVal = new Uint64Value();
+    else if(type == "int8"  )   newVal = new Int8Value();
+    else if(type == "int16" )   newVal = new Int16Value();
+    else if(type == "int32" )   newVal = new Int32Value();
+    else if(type == "int64" )   newVal = new Int64Value();
+    else if(type == "float" )   newVal = new FloatValue();
+    else if(type == "double")   newVal = new DoubleValue();
+    else if(type == "string")   newVal = new StringValue();
+    else                        newVal = new Uint8Value();
     mutex->unlock();
 
-    return retMap;
-}
+    newVal->setTimestamp(time);
+    newVal->setValue(value);
 
-void DatumInfo::addValue(DatumValue value)
-{
-    DatumValue newVal(value.getTimestamp(), value.getValue());
+    // Only add new value if it is actually different
+    QByteArray lastVal = getLastRawValue();
     mutex->lock();
-    values[newVal.getTimestamp()] = value;
+    if(newVal->getRawData() != lastVal)
+    {
+        valueChanged = true;
+        values.push_back(newVal);
+    }
     mutex->unlock();
+
+    return valueChanged;
 }
 
 void DatumInfo::truncateHistory(double currentTime)
 {
-    std::map<double, DatumValue>::iterator it, itEnd;
+    std::vector<DatumValue*>::iterator it, itEnd;
 
     mutex->lock();
     itEnd = values.end();
     for(it = values.begin(); it != itEnd; it++)
     {
-        if(it->first > currentTime)
+        if((*it)->getTimestamp() > currentTime)
         {
-            values.erase(it, itEnd); // last element not erased
-            values.erase(values.end());
+            std::vector<DatumValue*>::iterator delIt;
+            for(delIt = it; delIt != itEnd; delIt++)
+                delete (*delIt);
+            values.erase(it, itEnd);
             break;
         }
     }

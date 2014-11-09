@@ -115,7 +115,6 @@ void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, Datum
     size      = singleDatumInfo.attribute("size", "4");
     byteOrder = singleDatumInfo.attribute("byte_order", "network");
 
-
     def->setType(varType.toStdString());
     def->setOffset(offset.toUInt());
     def->setLength(size.toUInt());
@@ -159,6 +158,15 @@ void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, Datum
         }
         child = child.nextSibling().toElement();
     }
+
+    def->setName(name.toStdString());
+    def->setCategory(category.toStdString());
+    def->setDescription(description.toStdString());
+    def->setUnitClass(unitClass.toStdString());
+    def->setUnit(unit.toStdString());
+    //def->setMin(minVal.toStdString());  // TODO: FIX
+    //def->setMax(maxVal.toStdString());
+    def->setEnumType(enumType.toStdString());
 
     std::cout << "Name: " << name.toStdString() << std::endl;
     std::cout << "Category: " << category.toStdString() << std::endl;

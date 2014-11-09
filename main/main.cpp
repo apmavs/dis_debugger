@@ -18,17 +18,20 @@ using namespace NETWORK;
 
 class MainObs : public DatumObserver
 {
+private:
+    DataModelController* controller;
 public:
-    MainObs(){}
+    MainObs(DataModelController* cont){controller = cont;}
     virtual ~MainObs(){}
     virtual void notifyNewDatum(DatumInfo* datum)
     {
-        std::cout << "Received new datum:" << (char *)(datum->getValue().getValue().data()) << std::endl;
+        std::cout << "Received new datum " << datum->getName() << ":" << datum->getValue() << std::endl;
+        controller->registerDatumObserver(this, datum);
     }
 
     virtual void notifyNewValue(DatumInfo* datum)
     {
-        std::cout << "Received new value:" << datum->getName() << std::endl;
+        std::cout << "Received new value " << datum->getName() << ":" << datum->getValue() << std::endl;
     }
 
     virtual void notifyEntityRemoved(std::string entity)
@@ -40,8 +43,8 @@ public:
 
 int main()
 {
-    MainObs* obs = new MainObs();
     DataModelController *controller = new DataModelController();
+    MainObs* obs = new MainObs(controller);
     controller->registerObserver(obs);
     controller->loadMetadataXml("C:\\Comp\\school_work\\CSE\\dis_debugger\\dis_definitions.xml");
 

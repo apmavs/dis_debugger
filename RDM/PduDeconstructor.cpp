@@ -1,6 +1,8 @@
 #include "PduDeconstructor.h"
 #include "VehicleMetadataLoader.h"
 
+#include <iostream>
+
 PduDeconstructor::PduDeconstructor()
 {
 }
@@ -22,9 +24,9 @@ bool PduDeconstructor::loadXml(std::string filename)
     return success;
 }
 
-std::vector<DatumInfo> PduDeconstructor::deconstruct(KDIS::PDU::Header* pdu)
+std::vector<DatumInfo*> PduDeconstructor::deconstruct(KDIS::PDU::Header* pdu)
 {
-    std::vector<DatumInfo> retVal;
+    std::vector<DatumInfo*> retVal;
     uint32_t size = pdu->GetPDULength();
     KDIS::DATA_TYPE::ENUMS::PDUType type = pdu->GetPDUType();
     if((type == KDIS::DATA_TYPE::ENUMS::Entity_State_PDU_Type) &&

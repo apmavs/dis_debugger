@@ -18,7 +18,7 @@ private:
     QMutex mutex;
     PduSource* pdu_source;
     PduDeconstructor* deconstructor;
-    std::vector<DatumIdentifier> existing_datum_types;
+    std::vector<DatumInfo*> datums;
     std::vector<DatumObserver*> new_datum_observers;
     std::map<DatumObserver*, std::vector<DatumIdentifier>*> change_observers;
 
@@ -29,7 +29,7 @@ public:
     DataModelController();
     virtual ~DataModelController();
 
-    virtual void notifyPdu(KDIS::PDU::Header pdu);
+    virtual void notifyPdu(KDIS::PDU::Header *pdu);
 
     bool loadMetadataXml(std::string filename);
     void registerObserver(DatumObserver* obs);

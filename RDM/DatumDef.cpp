@@ -1,13 +1,10 @@
 #include "DatumDef.h"
+#include <iostream>
 
 #include "KDIS/DataTypes/EntityIdentifier.h"
 #include "KDIS/PDU/Header.h"
 
-DatumDef::~DatumDef()
-{
-}
-
-void DatumDef::initializeMembers()
+DatumDef::DatumDef()
 {
     length      = 0;
     offset      = 0;
@@ -20,6 +17,10 @@ void DatumDef::initializeMembers()
     minimum     = "";
     maximum     = "";
     my_id       = generateId();
+}
+
+DatumDef::~DatumDef()
+{
 }
 
 void DatumDef::setDatumInfoId(KDIS::PDU::Header* pdu, DatumInfo* datum)
@@ -116,5 +117,10 @@ void DatumDef::setMin(QByteArray m)
 void DatumDef::setMax(QByteArray m)
 {
     maximum = m;
+}
+
+void DatumDef::setEnumType(std::string enumType)
+{
+    enum_type = enumType;
 }
 

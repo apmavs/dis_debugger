@@ -1,8 +1,8 @@
 #include "ComplexDef.h"
 
+
 ComplexDef::ComplexDef()
 {
-    initializeMembers();
 }
 
 ComplexDef::~ComplexDef()
@@ -71,7 +71,7 @@ void ComplexDef::add(DatumDef* d)
     }
 }
 
-void ComplexDef::getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo>* datums)
+void ComplexDef::getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo*>* datums)
 {
     std::vector<DatumDef*>::iterator it;
     for(it = base_defs.begin(); it != base_defs.end(); it++)
@@ -103,15 +103,15 @@ void ComplexDef::getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<Da
         }
     }
 
-    std::vector<DatumInfo>::iterator datumIt;
+    std::vector<DatumInfo*>::iterator datumIt;
     for(datumIt = datums->begin(); datumIt != datums->end(); datumIt++)
     {
-        setDatumInfoId(pdu, &(*datumIt));
+        setDatumInfoId(pdu, *datumIt);
     }
 }
 
 // Parse through each fixed datum and add it to the vector
-void ComplexDef::parseFixedDatum(unsigned char* fixedDatum, std::vector<DatumInfo> *datums)
+void ComplexDef::parseFixedDatum(unsigned char* fixedDatum, std::vector<DatumInfo*>* datums)
 {
     uint32_t fixedId = *((uint32_t*)fixedDatum);
     if(fixed_defs.count(fixedId))
@@ -127,7 +127,7 @@ void ComplexDef::parseFixedDatum(unsigned char* fixedDatum, std::vector<DatumInf
 }
 
 // Parse through each variable datum and add it to the vector
-void ComplexDef::parseVariableDatums(unsigned char* varDatum, std::vector<DatumInfo>* datums)
+void ComplexDef::parseVariableDatums(unsigned char* varDatum, std::vector<DatumInfo*>* datums)
 {
     uint32_t varId = *((uint32_t*)varDatum);
     if(variable_defs.count(varId))

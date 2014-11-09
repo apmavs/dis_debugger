@@ -20,17 +20,34 @@ DataModelController::~DataModelController()
 
 void DataModelController::processNewDatum(DatumInfo* datum)
 {
-    existing_datum_types.push_back(datum->getId());
+    std::vector<DatumObserver*> observers;
+
+    // Generate a local list of who is registered to receive new datums while
+    //  the mutex is locked. Then after we have the list and have unlocked the
+    //  mutex, notify everybody. It's possible that on the notification they
+    //  could register for this datum which requires a lock
+    mutex.lock();
+    datums.push_back(datum);
     std::vector<DatumObserver*>::iterator it;
     for(it = new_datum_observers.begin(); it != new_datum_observers.end(); it++)
     {
-        (*it)->notifyNewDatum(datum);
+        observers.push_back(*it);
     }
+    mutex.unlock();
+
+    for(it = observers.begin(); it != observers.end(); it++)
+        (*it)->notifyNewDatum(datum);
 }
 
 void DataModelController::processDatumChange(DatumInfo* datum)
 {
-    // Send new datum to anybody registered for it
+    std::vector<DatumObserver*> observers;
+
+    // Generate a local list of who is registered to receive this datum while
+    //  the mutex is locked. Then after we have the list and have unlocked the
+    //  mutex, notify everybody. It's possible that on the notification they
+    //  could unregister which requires a lock
+    mutex.lock();
     std::map<DatumObserver*, std::vector<DatumIdentifier>*>::iterator it;
     for(it = change_observers.begin(); it != change_observers.end(); it++)
     {
@@ -39,32 +56,56 @@ void DataModelController::processDatumChange(DatumInfo* datum)
                 != datumIds->end())
         {
             // Observer is registered for this datum type
-            DatumObserver* obs = it->first;
-            obs->notifyNewValue(datum);
-        }
-    }
-}
-
-void DataModelController::notifyPdu(KDIS::PDU::Header pdu)
-{
-    mutex.lock();
-    std::vector<DatumInfo> datums = deconstructor->deconstruct(&pdu);
-    std::vector<DatumInfo>::iterator it;
-    for(it = datums.begin(); it != datums.end(); it++)
-    {
-        DatumInfo datum = *it;
-        // Check if we've seen this datum before
-        if(std::find(existing_datum_types.begin(), existing_datum_types.end(),
-                     datum.getId()) != existing_datum_types.end())
-        {
-            processDatumChange(&datum);
-        }
-        else // notify observers of new datum type
-        {
-            processNewDatum(&datum);
+            observers.push_back(it->first);
         }
     }
     mutex.unlock();
+
+    // Notify everybody from list
+    std::vector<DatumObserver*>::iterator obsIt;
+    for(obsIt = observers.begin(); obsIt != observers.end(); obsIt++)
+        (*obsIt)->notifyNewValue(datum);
+}
+
+void DataModelController::notifyPdu(KDIS::PDU::Header* pdu)
+{
+    std::vector<DatumInfo*> newDatums = deconstructor->deconstruct(pdu);
+    std::vector<DatumInfo*>::iterator newIt;
+    for(newIt = newDatums.begin(); newIt != newDatums.end(); newIt++)
+    {
+        DatumInfo* newDatum = *newIt;
+        // Check if we've seen this datum before
+        bool seenBefore = false;
+        std::vector<DatumInfo*>::iterator existingIt;
+
+        mutex.lock();
+        bool newValIsChanged = false;
+        for(existingIt = datums.begin(); existingIt != datums.end(); existingIt++)
+        {
+            DatumInfo* existingDatum = *existingIt;
+            if(existingDatum->hasSameId(newDatum))
+            {
+                seenBefore = true;
+                // Add updated value to stored datum
+                newValIsChanged = existingDatum->addValue(
+                                        newDatum->getLastTimestamp(),
+                                        newDatum->getLastRawValue());
+                break;
+            }
+        }
+        mutex.unlock();
+
+        if(seenBefore)
+        {
+            // Only send notifications if updated datum is changed
+            if(newValIsChanged)
+                processDatumChange(newDatum);
+        }
+        else // notify observers of new datum type
+        {
+            processNewDatum(newDatum);
+        }
+    }
 }
 
 bool DataModelController::loadMetadataXml(std::string filename)

@@ -37,38 +37,13 @@ void PduSource::notifyObservers(KDIS::KOCTET *raw_data,
 
     if(pHeader.get())
     {
-        KDIS::DATA_TYPE::ENUMS::PDUType type = pHeader->
-                                               GetPDUType();
-        KDIS::KDataStream s(raw_data, size);
-        std::vector<PduObserver*>::iterator it;
+        KDIS::PDU::Header* pdu = pHeader.get();
         observer_mutex.lock();
+        std::vector<PduObserver*>::iterator it;
         try
         {
-            if(type == KDIS::DATA_TYPE::ENUMS::Data_PDU_Type)
-            {
-                KDIS::PDU::Data_PDU dataPdu;
-                dataPdu.Decode(s);
-                for(it = observers.begin(); it != observers.end(); it++)
-                    (*it)->notifyPdu(dataPdu);
-            }
-            else if(type == KDIS::DATA_TYPE::ENUMS::Set_Data_PDU_Type)
-            {
-                KDIS::PDU::Set_Data_PDU setDataPdu;
-                setDataPdu.Decode(s);
-                for(it = observers.begin(); it != observers.end(); it++)
-                    (*it)->notifyPdu(setDataPdu);
-            }
-            else if(type == KDIS::DATA_TYPE::ENUMS::Entity_State_PDU_Type)
-            {
-                KDIS::PDU::Entity_State_PDU entityStatePdu;
-                entityStatePdu.Decode(s);
-                for(it = observers.begin(); it != observers.end(); it++)
-                    (*it)->notifyPdu(entityStatePdu);
-            }
-            else
-            {
-                unknown_pdu_count++;
-            }
+            for(it = observers.begin(); it != observers.end(); it++)
+                (*it)->notifyPdu(pdu);
         }
         catch(std::exception &e)
         {

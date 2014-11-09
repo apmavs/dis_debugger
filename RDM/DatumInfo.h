@@ -5,6 +5,7 @@
 #include "DatumIdentifier.h"
 
 #include <QMutex>
+#include <vector>
 #include <map>
 #include <string>
 
@@ -19,16 +20,24 @@ private:
     std::string name;
     std::string category;
     std::string description;
-    std::map<double, DatumValue> values;
+    std::vector<DatumValue*> values;
+
+    DatumInfo();
+
+protected:
+    DatumValue* getRawDatumValue();
 
 public:
-    DatumInfo();
     ~DatumInfo();
-    DatumInfo & operator=(const DatumInfo& copyVal);
-    DatumInfo(const DatumInfo& copyVal);
+    //DatumInfo & operator=(const DatumInfo& copyVal);
+    //DatumInfo(const DatumInfo& copyVal);
 
+    static DatumInfo* createDatum(std::string type, QByteArray value);
+    double getLastTimestamp();
+    QByteArray getLastRawValue();
+
+    bool hasSameId(DatumInfo* rhs);
     void setId(DatumIdentifier id);
-    void setType(std::string t);
     void setUnit(std::string u);
     void setUnitClass(std::string u);
     void setName(std::string n);
@@ -41,9 +50,9 @@ public:
     std::string getName() const;
     std::string getCategory() const;
     std::string getDescription() const;
-    DatumValue getValue();
-    std::map<double, DatumValue> getHistory() const;
-    void addValue(DatumValue value);
+    std::string getValue();
+    std::map<double, std::string> getHistory() const;
+    bool addValue(double time, QByteArray value);
     void truncateHistory(double currentTime);
 };
 

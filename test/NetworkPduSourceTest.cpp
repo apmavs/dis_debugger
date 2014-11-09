@@ -49,16 +49,16 @@ public:
     int getSetDataPduCount(){ return SetDataPduCount; }
     int getEntityStatePduCount(){ return EntityStatePduCount; }
 
-    virtual void notifyPdu(KDIS::PDU::Header pdu)
+    virtual void notifyPdu(KDIS::PDU::Header* pdu)
     {
-        uint8_t type = pdu.GetPDUType();
+        uint8_t type = pdu->GetPDUType();
         if(type == KDIS::DATA_TYPE::ENUMS::Entity_State_PDU_Type)
             EntityStatePduCount++;
         else if(type == KDIS::DATA_TYPE::ENUMS::Data_PDU_Type)
             DataPduCount++;
         else if(type == KDIS::DATA_TYPE::ENUMS::Set_Data_PDU_Type)
             SetDataPduCount++;
-        last_pdu = pdu;
+        last_pdu = *pdu;
     }
 };
 

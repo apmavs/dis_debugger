@@ -27,8 +27,9 @@ protected:
     std::string description;
     QByteArray minimum;
     QByteArray maximum;
+    std::string enum_type;
 
-    void initializeMembers();
+    DatumDef();
     void setDatumInfoId(KDIS::PDU::Header* pdu, DatumInfo* datum);
     uint32_t generateId();
 
@@ -47,8 +48,9 @@ public:
     void setDescription(std::string d);
     void setMin(QByteArray m);
     void setMax(QByteArray m);
+    void setEnumType(std::string enumType);
 
-    virtual void getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo>* datums) = 0;
+    virtual void getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo*>* datums) = 0;
 };
 
 #endif // DATUMDEF_H

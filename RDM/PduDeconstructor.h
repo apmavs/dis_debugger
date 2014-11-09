@@ -17,7 +17,7 @@ private:
 public:
     PduDeconstructor();
     bool loadXml(std::string filename);
-    std::vector<DatumInfo> deconstruct(KDIS::PDU::Header* pdu);
+    std::vector<DatumInfo*> deconstruct(KDIS::PDU::Header* pdu);
 };
 
 #endif // PDUDECONSTRUCTOR_H
