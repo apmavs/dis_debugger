@@ -24,12 +24,13 @@ private:
 
     void processNewDatum(DatumInfo* datum);
     void processDatumChange(DatumInfo* datum);
+    void processEntityRemoval(KDIS::PDU::Header* pdu);
 
 public:
     DataModelController();
     virtual ~DataModelController();
 
-    virtual void notifyPdu(KDIS::PDU::Header *pdu);
+    virtual void notifyPdu(KDIS::PDU::Header* pdu);
 
     bool loadMetadataXml(std::string filename);
     void registerObserver(DatumObserver* obs);

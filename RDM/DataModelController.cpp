@@ -67,45 +67,92 @@ void DataModelController::processDatumChange(DatumInfo* datum)
         (*obsIt)->notifyNewValue(datum);
 }
 
+void DataModelController::processEntityRemoval(KDIS::PDU::Header* pdu)
+{
+    uint16_t site   = 0;
+    uint16_t app    = 0;
+    uint16_t entity = 0;
+
+    KDIS::KUINT16 headerSize = KDIS::PDU::Header::HEADER6_PDU_SIZE;
+    KDIS::KUINT16 entityIdSize = KDIS::DATA_TYPE::EntityIdentifier::ENTITY_IDENTIFER_SIZE;
+    KDIS::KUINT16 minSize = headerSize + entityIdSize;
+    if(pdu->GetPDULength() >= minSize)
+    {
+        const KDIS::KOCTET *rawData = pdu->Encode().GetBufferPtr();
+        rawData += headerSize; // Move past header
+        site = *((uint16_t *)rawData);
+        rawData += 2;
+        app = *((uint16_t *)rawData);
+        rawData += 2;
+        entity = *((uint16_t *)rawData);
+    }
+    std::string entityName = QString("(%1:%2:%3)").arg(site)
+                                                  .arg(app)
+                                                  .arg(entity)
+                                                  .toStdString();
+    std::cout << "Removing: " << entityName << std::endl;
+
+    std::vector<DatumObserver*> observers;
+    mutex.lock();
+    std::vector<DatumObserver*>::iterator it;
+    for(it = new_datum_observers.begin(); it != new_datum_observers.end(); it++)
+    {
+        observers.push_back(*it);
+    }
+    mutex.unlock();
+
+    for(it = observers.begin(); it != observers.end(); it++)
+    {
+        (*it)->notifyEntityRemoved(entityName);
+    }
+}
+
 void DataModelController::notifyPdu(KDIS::PDU::Header* pdu)
 {
-    std::vector<DatumInfo*> newDatums = deconstructor->deconstruct(pdu);
-    std::vector<DatumInfo*>::iterator newIt;
-    for(newIt = newDatums.begin(); newIt != newDatums.end(); newIt++)
+    if(pdu->GetPDUType() == KDIS::DATA_TYPE::ENUMS::Detonation_PDU_Type)
     {
-        DatumInfo* newDatum = *newIt;
-        // Check if we've seen this datum before
-        bool seenBefore = false;
-        std::vector<DatumInfo*>::iterator existingIt;
-
-        mutex.lock();
-        bool newValIsChanged = false;
-        for(existingIt = datums.begin(); existingIt != datums.end(); existingIt++)
+        processEntityRemoval(pdu);
+    }
+    else
+    {
+        std::vector<DatumInfo*> newDatums = deconstructor->deconstruct(pdu);
+        std::vector<DatumInfo*>::iterator newIt;
+        for(newIt = newDatums.begin(); newIt != newDatums.end(); newIt++)
         {
-            DatumInfo* existingDatum = *existingIt;
-            if(existingDatum->hasSameId(newDatum))
+            DatumInfo* newDatum = *newIt;
+            // Check if we've seen this datum before
+            bool seenBefore = false;
+            std::vector<DatumInfo*>::iterator existingIt;
+
+            mutex.lock();
+            bool newValIsChanged = false;
+            for(existingIt = datums.begin(); existingIt != datums.end(); existingIt++)
             {
-                seenBefore = true;
-                // Add updated value to stored datum
-                newValIsChanged = existingDatum->addValue(
-                                        newDatum->getLastTimestamp(),
-                                        newDatum->getLastRawValue());
-                break;
+                DatumInfo* existingDatum = *existingIt;
+                if(existingDatum->hasSameId(newDatum))
+                {
+                    seenBefore = true;
+                    // Add updated value to stored datum
+                    newValIsChanged = existingDatum->addValue(
+                                            newDatum->getLastTimestamp(),
+                                            newDatum->getLastRawValue());
+                    break;
+                }
+            }
+            mutex.unlock();
+
+            if(seenBefore)
+            {
+                // Only send notifications if updated datum is changed
+                if(newValIsChanged)
+                    processDatumChange(newDatum);
+            }
+            else // notify observers of new datum type
+            {
+                processNewDatum(newDatum);
             }
         }
-        mutex.unlock();
-
-        if(seenBefore)
-        {
-            // Only send notifications if updated datum is changed
-            if(newValIsChanged)
-                processDatumChange(newDatum);
-        }
-        else // notify observers of new datum type
-        {
-            processNewDatum(newDatum);
-        }
-    }
+     }
 }
 
 bool DataModelController::loadMetadataXml(std::string filename)

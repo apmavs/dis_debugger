@@ -42,3 +42,23 @@ void DatumIdentifier::setDatumId(uint32_t d)
 {
     datum_id = d;
 }
+
+uint16_t DatumIdentifier::getSite()
+{
+    return site;
+}
+
+uint16_t DatumIdentifier::getApp()
+{
+    return app;
+}
+
+uint16_t DatumIdentifier::getEntity()
+{
+    return entity;
+}
+
+uint32_t DatumIdentifier::getDatumId()
+{
+    return datum_id;
+}

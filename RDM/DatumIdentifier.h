@@ -18,6 +18,10 @@ public:
     void setApp(uint16_t a);
     void setEntity(uint16_t e);
     void setDatumId(uint32_t d);
+    uint16_t getSite();
+    uint16_t getApp();
+    uint16_t getEntity();
+    uint32_t getDatumId();
 };
 
 #endif // DATUMIDENTIFIER_H

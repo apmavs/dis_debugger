@@ -1,5 +1,6 @@
 #include "DatumInfo.h"
 #include <iostream>
+#include <QString>
 
 DatumInfo::DatumInfo()
 {
@@ -111,6 +112,16 @@ DatumIdentifier DatumInfo::getId() const
     DatumIdentifier id = identifier;
     mutex->unlock();
     return id;
+}
+
+std::string DatumInfo::getEntityName() const
+{
+    DatumIdentifier id = getId();
+    std::string entityName = QString("(%1:%2:%3)").arg(id.getSite())
+                                                  .arg(id.getApp())
+                                                  .arg(id.getEntity())
+                                                  .toStdString();
+    return entityName;
 }
 
 std::string DatumInfo::getType() const

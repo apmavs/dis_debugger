@@ -44,6 +44,7 @@ public:
     void setCategory(std::string c);
     void setDescription(std::string d);
     DatumIdentifier getId() const;
+    std::string getEntityName() const;
     std::string getType() const;
     std::string getUnit() const;
     std::string getUnitClass() const;

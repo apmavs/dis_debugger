@@ -236,6 +236,8 @@ std::string StringValue::getValue() const
     }
     if(foundNullTerminator)
         val = QString(value.constData());
+    else
+        val = "Error:NoNull!";
     mutex->unlock();
     return val.toStdString();
 }

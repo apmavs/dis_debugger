@@ -4,6 +4,21 @@
       <Category>Name</Category>
       <Description>Name of entity</Description>
    </DatumInfo>
+   <DatumInfo source="EntityState" type="double" offset="49" size="8" byte_order="network">
+      <Name>X</Name>
+      <Category>Location</Category>
+      <Description>X-coord of entity</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="double" offset="57" size="8" byte_order="network">
+      <Name>Y</Name>
+      <Category>Location</Category>
+      <Description>Y-coord of entity</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="double" offset="65" size="8" byte_order="network">
+      <Name>Z</Name>
+      <Category>Location</Category>
+      <Description>Z-coord of entity</Description>
+   </DatumInfo>
    <DatumInfo source="FixedDatum" id="123456" type="uint32" offset="0" size="4" byte_order="network">
       <Name>Barometric altitude</Name>
       <Category>Indicators,Altitude,Barometric</Category>
@@ -21,7 +36,7 @@
    </DatumInfo>
    <DatumInfo source="VariableDatum" id="123457" type="uint32" offset="0" size="4" byte_order="network">
       <Name>Mode 1 Code</Name>
-      <Category>Radios,IFF,Mode 1 Code</Category>
+      <Category>Radios,IFF</Category>
       <Description>Mode 1 IFF Code</Description>
       <UnitClass>integer</UnitClass>
       <MinValue>0</MinValue>
@@ -29,7 +44,7 @@
    </DatumInfo>
    <DatumInfo source="VariableDatum" id="123457" type="uint32" offset="4" size="4" byte_order="network">
       <Name>Mode 2 Code</Name>
-      <Category>Radios,IFF,Mode 2 Code</Category>
+      <Category>Radios,IFF</Category>
       <Description>Mode 2 IFF Code</Description>
       <UnitClass>integer</UnitClass>
       <MinValue>0</MinValue>
