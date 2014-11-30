@@ -31,7 +31,10 @@ void EntityDataList::setActiveEntity(std::string entity)
             for(it = datums->begin(); it != datums->end(); it++)
             {
                 const DatumInfo* datum = *it;
-                addItem(getDisplayString(datum));
+                QString newVal = getDisplayString(datum);
+                QListWidgetItem* newItem = new QListWidgetItem(newVal);
+                newItem->setToolTip(QString(datum->getDescription().c_str()));
+                addItem(newItem);
             }
         }
     }
@@ -62,7 +65,9 @@ void EntityDataList::notifyNewDatum(const DatumInfo *datum)
     if(entity == active_entity)
     {
         QString newVal = getDisplayString(datum);
-        addItem(newVal);
+        QListWidgetItem* newItem = new QListWidgetItem(newVal);
+        newItem->setToolTip(QString(datum->getDescription().c_str()));
+        addItem(newItem);
     }
 
     mutex.unlock();
