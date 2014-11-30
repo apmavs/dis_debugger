@@ -12,7 +12,8 @@ TEMPLATE = subdirs
 
 SUBDIRS += RDM \
     main \
-    test
+    test \
+    Visualization
 
 main.depends = RDM
 test.depends = RDM
