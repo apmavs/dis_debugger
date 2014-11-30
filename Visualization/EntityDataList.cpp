@@ -2,11 +2,41 @@
 
 
 EntityDataList::EntityDataList(QWidget *parent) :
-    QListWidget(parent)
+    QTreeWidget(parent)
 {
     controller = DataModelController::getInstance();
     controller->registerObserver(this);
     active_entity = "";
+}
+
+void EntityDataList::addItem(const DatumInfo* datum)
+{
+    QString catStr = QString(datum->getCategory().c_str());
+    QTreeWidgetItem* catItem = NULL;
+
+    // Check if category already exists
+    for(int cat = 0; cat < topLevelItemCount(); cat++)
+    {
+        if(topLevelItem(cat)->text(0) == catStr)
+        {
+            catItem = topLevelItem(cat);
+            break;
+        }
+    }
+
+    // If not found, create category
+    if(catItem == NULL)
+    {
+        catItem = new QTreeWidgetItem(QStringList(catStr));
+        addTopLevelItem(catItem);
+    }
+
+    QStringList strings = QStringList(datum->getName().c_str());
+    strings.append(datum->getValue().c_str());
+    QTreeWidgetItem* newItem = new QTreeWidgetItem(catItem, strings);
+    catItem->setExpanded(true);
+    newItem->setToolTip(0, QString(datum->getDescription().c_str()));
+    newItem->setToolTip(1, QString(datum->getDescription().c_str()));
 }
 
 QString EntityDataList::getDisplayString(const DatumInfo* datum)
@@ -31,10 +61,7 @@ void EntityDataList::setActiveEntity(std::string entity)
             for(it = datums->begin(); it != datums->end(); it++)
             {
                 const DatumInfo* datum = *it;
-                QString newVal = getDisplayString(datum);
-                QListWidgetItem* newItem = new QListWidgetItem(newVal);
-                newItem->setToolTip(QString(datum->getDescription().c_str()));
-                addItem(newItem);
+                addItem(datum);
             }
         }
     }
@@ -64,10 +91,7 @@ void EntityDataList::notifyNewDatum(const DatumInfo *datum)
 
     if(entity == active_entity)
     {
-        QString newVal = getDisplayString(datum);
-        QListWidgetItem* newItem = new QListWidgetItem(newVal);
-        newItem->setToolTip(QString(datum->getDescription().c_str()));
-        addItem(newItem);
+        addItem(datum);
     }
 
     mutex.unlock();
@@ -89,8 +113,29 @@ void EntityDataList::notifyNewValue(const DatumInfo* datum)
             {
                 if(entity == active_entity)
                 {
-                    QString newVal = getDisplayString(datum);
-                    item(pos)->setText(newVal);
+                    QString catStr(datum->getCategory().c_str());
+                    QString nameStr(datum->getName().c_str());
+                    for(int catIdx = 0; catIdx < topLevelItemCount(); catIdx++)
+                    {
+                        QTreeWidgetItem* catItem = topLevelItem(catIdx);
+                        if(catItem->text(0) == catStr)
+                        {
+                            for(int kidIdx = 0;
+                                kidIdx < catItem->childCount();
+                                kidIdx++)
+                            {
+                                QTreeWidgetItem* kidItem =
+                                        catItem->child(kidIdx);
+                                if(kidItem->text(0) == nameStr)
+                                {
+                                    QString val(datum->getValue().c_str());
+                                    kidItem->setText(1, val);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
                 }
                 (*datums)[pos] = datum;
 

@@ -8,9 +8,9 @@
 #include <map>
 #include <QString>
 #include <QMutex>
-#include <QListWidget>
+#include <QTreeWidget>
 
-class EntityDataList : public QListWidget, DatumObserver
+class EntityDataList : public QTreeWidget, DatumObserver
 {
     Q_OBJECT
 protected:
@@ -19,6 +19,8 @@ protected:
     std::map<std::string, std::vector<const DatumInfo*>* > datum_map;
     DataModelController* controller;
     std::string active_entity;
+
+    void addItem(const DatumInfo* datum);
 
     static QString getDisplayString(const DatumInfo* datum);
 

@@ -5,17 +5,17 @@
       <Description>Name of entity</Description>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="36" size="4" byte_order="network">
-      <Name>X velocity</Name>
+      <Name>X</Name>
       <Category>Velocity</Category>
       <Description>X velocity of entity</Description>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="40" size="4" byte_order="network">
-      <Name>Y velocity</Name>
+      <Name>Y</Name>
       <Category>Velocity</Category>
       <Description>Y velocity of entity</Description>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="44" size="4" byte_order="network">
-      <Name>Z velocity</Name>
+      <Name>Z</Name>
       <Category>Velocity</Category>
       <Description>Z velocity of entity</Description>
    </DatumInfo>

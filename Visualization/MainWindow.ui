@@ -69,9 +69,22 @@
            <property name="selectionMode">
             <enum>QAbstractItemView::SingleSelection</enum>
            </property>
-           <property name="resizeMode">
-            <enum>QListView::Adjust</enum>
+           <property name="indentation">
+            <number>10</number>
            </property>
+           <property name="columnCount">
+            <number>2</number>
+           </property>
+           <column>
+            <property name="text">
+             <string>Variable</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </column>
           </widget>
          </widget>
         </item>
@@ -133,7 +146,7 @@
  <customwidgets>
   <customwidget>
    <class>EntityDataList</class>
-   <extends>QListWidget</extends>
+   <extends>QTreeWidget</extends>
    <header>EntityDataList.h</header>
   </customwidget>
  </customwidgets>
