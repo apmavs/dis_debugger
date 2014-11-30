@@ -1,20 +1,35 @@
 <DatumDefinitions>
-   <DatumInfo source="EntityState" type="string" offset="129" size="11" byte_order="network">
+   <DatumInfo source="EntityState" type="string" offset="129" size="11" byte_order="string">
       <Name>Entity Marking</Name>
       <Category>Name</Category>
       <Description>Name of entity</Description>
    </DatumInfo>
-   <DatumInfo source="EntityState" type="double" offset="49" size="8" byte_order="network">
+   <DatumInfo source="EntityState" type="float" offset="36" size="4" byte_order="network">
+      <Name>X velocity</Name>
+      <Category>Velocity</Category>
+      <Description>X velocity of entity</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="40" size="4" byte_order="network">
+      <Name>Y velocity</Name>
+      <Category>Velocity</Category>
+      <Description>Y velocity of entity</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="44" size="4" byte_order="network">
+      <Name>Z velocity</Name>
+      <Category>Velocity</Category>
+      <Description>Z velocity of entity</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="double" offset="48" size="8" byte_order="network">
       <Name>X</Name>
       <Category>Location</Category>
       <Description>X-coord of entity</Description>
    </DatumInfo>
-   <DatumInfo source="EntityState" type="double" offset="57" size="8" byte_order="network">
+   <DatumInfo source="EntityState" type="double" offset="56" size="8" byte_order="network">
       <Name>Y</Name>
       <Category>Location</Category>
       <Description>Y-coord of entity</Description>
    </DatumInfo>
-   <DatumInfo source="EntityState" type="double" offset="65" size="8" byte_order="network">
+   <DatumInfo source="EntityState" type="double" offset="64" size="8" byte_order="network">
       <Name>Z</Name>
       <Category>Location</Category>
       <Description>Z-coord of entity</Description>
