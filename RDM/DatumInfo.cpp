@@ -1,4 +1,6 @@
 #include "DatumInfo.h"
+#include "PduDeconstructor.h"
+
 #include <iostream>
 #include <QString>
 
@@ -117,10 +119,9 @@ DatumIdentifier DatumInfo::getId() const
 std::string DatumInfo::getEntityName() const
 {
     DatumIdentifier id = getId();
-    std::string entityName = QString("(%1:%2:%3)").arg(id.getSite())
-                                                  .arg(id.getApp())
-                                                  .arg(id.getEntity())
-                                                  .toStdString();
+    std::string entityName = PduDeconstructor::getEntityIdentifier(id.getSite(),
+                                                                   id.getApp(),
+                                                                   id.getEntity());
     return entityName;
 }
 
@@ -173,13 +174,13 @@ std::string DatumInfo::getDescription() const
 }
 
 // Get the most recent value
-std::string DatumInfo::getValue()
+std::string DatumInfo::getValue() const
 {
     std::string data;
 
     mutex->lock();
     // Get most current value if any values exist
-    std::vector<DatumValue*>::reverse_iterator it = values.rbegin();
+    std::vector<DatumValue*>::const_reverse_iterator it = values.rbegin();
     if(it != values.rend())
         data = (*it)->getValue();
 

@@ -29,8 +29,6 @@ protected:
 
 public:
     ~DatumInfo();
-    //DatumInfo & operator=(const DatumInfo& copyVal);
-    //DatumInfo(const DatumInfo& copyVal);
 
     static DatumInfo* createDatum(std::string type, QByteArray value);
     double getLastTimestamp();
@@ -51,7 +49,7 @@ public:
     std::string getName() const;
     std::string getCategory() const;
     std::string getDescription() const;
-    std::string getValue();
+    std::string getValue() const;
     std::map<double, std::string> getHistory() const;
     bool addValue(double time, QByteArray value);
     void truncateHistory(double currentTime);

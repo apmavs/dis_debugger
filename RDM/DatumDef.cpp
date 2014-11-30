@@ -25,28 +25,12 @@ DatumDef::~DatumDef()
 
 void DatumDef::setDatumInfoId(KDIS::PDU::Header* pdu, DatumInfo* datum)
 {
-    uint16_t site   = 0;
-    uint16_t app    = 0;
-    uint16_t entity = 0;
-
-    KDIS::KUINT16 headerSize = KDIS::PDU::Header::HEADER6_PDU_SIZE;
-    KDIS::KUINT16 entityIdSize = KDIS::DATA_TYPE::EntityIdentifier::ENTITY_IDENTIFER_SIZE;
-    KDIS::KUINT16 minSize = headerSize + entityIdSize;
-    if(pdu->GetPDULength() >= minSize)
-    {
-        const KDIS::KOCTET *rawData = pdu->Encode().GetBufferPtr();
-        rawData += headerSize; // Move past header
-        site = *((uint16_t *)rawData);
-        rawData += 2;
-        app = *((uint16_t *)rawData);
-        rawData += 2;
-        entity = *((uint16_t *)rawData);
-    }
+    SenderId sender = getSender(pdu);
 
     DatumIdentifier id;
-    id.setSite(site);
-    id.setApp(app);
-    id.setEntity(entity);
+    id.setSite(sender.site);
+    id.setApp(sender.app);
+    id.setEntity(sender.entity);
     id.setDatumId(my_id);
     datum->setId(id);
 }
@@ -57,6 +41,34 @@ uint32_t DatumDef::generateId()
     static uint32_t lastId = 0;
     lastId++;
     return lastId;
+}
+
+SenderId DatumDef::getSender(KDIS::PDU::Header* pdu)
+{
+    SenderId sender;
+    KDIS::KUINT16 headerSize = KDIS::PDU::Header::HEADER6_PDU_SIZE;
+    KDIS::KUINT16 entityIdSize = KDIS::DATA_TYPE::EntityIdentifier::ENTITY_IDENTIFER_SIZE;
+    KDIS::KUINT16 minSize = headerSize + entityIdSize;
+    if(pdu->GetPDULength() >= minSize)
+    {
+        // Bytes need to be swapped
+        uint8_t byte1, byte2;
+        unsigned char* rawData = (unsigned char *)pdu->Encode().GetBufferPtr();
+        rawData += headerSize; // Move past header
+        byte1 = *((uint8_t*)rawData);
+        byte2 = *((uint8_t*)(rawData+1));
+        sender.site = (byte1*256) + byte2;
+        rawData += 2;
+        byte1 = *((uint8_t*)rawData);
+        byte2 = *((uint8_t*)(rawData+1));
+        sender.app = (byte1*256) + byte2;
+        rawData += 2;
+        byte1 = *((uint8_t*)rawData);
+        byte2 = *((uint8_t*)(rawData+1));
+        sender.entity = (byte1*256) + byte2;
+    }
+
+    return sender;
 }
 
 void DatumDef::setDefinitionId(DatumDefId id)

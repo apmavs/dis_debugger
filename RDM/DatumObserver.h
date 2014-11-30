@@ -7,8 +7,8 @@ class DatumObserver
 {
 public:
     virtual ~DatumObserver(){}
-    virtual void notifyNewDatum(DatumInfo* datum) = 0;
-    virtual void notifyNewValue(DatumInfo* datum) = 0;
+    virtual void notifyNewDatum(const DatumInfo* datum) = 0;
+    virtual void notifyNewValue(const DatumInfo* datum) = 0;
     virtual void notifyEntityRemoved(std::string entity) = 0;
 };
 

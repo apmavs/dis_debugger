@@ -12,6 +12,16 @@
 #include <stdint.h>
 
 
+class SenderId
+{
+public:
+    uint16_t site;
+    uint16_t app;
+    uint16_t entity;
+
+    SenderId() : site(0), app(0), entity(0) {}
+};
+
 class DatumDef
 {
 protected:
@@ -36,6 +46,9 @@ protected:
 public:
     virtual ~DatumDef();
     DatumDefId definition_id;
+
+    static SenderId getSender(KDIS::PDU::Header* pdu);
+
     void setDefinitionId(DatumDefId id);
     void setLength(uint32_t l); // in bytes
     void setOffset(uint32_t o); // in bytes

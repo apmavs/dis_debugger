@@ -15,6 +15,10 @@
 class DataModelController : public PduObserver
 {
 private:
+    static DataModelController* instance;
+    DataModelController();
+    virtual ~DataModelController();
+
     QMutex mutex;
     PduSource* pdu_source;
     PduDeconstructor* deconstructor;
@@ -27,16 +31,14 @@ private:
     void processEntityRemoval(KDIS::PDU::Header* pdu);
 
 public:
-    DataModelController();
-    virtual ~DataModelController();
-
+    static DataModelController* getInstance();
     virtual void notifyPdu(KDIS::PDU::Header* pdu);
 
     bool loadMetadataXml(std::string filename);
     void registerObserver(DatumObserver* obs);
-    void registerDatumObserver(DatumObserver* obs, DatumInfo* datum);
+    void registerDatumObserver(DatumObserver* obs, const DatumInfo* datum);
     void unregisterObserver(DatumObserver* obs);
-    void unregisterDatumObserver(DatumObserver* obs, DatumInfo* datum);
+    void unregisterDatumObserver(DatumObserver* obs, const DatumInfo* datum);
 
 };
 

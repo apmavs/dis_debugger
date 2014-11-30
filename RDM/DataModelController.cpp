@@ -2,6 +2,8 @@
 
 #include "DataModelController.h"
 
+DataModelController* DataModelController::instance = NULL;
+
 DataModelController::DataModelController()
 {
     pdu_source = new NetworkPduSource("127.0.0.1");
@@ -16,6 +18,16 @@ DataModelController::~DataModelController()
     pdu_source->terminate();
     delete pdu_source;
     delete deconstructor;
+}
+
+DataModelController* DataModelController::getInstance()
+{
+    if(instance == NULL)
+    {
+        instance = new DataModelController();
+    }
+
+    return instance;
 }
 
 void DataModelController::processNewDatum(DatumInfo* datum)
@@ -69,29 +81,10 @@ void DataModelController::processDatumChange(DatumInfo* datum)
 
 void DataModelController::processEntityRemoval(KDIS::PDU::Header* pdu)
 {
-    uint16_t site   = 0;
-    uint16_t app    = 0;
-    uint16_t entity = 0;
-
-    KDIS::KUINT16 headerSize = KDIS::PDU::Header::HEADER6_PDU_SIZE;
-    KDIS::KUINT16 entityIdSize = KDIS::DATA_TYPE::EntityIdentifier::ENTITY_IDENTIFER_SIZE;
-    KDIS::KUINT16 minSize = headerSize + entityIdSize;
-    if(pdu->GetPDULength() >= minSize)
-    {
-        const KDIS::KOCTET *rawData = pdu->Encode().GetBufferPtr();
-        rawData += headerSize; // Move past header
-        site = *((uint16_t *)rawData);
-        rawData += 2;
-        app = *((uint16_t *)rawData);
-        rawData += 2;
-        entity = *((uint16_t *)rawData);
-    }
-    std::string entityName = QString("(%1:%2:%3)").arg(site)
-                                                  .arg(app)
-                                                  .arg(entity)
-                                                  .toStdString();
-    std::cout << "Removing: " << entityName << std::endl;
-
+    SenderId sender = DatumDef::getSender(pdu);
+    std::string entityName = PduDeconstructor::getEntityIdentifier(sender.site,
+                                                                   sender.app,
+                                                                   sender.entity);
     std::vector<DatumObserver*> observers;
     mutex.lock();
     std::vector<DatumObserver*>::iterator it;
@@ -170,7 +163,7 @@ void DataModelController::registerObserver(DatumObserver* obs)
     mutex.unlock();
 }
 
-void DataModelController::registerDatumObserver(DatumObserver* obs, DatumInfo* datum)
+void DataModelController::registerDatumObserver(DatumObserver* obs, const DatumInfo* datum)
 {
     mutex.lock();
 
@@ -201,7 +194,7 @@ void DataModelController::unregisterObserver(DatumObserver* obs)
     mutex.unlock();
 }
 
-void DataModelController::unregisterDatumObserver(DatumObserver* obs, DatumInfo* datum)
+void DataModelController::unregisterDatumObserver(DatumObserver* obs, const DatumInfo* datum)
 {
     mutex.lock();
     if(change_observers.count(obs))
