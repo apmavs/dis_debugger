@@ -19,10 +19,20 @@ void BaseDef::getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<Datum
         unsigned char* pos = (unsigned char *)pdu->Encode().GetBufferPtr();
         pos += offset;
         QByteArray value;
-        for(uint32_t byteNum = 0; byteNum < length; byteNum++)
+
+        if(byte_order == "network")
         {
-            // TODO: Make use of byte_order
-            value.append(pos[byteNum]);
+            for(int32_t byteNum = length - 1; byteNum >= 0; byteNum--)
+            {
+                value.append(pos[byteNum]);
+            }
+        }
+        else
+        {
+            for(uint32_t byteNum = 0; byteNum < length; byteNum++)
+            {
+                value.append(pos[byteNum]);
+            }
         }
         DatumInfo* newDatum;
         newDatum = DatumInfo::createDatum(type, value);
