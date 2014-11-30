@@ -1,8 +1,83 @@
 <DatumDefinitions>
    <DatumInfo source="EntityState" type="string" offset="129" size="11" byte_order="string">
       <Name>Entity Marking</Name>
-      <Category>Name</Category>
+      <Category>Id</Category>
       <Description>Name of entity</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="18" size="1" byte_order="network">
+      <Name>Force</Name>
+      <Category>Id</Category>
+      <Description>Force Identifier</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="20" size="1" byte_order="network">
+      <Name>Kind</Name>
+      <Category>DIS Identifier</Category>
+      <Description>DIS Kind</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="21" size="1" byte_order="network">
+      <Name>Domain</Name>
+      <Category>DIS Identifier</Category>
+      <Description>DIS Domain</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint16" offset="22" size="2" byte_order="network">
+      <Name>Country</Name>
+      <Category>DIS Identifier</Category>
+      <Description>DIS Country Code</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="24" size="1" byte_order="network">
+      <Name>Category</Name>
+      <Category>DIS Identifier</Category>
+      <Description>DIS Category</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="25" size="1" byte_order="network">
+      <Name>Subcategory</Name>
+      <Category>DIS Identifier</Category>
+      <Description>DIS Subcategory</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="26" size="1" byte_order="network">
+      <Name>Specific</Name>
+      <Category>DIS Identifier</Category>
+      <Description>DIS Specific Type</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="27" size="1" byte_order="network">
+      <Name>Extra</Name>
+      <Category>DIS Identifier</Category>
+      <Description>DIS Extra Identifier</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="28" size="1" byte_order="network">
+      <Name>Kind</Name>
+      <Category>Alt DIS Identifier</Category>
+      <Description>DIS Kind</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="29" size="1" byte_order="network">
+      <Name>Domain</Name>
+      <Category>Alt DIS Identifier</Category>
+      <Description>DIS Domain</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint16" offset="30" size="2" byte_order="network">
+      <Name>Country</Name>
+      <Category>Alt DIS Identifier</Category>
+      <Description>DIS Country Code</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="32" size="1" byte_order="network">
+      <Name>Category</Name>
+      <Category>Alt DIS Identifier</Category>
+      <Description>DIS Category</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="33" size="1" byte_order="network">
+      <Name>Subcategory</Name>
+      <Category>Alt DIS Identifier</Category>
+      <Description>DIS Subcategory</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="34" size="1" byte_order="network">
+      <Name>Specific</Name>
+      <Category>Alt DIS Identifier</Category>
+      <Description>DIS Specific Type</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="35" size="1" byte_order="network">
+      <Name>Extra</Name>
+      <Category>Alt DIS Identifier</Category>
+      <Description>DIS Extra Identifier</Description>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="36" size="4" byte_order="network">
       <Name>X</Name>
@@ -33,6 +108,56 @@
       <Name>Z</Name>
       <Category>Location</Category>
       <Description>Z-coord of entity</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="72" size="4" byte_order="network">
+      <Name>Psi</Name>
+      <Category>Attitude</Category>
+      <Description>Euler psi</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="76" size="4" byte_order="network">
+      <Name>Theta</Name>
+      <Category>Attitude</Category>
+      <Description>Euler theta</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="80" size="4" byte_order="network">
+      <Name>Phi</Name>
+      <Category>Attitude</Category>
+      <Description>Euler Phi</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="uint8" offset="88" size="4" byte_order="network">
+      <Name>Algorithm</Name>
+      <Category>Dead Reckoning</Category>
+      <Description>Dead reckoning algorithm</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="92" size="4" byte_order="network">
+      <Name>X Acceleration</Name>
+      <Category>Dead Reckoning</Category>
+      <Description>Dead reckoning acceleration in X direction</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="96" size="4" byte_order="network">
+      <Name>Y Acceleration</Name>
+      <Category>Dead Reckoning</Category>
+      <Description>Dead reckoning acceleration in Y direction</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="100" size="4" byte_order="network">
+      <Name>Z Acceleration</Name>
+      <Category>Dead Reckoning</Category>
+      <Description>Dead reckoning acceleration in Z direction</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="104" size="4" byte_order="network">
+      <Name>X Angular Velocity</Name>
+      <Category>Dead Reckoning</Category>
+      <Description>Dead reckoning velocity about X axis</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="108" size="4" byte_order="network">
+      <Name>Y Angular Velocity</Name>
+      <Category>Dead Reckoning</Category>
+      <Description>Dead reckoning velocity about Y axis</Description>
+   </DatumInfo>
+   <DatumInfo source="EntityState" type="float" offset="112" size="4" byte_order="network">
+      <Name>Z Angular Velocity</Name>
+      <Category>Dead Reckoning</Category>
+      <Description>Dead reckoning velocity about Z axis</Description>
    </DatumInfo>
    <DatumInfo source="FixedDatum" id="123456" type="uint32" offset="0" size="4" byte_order="network">
       <Name>Barometric altitude</Name>
