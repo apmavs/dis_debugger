@@ -22,8 +22,6 @@ protected:
 
     void addItem(const DatumInfo* datum);
 
-    static QString getDisplayString(const DatumInfo* datum);
-
 public:
     explicit EntityDataList(QWidget *parent = 0);
 

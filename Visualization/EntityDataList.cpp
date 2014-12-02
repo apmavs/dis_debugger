@@ -32,17 +32,12 @@ void EntityDataList::addItem(const DatumInfo* datum)
     }
 
     QStringList strings = QStringList(datum->getName().c_str());
-    strings.append(datum->getValue().c_str());
+    std::string val = datum->getValue() + " " + datum->getUnit();
+    strings.append(val.c_str());
     QTreeWidgetItem* newItem = new QTreeWidgetItem(catItem, strings);
     catItem->setExpanded(true);
     newItem->setToolTip(0, QString(datum->getDescription().c_str()));
     newItem->setToolTip(1, QString(datum->getDescription().c_str()));
-}
-
-QString EntityDataList::getDisplayString(const DatumInfo* datum)
-{
-    std::string retVal = datum->getName() + ": " + datum->getValue();
-    return QString(retVal.c_str());
 }
 
 void EntityDataList::setActiveEntity(std::string entity)
@@ -128,8 +123,9 @@ void EntityDataList::notifyNewValue(const DatumInfo* datum)
                                         catItem->child(kidIdx);
                                 if(kidItem->text(0) == nameStr)
                                 {
-                                    QString val(datum->getValue().c_str());
-                                    kidItem->setText(1, val);
+                                    std::string val = datum->getValue();
+                                    val += " " + datum->getUnit();
+                                    kidItem->setText(1, QString(val.c_str()));
                                     break;
                                 }
                             }

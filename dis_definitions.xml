@@ -83,46 +83,55 @@
       <Name>X</Name>
       <Category>Velocity</Category>
       <Description>X velocity of entity</Description>
+      <Unit>m/s</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="40" size="4" byte_order="network">
       <Name>Y</Name>
       <Category>Velocity</Category>
       <Description>Y velocity of entity</Description>
+      <Unit>m/s</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="44" size="4" byte_order="network">
       <Name>Z</Name>
       <Category>Velocity</Category>
       <Description>Z velocity of entity</Description>
+      <Unit>m/s</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="double" offset="48" size="8" byte_order="network">
       <Name>X</Name>
       <Category>Location</Category>
       <Description>X-coord of entity</Description>
+      <Unit>m</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="double" offset="56" size="8" byte_order="network">
       <Name>Y</Name>
       <Category>Location</Category>
       <Description>Y-coord of entity</Description>
+      <Unit>m</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="double" offset="64" size="8" byte_order="network">
       <Name>Z</Name>
       <Category>Location</Category>
       <Description>Z-coord of entity</Description>
+      <Unit>m</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="72" size="4" byte_order="network">
       <Name>Psi</Name>
       <Category>Attitude</Category>
       <Description>Euler psi</Description>
+      <Unit>radians</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="76" size="4" byte_order="network">
       <Name>Theta</Name>
       <Category>Attitude</Category>
       <Description>Euler theta</Description>
+      <Unit>radians</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="80" size="4" byte_order="network">
       <Name>Phi</Name>
       <Category>Attitude</Category>
       <Description>Euler Phi</Description>
+      <Unit>radians</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="uint8" offset="88" size="4" byte_order="network">
       <Name>Algorithm</Name>
@@ -133,31 +142,37 @@
       <Name>X Acceleration</Name>
       <Category>Dead Reckoning</Category>
       <Description>Dead reckoning acceleration in X direction</Description>
+      <Unit>m/s/s</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="96" size="4" byte_order="network">
       <Name>Y Acceleration</Name>
       <Category>Dead Reckoning</Category>
       <Description>Dead reckoning acceleration in Y direction</Description>
+      <Unit>m/s/s</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="100" size="4" byte_order="network">
       <Name>Z Acceleration</Name>
       <Category>Dead Reckoning</Category>
       <Description>Dead reckoning acceleration in Z direction</Description>
+      <Unit>m/s/s</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="104" size="4" byte_order="network">
       <Name>X Angular Velocity</Name>
       <Category>Dead Reckoning</Category>
       <Description>Dead reckoning velocity about X axis</Description>
+      <Unit>radians/s</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="108" size="4" byte_order="network">
       <Name>Y Angular Velocity</Name>
       <Category>Dead Reckoning</Category>
       <Description>Dead reckoning velocity about Y axis</Description>
+      <Unit>radians/s</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="112" size="4" byte_order="network">
       <Name>Z Angular Velocity</Name>
       <Category>Dead Reckoning</Category>
       <Description>Dead reckoning velocity about Z axis</Description>
+      <Unit>radians/s</Unit>
    </DatumInfo>
    <DatumInfo source="FixedDatum" id="123456" type="uint32" offset="0" size="4" byte_order="network">
       <Name>Barometric altitude</Name>
