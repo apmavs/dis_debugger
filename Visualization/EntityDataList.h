@@ -31,6 +31,7 @@ public:
     virtual void notifyNewDatum(const DatumInfo* datum);
     virtual void notifyNewValue(const DatumInfo* datum);
     virtual void notifyEntityRemoved(std::string entity);
+    virtual void notifyAllDatumsInvalid();
 
 };
 

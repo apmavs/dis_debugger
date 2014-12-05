@@ -86,6 +86,22 @@ public:
         redraw();
     }
 
+    virtual void notifyAllDatumsInvalid()
+    {
+        std::map<std::string, std::map<std::string, std::vector<const DatumInfo*> > >::iterator it1;
+        for(it1 = datums.begin(); it1 != datums.end(); it1++)
+        {
+            std::map<std::string, std::vector<const DatumInfo*> >::iterator it2;
+            for(it2 = it1->second.begin(); it2 != it1->second.end(); it2++)
+            {
+                it2->second.clear();
+            }
+            it1->second.clear();
+        }
+
+        datums.clear();
+    }
+
     void redraw()
     {
         // Clear screen

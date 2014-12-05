@@ -18,6 +18,13 @@ bool PduDeconstructor::loadXml(std::string filename)
     VehicleMetadataLoader* loader = new VehicleMetadataLoader(filename);
 
     mutex.lock();
+    // Destroy current definitions if they exist
+    std::map<uint8_t, PduDef*>::iterator it;
+    for(it = definitions.begin(); it != definitions.end(); it++)
+    {
+        PduDef* def = it->second;
+        delete def;
+    }
     definitions = loader->getDefinitions();
     mutex.unlock();
 

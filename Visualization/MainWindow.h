@@ -24,15 +24,18 @@ public:
     virtual void notifyNewDatum(const DatumInfo* datum);
     virtual void notifyNewValue(const DatumInfo* datum);
     virtual void notifyEntityRemoved(std::string entity);
+    virtual void notifyAllDatumsInvalid();
 
 protected:
     std::string getStrippedName(std::string entityName);
 
 private slots:
     void on_EntityView_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void openXml();
 
 private:
     QMutex mutex;
+    std::string xml_file;
     Ui::MainWindow *ui;
     DataModelController* controller;
 };

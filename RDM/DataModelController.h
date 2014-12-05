@@ -34,6 +34,7 @@ public:
     static DataModelController* getInstance();
     virtual void notifyPdu(KDIS::PDU::Header* pdu);
 
+    void removeAllDatums();
     bool loadMetadataXml(std::string filename);
     void registerObserver(DatumObserver* obs);
     void registerDatumObserver(DatumObserver* obs, const DatumInfo* datum);

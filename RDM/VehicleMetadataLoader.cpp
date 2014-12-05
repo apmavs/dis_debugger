@@ -99,7 +99,6 @@ void VehicleMetadataLoader::createDatumDefinitions(QDomElement e,
             std::cerr << "Unknown source type:" << source.toStdString() << std::endl;
             file_error_detected = true;
         }
-        std::cout << std::endl;
         e = e.nextSibling().toElement();
     }
 }
@@ -119,13 +118,6 @@ void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, Datum
     def->setOffset(offset.toUInt());
     def->setLength(size.toUInt());
     def->setByteOrder(byteOrder.toStdString());
-
-    std::cout << "Source:" << source.toStdString() << std::endl;
-    std::cout << "ID:" << id.toStdString() << std::endl;
-    std::cout << "Type:" << varType.toStdString() << std::endl;
-    std::cout << "Offset:" << offset.toStdString() << std::endl;
-    std::cout << "Size:" << size.toStdString() << std::endl;
-    std::cout << "ByteOrder:" << byteOrder.toStdString() << std::endl;
 
     // Parse children
     QString name(""), category(""), description(""), unitClass(""),
@@ -168,14 +160,6 @@ void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, Datum
     //def->setMax(maxVal.toStdString());
     def->setEnumType(enumType.toStdString());
 
-    std::cout << "Name: " << name.toStdString() << std::endl;
-    std::cout << "Category: " << category.toStdString() << std::endl;
-    std::cout << "Description: " << description.toStdString() << std::endl;
-    std::cout << "UnitClass: " << unitClass.toStdString() << std::endl;
-    std::cout << "Unit: " << unit.toStdString() << std::endl;
-    std::cout << "MinValue: " << minVal.toStdString() << std::endl;
-    std::cout << "MaxValue: " << maxVal.toStdString() << std::endl;
-    std::cout << "EnumType: " << enumType.toStdString() << std::endl;
 }
 
 void VehicleMetadataLoader::addDefToPduDef(BaseDef* def, uint8_t pduType,

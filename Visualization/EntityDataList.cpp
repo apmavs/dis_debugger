@@ -49,7 +49,7 @@ void EntityDataList::setActiveEntity(std::string entity)
         clear();
         active_entity = entity;
 
-        if(datum_map.count(active_entity))
+        if(datum_map.count(entity))
         {
             std::vector<const DatumInfo*>* datums = datum_map[entity];
             std::vector<const DatumInfo*>::const_iterator it;
@@ -148,4 +148,31 @@ void EntityDataList::notifyEntityRemoved(std::string entity)
 {
     static std::string lastEntityRemoved;
     lastEntityRemoved = entity;
+}
+
+void EntityDataList::notifyAllDatumsInvalid()
+{
+    mutex.lock();
+    while(topLevelItemCount() > 0)
+    {
+        QTreeWidgetItem* item = takeTopLevelItem(0);
+        if(item != NULL)
+            delete item;
+        else
+        {
+            std::cerr << "EntityDataList Error: Delete all items failed!";
+            break;
+        }
+    }
+    clear();
+
+
+    std::map<std::string, std::vector<const DatumInfo*>* >::iterator it;
+    for(it = datum_map.begin(); it != datum_map.end(); it++)
+    {
+        std::vector<const DatumInfo*>* vecPtr = it->second;
+        delete vecPtr;
+    }
+    datum_map.clear();
+    mutex.unlock();
 }

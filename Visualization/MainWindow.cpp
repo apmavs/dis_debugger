@@ -2,6 +2,7 @@
 #include "ui_MainWindow.h"
 
 #include <iostream>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,9 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->EntitySplitter->setStretchFactor(0, 1);
     ui->EntitySplitter->setStretchFactor(1, 4);
 
+    xml_file = "C:\\Comp\\school_work\\CSE\\dis_debugger\\dis_definitions.xml"; // TODO: Replace w/config
     controller = DataModelController::getInstance();
     controller->registerObserver(this);
-    controller->loadMetadataXml("C:\\Comp\\school_work\\CSE\\dis_debugger\\dis_definitions.xml");
+    controller->loadMetadataXml(xml_file);
 }
 
 MainWindow::~MainWindow()
@@ -63,6 +65,11 @@ void MainWindow::notifyEntityRemoved(std::string entity)
     mutex.unlock();
 }
 
+void MainWindow::notifyAllDatumsInvalid()
+{
+    ui->EntityView->clear();
+}
+
 std::string MainWindow::getStrippedName(std::string entityName)
 {
     // If removed was appended to name, remove appended string
@@ -83,8 +90,22 @@ std::string MainWindow::getStrippedName(std::string entityName)
 
 void MainWindow::on_EntityView_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
 {
-    std::string entitySelected = current->text().toStdString();
-    entitySelected = getStrippedName(entitySelected);
+    if(current != NULL)
+    {
+        std::string entitySelected = current->text().toStdString();
+        entitySelected = getStrippedName(entitySelected);
 
-    ui->AttributeView->setActiveEntity(entitySelected);
+        ui->AttributeView->setActiveEntity(entitySelected);
+    }
+}
+
+void MainWindow::openXml()
+{
+    QString file = QFileDialog::getOpenFileName(this, tr("Open XML file"), "");
+    if(xml_file != file.toStdString())
+    {
+        controller->removeAllDatums();
+        xml_file = file.toStdString();
+        controller->loadMetadataXml(xml_file);
+    }
 }

@@ -18,6 +18,14 @@ DataModelController::~DataModelController()
     pdu_source->terminate();
     delete pdu_source;
     delete deconstructor;
+
+    std::vector<DatumInfo*>::iterator it;
+    for(it = datums.begin(); it != datums.end(); it++)
+        delete *it;
+
+    std::map<DatumObserver*, std::vector<DatumIdentifier>*>::iterator itMap;
+    for(itMap = change_observers.begin(); itMap != change_observers.end(); itMap++)
+        delete itMap->second;
 }
 
 DataModelController* DataModelController::getInstance()
@@ -146,6 +154,36 @@ void DataModelController::notifyPdu(KDIS::PDU::Header* pdu)
             }
         }
      }
+}
+
+// Remove all datums to start with clean, empty history
+void DataModelController::removeAllDatums()
+{
+    // Notify all observers that we are destroying datums
+    std::vector<DatumObserver*>::iterator itObs;
+    for(itObs = new_datum_observers.begin();
+        itObs != new_datum_observers.end();
+        itObs++)
+    {
+        (*itObs)->notifyAllDatumsInvalid();
+    }
+
+
+    std::map<DatumObserver*, std::vector<DatumIdentifier>*>::iterator itChange;
+    for(itChange = change_observers.begin();
+        itChange != change_observers.end();
+        itChange++)
+    {
+        itChange->first->notifyAllDatumsInvalid();
+        delete itChange->second;
+    }
+    change_observers.clear();
+
+    // Destroy all datums and clear vector
+    std::vector<DatumInfo*>::iterator it;
+    for(it = datums.begin(); it != datums.end(); it++)
+        delete *it;
+    datums.clear();
 }
 
 bool DataModelController::loadMetadataXml(std::string filename)
