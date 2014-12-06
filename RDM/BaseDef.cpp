@@ -11,27 +11,27 @@ BaseDef::~BaseDef()
 {
 }
 
-void BaseDef::getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo*>* datums)
+void BaseDef::getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
+                        uint32_t size, std::vector<DatumInfo*>* datums)
 {
     uint32_t minSize = offset + length;
     if(size >= minSize)
     {
-        unsigned char* pos = (unsigned char *)pdu->Encode().GetBufferPtr();
-        pos += offset;
+        data += offset;
         QByteArray value;
 
         if(byte_order == "network")
         {
             for(int32_t byteNum = length - 1; byteNum >= 0; byteNum--)
             {
-                value.append(pos[byteNum]);
+                value.append(data[byteNum]);
             }
         }
         else
         {
             for(uint32_t byteNum = 0; byteNum < length; byteNum++)
             {
-                value.append(pos[byteNum]);
+                value.append(data[byteNum]);
             }
         }
         DatumInfo* newDatum;

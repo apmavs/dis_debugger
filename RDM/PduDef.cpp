@@ -18,11 +18,12 @@ void PduDef::add(DatumDef* d)
     base_defs.push_back(d);
 }
 
-void PduDef::getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo*>* datums)
+void PduDef::getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
+                        uint32_t size, std::vector<DatumInfo*>* datums)
 {
     std::vector<DatumDef*>::iterator it;
     for(it = base_defs.begin(); it != base_defs.end(); it++)
     {
-        (*it)->getDatums(pdu, size, datums);
+        (*it)->getDatums(pdu, data, size, datums);
     }
 }

@@ -9,7 +9,8 @@ public:
     BaseDef();
     virtual ~BaseDef();
 
-    virtual void getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo *> *datums);
+    virtual void getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
+                        uint32_t size, std::vector<DatumInfo*>* datums);
 };
 
 #endif // BASEDEF_H

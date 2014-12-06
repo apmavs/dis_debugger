@@ -61,7 +61,8 @@ std::vector<DatumInfo*> PduDeconstructor::deconstruct(KDIS::PDU::Header* pdu)
     // Deconstruct datums from PDU
     if(definitions.count(type) > 0)
     {
-        definitions[type]->getDatums(pdu, size, &retVal);
+        unsigned char* data = (unsigned char *)pdu->Encode().GetBufferPtr();
+        definitions[type]->getDatums(pdu, data, size, &retVal);
     }
 
     return retVal;

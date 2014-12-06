@@ -19,7 +19,18 @@ public:
     uint16_t app;
     uint16_t entity;
 
-    SenderId() : site(0), app(0), entity(0) {}
+    SenderId() :
+        site(0),
+        app(0),
+        entity(0)
+    {}
+
+    SenderId(uint16_t s, uint16_t a, uint16_t e)
+    {
+        site   = s;
+        app    = a;
+        entity = e;
+    }
 };
 
 class DatumDef
@@ -63,7 +74,8 @@ public:
     void setMax(QByteArray m);
     void setEnumType(std::string enumType);
 
-    virtual void getDatums(KDIS::PDU::Header* pdu, uint32_t size, std::vector<DatumInfo*>* datums) = 0;
+    virtual void getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
+                        uint32_t size, std::vector<DatumInfo*>* datums) = 0;
 };
 
 #endif // DATUMDEF_H
