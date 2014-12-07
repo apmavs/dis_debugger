@@ -15,7 +15,14 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 win32 {
-    kdis_lib_path = C:/Program Files (x86)/KDIS/lib
+    CONFIG(debug, debug|release){
+        kdis_lib_path = C:/Program Files (x86)/KDIS/lib/debug
+        kdis_lib_name = libkdisd.a
+    }
+    CONFIG(release, debug|release){
+        kdis_lib_path = C:/Program Files (x86)/KDIS/lib/release
+        kdis_lib_name = libkdis.a
+    }
     kdis_inc_path = C:/Program Files (x86)/KDIS/include
 }
 
@@ -26,9 +33,9 @@ INCLUDEPATH += $$quote($$kdis_inc_path)
 DEPENDPATH += ../RDM
 DEPENDPATH += $$quote($$kdis_inc_path)
 
-PRE_TARGETDEPS += $$quote($$kdis_lib_path)/libkdis.a
+PRE_TARGETDEPS += $$quote($$kdis_lib_path)/$$kdis_lib_name
 LIBS += ../../build/RDM/release/librdm.a
-LIBS += $$quote($$kdis_lib_path/libkdis.a)
+LIBS += $$quote($$kdis_lib_path/$$kdis_lib_name)
 win32:LIBS += -lws2_32
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

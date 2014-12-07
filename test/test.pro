@@ -17,8 +17,16 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 win32 {
-    kdis_lib_path = C:/Program Files (x86)/KDIS/lib
     kdis_inc_path = C:/Program Files (x86)/KDIS/include
+    CONFIG(debug, debug|release){
+        QMAKE_LFLAGS += -g
+        kdis_lib_path = C:/Program Files (x86)/KDIS/lib/debug
+        kdis_lib_name = libkdisd.a
+    }
+    CONFIG(release, debug|release){
+        kdis_lib_path = C:/Program Files (x86)/KDIS/lib/release
+        kdis_lib_name = libkdis.a
+    }
     INCLUDEPATH += ../..
 }
 
@@ -29,13 +37,20 @@ DEPENDPATH += $$quote($$kdis_inc_path)
 
 INCLUDEPATH += ../RDM
 
-LIBS += -L../../gtest
+CONFIG(debug, debug|release){
+    LIBS += -L../../gtest/debug
+    LIBS += ../../build/RDM/debug/librdm.a
+}
+CONFIG(release, debug|release){
+    LIBS += -L../../gtest/release
+    LIBS += ../../build/RDM/release/librdm.a
+}
 
 LIBS += -lgtest
 LIBS += -lgtest_main
-LIBS += ../../build/RDM/release/librdm.a
-LIBS += $$quote($$kdis_lib_path/libkdis.a)
+LIBS += $$quote($$kdis_lib_path/$$kdis_lib_name)
 win32:LIBS += -lws2_32
 
 SOURCES += main.cpp \
-    NetworkPduSourceTest.cpp
+    NetworkPduSourceTest.cpp \
+    DatumDefTest.cpp
