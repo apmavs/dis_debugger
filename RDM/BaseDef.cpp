@@ -11,7 +11,8 @@ BaseDef::~BaseDef()
 {
 }
 
-void BaseDef::getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
+void BaseDef::getDatums(const KDIS::PDU::Header* pdu,
+                        const unsigned char* data,
                         uint32_t size, std::vector<DatumInfo*>* datums)
 {
     uint32_t minSize = offset + length;

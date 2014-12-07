@@ -51,14 +51,14 @@ protected:
     std::string enum_type;
 
     DatumDef();
-    void setDatumInfoId(KDIS::PDU::Header* pdu, DatumInfo* datum);
+    void setDatumInfoId(const KDIS::PDU::Header* pdu, DatumInfo* datum);
     uint32_t generateId();
 
 public:
     virtual ~DatumDef();
     DatumDefId definition_id;
 
-    static SenderId getSender(KDIS::PDU::Header* pdu);
+    static SenderId getSender(const KDIS::PDU::Header* pdu);
 
     void setDefinitionId(DatumDefId id);
     void setLength(uint32_t l); // in bytes
@@ -74,8 +74,9 @@ public:
     void setMax(QByteArray m);
     void setEnumType(std::string enumType);
 
-    virtual void getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
-                        uint32_t size, std::vector<DatumInfo*>* datums) = 0;
+    virtual void getDatums(const KDIS::PDU::Header* pdu,
+                           const unsigned char* data,
+                           uint32_t size, std::vector<DatumInfo*>* datums) = 0;
 };
 
 #endif // DATUMDEF_H

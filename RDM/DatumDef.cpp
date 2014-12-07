@@ -19,11 +19,9 @@ DatumDef::DatumDef()
     my_id       = generateId();
 }
 
-DatumDef::~DatumDef()
-{
-}
+DatumDef::~DatumDef() {}
 
-void DatumDef::setDatumInfoId(KDIS::PDU::Header* pdu, DatumInfo* datum)
+void DatumDef::setDatumInfoId(const KDIS::PDU::Header* pdu, DatumInfo* datum)
 {
     SenderId sender = getSender(pdu);
 
@@ -43,7 +41,7 @@ uint32_t DatumDef::generateId()
     return lastId;
 }
 
-SenderId DatumDef::getSender(KDIS::PDU::Header* pdu)
+SenderId DatumDef::getSender(const KDIS::PDU::Header* pdu)
 {
     SenderId sender;
     KDIS::KUINT16 headerSize = KDIS::PDU::Header::HEADER6_PDU_SIZE;
@@ -51,21 +49,20 @@ SenderId DatumDef::getSender(KDIS::PDU::Header* pdu)
     KDIS::KUINT16 minSize = headerSize + entityIdSize;
     if(pdu->GetPDULength() >= minSize)
     {
-        // Bytes need to be swapped
-        uint8_t byte1, byte2;
-        unsigned char* rawData = (unsigned char *)pdu->Encode().GetBufferPtr();
-        rawData += headerSize; // Move past header
-        byte1 = *((uint8_t*)rawData);
-        byte2 = *((uint8_t*)(rawData+1));
-        sender.site = (byte1*256) + byte2;
-        rawData += 2;
-        byte1 = *((uint8_t*)rawData);
-        byte2 = *((uint8_t*)(rawData+1));
-        sender.app = (byte1*256) + byte2;
-        rawData += 2;
-        byte1 = *((uint8_t*)rawData);
-        byte2 = *((uint8_t*)(rawData+1));
-        sender.entity = (byte1*256) + byte2;
+        KDIS::KDataStream pduStream = pdu->Encode();
+        uint16_t bufSize = pduStream.GetBufferSize();
+        unsigned char* rawData = new unsigned char[bufSize];
+        pduStream.CopyIntoBuffer((KDIS::KOCTET*)rawData, bufSize);
+
+        // Create new pointer to parse out sender info
+        unsigned char* pos = rawData + headerSize; // Move pass header
+        sender.site = __builtin_bswap16(*((uint16_t*)pos));
+        pos += 2;
+        sender.app = __builtin_bswap16(*((uint16_t*)pos));
+        pos += 2;
+        sender.entity = __builtin_bswap16(*((uint16_t*)pos));
+
+        delete [] rawData;
     }
 
     return sender;

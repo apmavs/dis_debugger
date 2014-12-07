@@ -73,9 +73,13 @@ void ComplexDef::add(DatumDef* d)
     }
 }
 
-void ComplexDef::getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
-                        uint32_t size, std::vector<DatumInfo*>* datums)
+void ComplexDef::getDatums(const KDIS::PDU::Header* pdu,
+                           const unsigned char* data,
+                           uint32_t size, std::vector<DatumInfo*>* datums)
 {
+    // Snap the starting address of data before we start parsing it
+    const unsigned char* dataStart = data;
+
     std::vector<DatumDef*>::iterator it;
     for(it = base_defs.begin(); it != base_defs.end(); it++)
     {
@@ -86,7 +90,6 @@ void ComplexDef::getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
        (pdu->GetPDUType() == KDIS::DATA_TYPE::ENUMS::Data_PDU_Type)) &&
        (size >= 40))
     {
-        std::cout << "Size is:" << pdu->Encode().GetBufferSize() << std::endl;
         data += 32; // offset to num fix datum records
         uint32_t numFixed = __builtin_bswap32(*((uint32_t*)data));
         data += 4; // offset to num variable datum records
@@ -95,8 +98,6 @@ void ComplexDef::getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
         uint32_t minSize = 40 + (numFixed*4) + (numVar*4);
         if(size >= minSize)
         {
-            std::cout << "Fixed size is:" << numFixed << std::endl;
-            std::cout << "Var size is:" << numVar << std::endl;
             data += 4; // offset to first fixed/variable datum
             for(uint32_t fixedIdx = 0; fixedIdx < numFixed; fixedIdx++)
             {
@@ -105,9 +106,25 @@ void ComplexDef::getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
             }
             for(uint32_t varIdx = 0; varIdx < numVar; varIdx++)
             {
-                parseVariableDatums(pdu, data, datums);
-                uint32_t varSize = (*((uint32_t*)(data+4))) / 8;
-                std::cout << "Var piece size is:" << varSize << std::endl;
+                const unsigned char* sizePtr = data + 4;
+                uint32_t varSize = __builtin_bswap32(*((uint32_t*)(sizePtr))) / 8;
+                varSize = __builtin_bswap32(*((uint32_t*)(sizePtr))) / 8;
+
+                // Ensure size of entire PDU is big enough to hold
+                // what the variable datum says it's size is
+                uint32_t sizeSoFar = (data - dataStart) + varSize;
+                if(size >= sizeSoFar)
+                {
+                    parseVariableDatums(pdu, data, datums);
+                }
+                else
+                {
+                    std::cerr << "ComplexDef Error: Rxed PDU requires at least";
+                    std::cerr << " " << sizeSoFar << " bytes, but PDU is only ";
+                    std::cerr << size << " bytes large." << std::endl;
+                }
+
+                varSize = __builtin_bswap32(*((uint32_t*)(sizePtr))) / 8;
                 data += varSize;
             }
         }
@@ -121,41 +138,39 @@ void ComplexDef::getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
 }
 
 // Parse through each fixed datum and add it to the vector
-void ComplexDef::parseFixedDatum(KDIS::PDU::Header* pdu,
-                                 unsigned char* fixedDatum,
+void ComplexDef::parseFixedDatum(const KDIS::PDU::Header* pdu,
+                                 const unsigned char* fixedDatum,
                                  std::vector<DatumInfo*>* datums)
 {
     uint32_t fixedId = __builtin_bswap32(*((uint32_t*)fixedDatum));
-    std::cout << "Parsing fixed datum with fixedId:" << fixedId << std::endl;
     if(fixed_defs.count(fixedId))
     {
-        std::cout << "Parsing fixed_defs list with fixedId:" << fixedId << std::endl;
         std::vector<DatumDef*>* defs = fixed_defs[fixedId];
         std::vector<DatumDef*>::iterator it;
         for(it = defs->begin(); it != defs->end(); it++)
         {
-            std::cout << "Getting datums with fixedId:" << fixedId << std::endl;
-            unsigned char* datumPtr = fixedDatum + 4;
+            const unsigned char* datumPtr = fixedDatum + 4;
             (*it)->getDatums(pdu, datumPtr, 4, datums);
         }
     }
 }
 
 // Parse through each variable datum and add it to the vector
-void ComplexDef::parseVariableDatums(KDIS::PDU::Header* pdu,
-                             unsigned char* varDatum,
+void ComplexDef::parseVariableDatums(const KDIS::PDU::Header* pdu,
+                             const unsigned char* varDatum,
                              std::vector<DatumInfo*>* datums)
 {
     uint32_t varId = __builtin_bswap32(*((uint32_t*)varDatum));
     if(variable_defs.count(varId))
     {
-        uint32_t size = __builtin_bswap32((*((uint32_t*)(varDatum + 4)))) / 8;
+        varDatum += 4; // Skip to size
+        uint32_t size = __builtin_bswap32(*((uint32_t*)(varDatum))) / 8;
+        varDatum += 4; // Skip to value
         std::vector<DatumDef*>* defs = variable_defs[varId];
         std::vector<DatumDef*>::iterator it;
         for(it = defs->begin(); it != defs->end(); it++)
         {
-            unsigned char* datumPtr = varDatum + 8;
-            (*it)->getDatums(pdu, datumPtr, size, datums);
+            (*it)->getDatums(pdu, varDatum, size, datums);
         }
     }
 }

@@ -1,4 +1,5 @@
 #include "DatumValue.h"
+
 #include <QString>
 #include <stdint.h>
 
@@ -68,7 +69,7 @@ QByteArray DatumValue::getRawData() const
 
 
 // ************************* Uint8Value *************************
-Uint8Value::Uint8Value(){}
+Uint8Value::Uint8Value() : DatumValue() {}
 Uint8Value::~Uint8Value(){}
 
 std::string Uint8Value::getValue() const
@@ -83,7 +84,7 @@ std::string Uint8Value::getValue() const
 // ************************* Uint8Value *************************
 
 // ************************* Uint16Value *************************
-Uint16Value::Uint16Value(){}
+Uint16Value::Uint16Value() : DatumValue() {}
 Uint16Value::~Uint16Value(){}
 
 std::string Uint16Value::getValue() const
@@ -98,7 +99,7 @@ std::string Uint16Value::getValue() const
 // ************************* Uint32Value *************************
 
 // ************************* Uint32Value *************************
-Uint32Value::Uint32Value(){}
+Uint32Value::Uint32Value() : DatumValue() {}
 Uint32Value::~Uint32Value(){}
 
 std::string Uint32Value::getValue() const
@@ -113,7 +114,7 @@ std::string Uint32Value::getValue() const
 // ************************* Uint32Value *************************
 
 // ************************* Uint64Value *************************
-Uint64Value::Uint64Value(){}
+Uint64Value::Uint64Value() : DatumValue() {}
 Uint64Value::~Uint64Value(){}
 
 std::string Uint64Value::getValue() const
@@ -128,7 +129,7 @@ std::string Uint64Value::getValue() const
 // ************************* Uint64Value *************************
 
 // ************************* Int8Value *************************
-Int8Value::Int8Value(){}
+Int8Value::Int8Value() : DatumValue() {}
 Int8Value::~Int8Value(){}
 
 std::string Int8Value::getValue() const
@@ -143,7 +144,7 @@ std::string Int8Value::getValue() const
 // ************************* Int8Value *************************
 
 // ************************* Int16Value *************************
-Int16Value::Int16Value(){}
+Int16Value::Int16Value() : DatumValue() {}
 Int16Value::~Int16Value(){}
 
 std::string Int16Value::getValue() const
@@ -158,7 +159,7 @@ std::string Int16Value::getValue() const
 // ************************* Int32Value *************************
 
 // ************************* Int32Value *************************
-Int32Value::Int32Value(){}
+Int32Value::Int32Value() : DatumValue() {}
 Int32Value::~Int32Value(){}
 
 std::string Int32Value::getValue() const
@@ -173,7 +174,7 @@ std::string Int32Value::getValue() const
 // ************************* Int32Value *************************
 
 // ************************* Int64Value *************************
-Int64Value::Int64Value(){}
+Int64Value::Int64Value() : DatumValue() {}
 Int64Value::~Int64Value(){}
 
 std::string Int64Value::getValue() const
@@ -188,7 +189,7 @@ std::string Int64Value::getValue() const
 // ************************* Int64Value *************************
 
 // ************************* FloatValue *************************
-FloatValue::FloatValue(){}
+FloatValue::FloatValue() : DatumValue() {}
 FloatValue::~FloatValue(){}
 
 std::string FloatValue::getValue() const
@@ -203,7 +204,7 @@ std::string FloatValue::getValue() const
 // ************************* FloatValue *************************
 
 // ************************* DoubleValue *************************
-DoubleValue::DoubleValue(){}
+DoubleValue::DoubleValue() : DatumValue() {}
 DoubleValue::~DoubleValue(){}
 
 std::string DoubleValue::getValue() const
@@ -218,7 +219,7 @@ std::string DoubleValue::getValue() const
 // ************************* DoubleValue *************************
 
 // ************************* StringValue *************************
-StringValue::StringValue(){}
+StringValue::StringValue() : DatumValue() {}
 StringValue::~StringValue(){}
 
 std::string StringValue::getValue() const

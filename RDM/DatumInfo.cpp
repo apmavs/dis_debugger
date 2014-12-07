@@ -1,7 +1,6 @@
 #include "DatumInfo.h"
 #include "PduDeconstructor.h"
 
-#include <iostream>
 #include <QString>
 
 DatumInfo::DatumInfo()
@@ -16,10 +15,12 @@ DatumInfo::DatumInfo()
 
 DatumInfo::~DatumInfo()
 {
-    std::vector<DatumValue*>::iterator it;
-    for(it = values.begin(); it != values.end(); it++)
+    int num = 0;
+    while(!values.empty())
     {
-        DatumValue* v = (*it);
+        num++;
+        DatumValue* v = values.back();
+        values.pop_back();
         delete v;
     }
     delete mutex;
@@ -235,6 +236,10 @@ bool DatumInfo::addValue(double time, QByteArray value)
     {
         valueChanged = true;
         values.push_back(newVal);
+    }
+    else
+    {
+        delete newVal;
     }
     mutex->unlock();
 

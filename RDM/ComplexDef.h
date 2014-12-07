@@ -13,19 +13,20 @@ protected:
     std::map<uint32_t, std::vector<DatumDef*>*> fixed_defs;
     std::map<uint32_t, std::vector<DatumDef*>*> variable_defs;
 
-    void parseFixedDatum(KDIS::PDU::Header* pdu,
-                                 unsigned char* fixedDatum,
-                                 std::vector<DatumInfo*>* datums);
-    void parseVariableDatums(KDIS::PDU::Header* pdu,
-                             unsigned char* varDatum,
+    void parseFixedDatum(const KDIS::PDU::Header* pdu,
+                         const unsigned char* fixedDatum,
+                         std::vector<DatumInfo*>* datums);
+    void parseVariableDatums(const KDIS::PDU::Header* pdu,
+                             const unsigned char* varDatum,
                              std::vector<DatumInfo*>* datums);
 
 public:
     ComplexDef();
     virtual ~ComplexDef();
     void add(DatumDef* d);
-    virtual void getDatums(KDIS::PDU::Header* pdu, unsigned char* data,
-                        uint32_t size, std::vector<DatumInfo*>* datums);
+    virtual void getDatums(const KDIS::PDU::Header* pdu,
+                           const unsigned char* data,
+                           uint32_t size, std::vector<DatumInfo*>* datums);
 };
 
 #endif // COMPLEXDEF_H
