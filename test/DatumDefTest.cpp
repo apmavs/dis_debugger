@@ -1,6 +1,6 @@
 #include "DatumDef.h"
 #include "BaseDef.h"
-#include "ComplexDef.h"
+#include "PduDef.h"
 
 #include <sstream>
 #include "gtest/gtest.h"
@@ -240,10 +240,10 @@ TEST_F(DatumDefTest, FixedDefTest)
     uint16_t bufSize = pduStream.GetBufferSize();
     unsigned char* data = (unsigned char *)pduStream.GetBufferPtr();
     std::vector<DatumInfo*> datums;
-    ComplexDef complex;
-    complex.add(base_fixed);
-    base_fixed = NULL; // Let complex handle destruction
-    complex.getDatums(&fixed_pdu, data, bufSize, &datums);
+    PduDef pduDef;
+    pduDef.add(base_fixed);
+    base_fixed = NULL; // Let PduDef handle destruction
+    pduDef.getDatums(&fixed_pdu, data, bufSize, &datums);
     ASSERT_EQ(1, datums.size());
 
     DatumInfo* datum = datums[0];
@@ -267,10 +267,10 @@ TEST_F(DatumDefTest, VariableDefTest)
     uint16_t bufSize = pduStream.GetBufferSize();
     unsigned char* data = (unsigned char *)pduStream.GetBufferPtr();
     std::vector<DatumInfo*> datums;
-    ComplexDef complex;
-    complex.add(base_variable);
-    base_variable = NULL; // Let complex handle destruction
-    complex.getDatums(&variable_pdu, data, bufSize, &datums);
+    PduDef pduDef;
+    pduDef.add(base_variable);
+    base_variable = NULL; // Let PduDef handle destruction
+    pduDef.getDatums(&variable_pdu, data, bufSize, &datums);
     ASSERT_EQ(1, datums.size());
 
     DatumInfo* datum = datums[0];

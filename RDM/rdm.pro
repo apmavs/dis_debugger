@@ -34,7 +34,6 @@ SOURCES += NetworkPduSource.cpp \
     VehicleMetadataLoader.cpp \
     PduDeconstructor.cpp \
     PduDef.cpp \
-    ComplexDef.cpp \
     DatumDefId.cpp \
     BaseDef.cpp
 
@@ -50,7 +49,6 @@ HEADERS += \
     VehicleMetadataLoader.h \
     PduDeconstructor.h \
     PduDef.h \
-    ComplexDef.h \
     DatumDefId.h \
     BaseDef.h \
     DatumObserver.h
