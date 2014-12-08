@@ -83,7 +83,7 @@ TEST(NetSourceTest, CreateTest)
 // Test adding and removing observers
 TEST(NetSourceTest, ObserverListTest)
 {
-    const int NUM_OBSERVERS = 50000;
+    const int NUM_OBSERVERS = 500;
     PduObserverTestClass *testObservers[NUM_OBSERVERS];
     NetworkPduSourceTestClass net_source("192.168.0.255");
 
@@ -113,7 +113,7 @@ TEST(NetSourceTest, ObserverListTest)
 
 void networkRxTest(std::string iface, int port)
 {
-    int NUM_PDUS = 500;
+    int NUM_PDUS = 50;
 
     NetworkPduSourceTestClass net_source(iface, port);
     PduObserverTestClass *obs = new PduObserverTestClass();
