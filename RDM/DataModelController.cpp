@@ -24,6 +24,9 @@ DataModelController::~DataModelController()
         delete *it;
 
     std::map<DatumObserver*, std::vector<DatumIdentifier>*>::iterator itMap;
+    for(itMap = rx_observers.begin(); itMap != rx_observers.end(); itMap++)
+        delete itMap->second;
+
     for(itMap = change_observers.begin(); itMap != change_observers.end(); itMap++)
         delete itMap->second;
 }
@@ -59,7 +62,7 @@ void DataModelController::processNewDatum(DatumInfo* datum)
         (*it)->notifyNewDatum(datum);
 }
 
-void DataModelController::processDatumChange(DatumInfo* datum)
+void DataModelController::processDatumChange(DatumInfo* datum, bool newValue)
 {
     std::vector<DatumObserver*> observers;
 
@@ -69,7 +72,8 @@ void DataModelController::processDatumChange(DatumInfo* datum)
     //  could unregister which requires a lock
     mutex.lock();
     std::map<DatumObserver*, std::vector<DatumIdentifier>*>::iterator it;
-    for(it = change_observers.begin(); it != change_observers.end(); it++)
+    // Rx observers always receive notice when a new datum arrives
+    for(it = rx_observers.begin(); it != rx_observers.end(); it++)
     {
         std::vector<DatumIdentifier>* datumIds = it->second;
         if(std::find(datumIds->begin(), datumIds->end(), datum->getId())
@@ -77,6 +81,21 @@ void DataModelController::processDatumChange(DatumInfo* datum)
         {
             // Observer is registered for this datum type
             observers.push_back(it->first);
+        }
+    }
+
+    // Change observers only receive notice if the value actually changed
+    if(newValue)
+    {
+        for(it = change_observers.begin(); it != change_observers.end(); it++)
+        {
+            std::vector<DatumIdentifier>* datumIds = it->second;
+            if(std::find(datumIds->begin(), datumIds->end(), datum->getId())
+                    != datumIds->end())
+            {
+                // Observer is registered for this datum type
+                observers.push_back(it->first);
+            }
         }
     }
     mutex.unlock();
@@ -143,15 +162,9 @@ void DataModelController::notifyPdu(KDIS::PDU::Header* pdu)
             mutex.unlock();
 
             if(seenBefore)
-            {
-                // Only send notifications if updated datum is changed
-                if(newValIsChanged)
-                    processDatumChange(newDatum);
-            }
+                processDatumChange(newDatum, newValIsChanged);
             else // notify observers of new datum type
-            {
                 processNewDatum(newDatum);
-            }
         }
      }
 }
@@ -170,6 +183,14 @@ void DataModelController::removeAllDatums()
 
 
     std::map<DatumObserver*, std::vector<DatumIdentifier>*>::iterator itChange;
+    for(itChange = rx_observers.begin();
+        itChange != rx_observers.end();
+        itChange++)
+    {
+        itChange->first->notifyAllDatumsInvalid();
+        delete itChange->second;
+    }
+    rx_observers.clear();
     for(itChange = change_observers.begin();
         itChange != change_observers.end();
         itChange++)
@@ -201,20 +222,37 @@ void DataModelController::registerObserver(DatumObserver* obs)
     mutex.unlock();
 }
 
-void DataModelController::registerDatumObserver(DatumObserver* obs, const DatumInfo* datum)
+void DataModelController::registerDatumObserver(DatumObserver* obs,
+                                                const DatumInfo* datum,
+                                                bool notifyAlways)
 {
     mutex.lock();
 
     std::vector<DatumIdentifier>* datumIds;
 
-    if(change_observers.count(obs))
-    {   // Observer is already registered for at least 1 datum
-        datumIds = change_observers[obs];
+    if(notifyAlways)
+    {
+        if(rx_observers.count(obs))
+        {   // Observer is already registered for at least 1 datum
+            datumIds = rx_observers[obs];
+        }
+        else
+        {
+            datumIds = new std::vector<DatumIdentifier>();
+            rx_observers[obs] = datumIds;
+        }
     }
     else
     {
-        datumIds = new std::vector<DatumIdentifier>();
-        change_observers[obs] = datumIds;
+        if(change_observers.count(obs))
+        {   // Observer is already registered for at least 1 datum
+            datumIds = change_observers[obs];
+        }
+        else
+        {
+            datumIds = new std::vector<DatumIdentifier>();
+            change_observers[obs] = datumIds;
+        }
     }
 
     // Add new datum id to registry
@@ -235,6 +273,21 @@ void DataModelController::unregisterObserver(DatumObserver* obs)
 void DataModelController::unregisterDatumObserver(DatumObserver* obs, const DatumInfo* datum)
 {
     mutex.lock();
+    if(rx_observers.count(obs))
+    {
+        DatumIdentifier id = datum->getId();
+        std::vector<DatumIdentifier>* datumIds = rx_observers[obs];
+        datumIds->erase(std::remove(datumIds->begin(),
+                                    datumIds->end(), id),
+                               datumIds->end());
+
+        // If no datums are registered any more, remove observer from map
+        if(datumIds->empty())
+        {
+            rx_observers.erase(obs);
+            delete datumIds;
+        }
+    }
     if(change_observers.count(obs))
     {
         DatumIdentifier id = datum->getId();

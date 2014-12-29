@@ -24,10 +24,11 @@ private:
     PduDeconstructor* deconstructor;
     std::vector<DatumInfo*> datums;
     std::vector<DatumObserver*> new_datum_observers;
+    std::map<DatumObserver*, std::vector<DatumIdentifier>*> rx_observers;
     std::map<DatumObserver*, std::vector<DatumIdentifier>*> change_observers;
 
     void processNewDatum(DatumInfo* datum);
-    void processDatumChange(DatumInfo* datum);
+    void processDatumChange(DatumInfo* datum, bool newVal);
     void processEntityRemoval(KDIS::PDU::Header* pdu);
 
 public:
@@ -37,7 +38,9 @@ public:
     void removeAllDatums();
     bool loadMetadataXml(std::string filename);
     void registerObserver(DatumObserver* obs);
-    void registerDatumObserver(DatumObserver* obs, const DatumInfo* datum);
+    void registerDatumObserver(DatumObserver* obs,
+                               const DatumInfo* datum,
+                               bool notifyAlways = false);
     void unregisterObserver(DatumObserver* obs);
     void unregisterDatumObserver(DatumObserver* obs, const DatumInfo* datum);
 
