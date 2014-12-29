@@ -7,19 +7,21 @@ EntityDataList::EntityDataList(QWidget *parent) :
     controller = DataModelController::getInstance();
     controller->registerObserver(this);
     active_entity = "";
+    connect(this, SIGNAL(expanded(QModelIndex)), this, SLOT(activateItem(QModelIndex)));
+    connect(this, SIGNAL(collapsed(QModelIndex)), this, SLOT(deactivateItem(QModelIndex)));
 }
 
 void EntityDataList::addItem(const DatumInfo* datum)
 {
     QString catStr = QString(datum->getCategory().c_str());
-    QTreeWidgetItem* catItem = NULL;
+    DatumItem* catItem = NULL;
 
     // Check if category already exists
     for(int cat = 0; cat < topLevelItemCount(); cat++)
     {
         if(topLevelItem(cat)->text(0) == catStr)
         {
-            catItem = topLevelItem(cat);
+            catItem = (DatumItem*)(topLevelItem(cat));
             break;
         }
     }
@@ -27,17 +29,33 @@ void EntityDataList::addItem(const DatumInfo* datum)
     // If not found, create category
     if(catItem == NULL)
     {
-        catItem = new QTreeWidgetItem(QStringList(catStr));
+        catItem = new DatumItem(catStr);
         addTopLevelItem(catItem);
     }
 
-    QStringList strings = QStringList(datum->getName().c_str());
-    std::string val = datum->getValue() + " " + datum->getUnit();
-    strings.append(val.c_str());
-    QTreeWidgetItem* newItem = new QTreeWidgetItem(catItem, strings);
-    catItem->setExpanded(true);
-    newItem->setToolTip(0, QString(datum->getDescription().c_str()));
-    newItem->setToolTip(1, QString(datum->getDescription().c_str()));
+    DatumItem* newItem = new DatumItem(catItem, datum);
+    if(catItem->isExpanded())
+        newItem->activate(this);
+    else
+        catItem->setExpanded(true);
+}
+
+void EntityDataList::activateItem(QModelIndex idx)
+{
+    DatumItem* dItem = (DatumItem*)(this->itemFromIndex(idx));
+    if(dItem != NULL)
+        dItem->activate(this);
+    else
+        std::cerr << "EntityDataList::activateItem ERROR: " << idx.row() << " does not exist!" << std::endl;
+}
+
+void EntityDataList::deactivateItem(QModelIndex idx)
+{
+    DatumItem* dItem = (DatumItem*)(this->itemFromIndex(idx));
+    if(dItem != NULL)
+        dItem->deactivate(this);
+    else
+        std::cerr << "EntityDataList::deactivateItem ERROR: " << idx.row() << " does not exist!" << std::endl;
 }
 
 void EntityDataList::setActiveEntity(std::string entity)
@@ -82,66 +100,17 @@ void EntityDataList::notifyNewDatum(const DatumInfo *datum)
     }
 
     datums->push_back(datum);
-    controller->registerDatumObserver(this, datum);
 
     if(entity == active_entity)
-    {
         addItem(datum);
-    }
 
     mutex.unlock();
 }
 
 void EntityDataList::notifyNewValue(const DatumInfo* datum)
 {
-    mutex.lock();
-
     std::string entity = datum->getEntityName();
-    if(datum_map.count(entity))
-    {
-        std::vector<const DatumInfo*>* datums = datum_map[entity];
-        std::vector<const DatumInfo*>::const_iterator it;
-        int pos = 0;
-        for(it = datums->begin(); it != datums->end(); it++)
-        {
-            if(datum->getId() == (*it)->getId())
-            {
-                if(entity == active_entity)
-                {
-                    QString catStr(datum->getCategory().c_str());
-                    QString nameStr(datum->getName().c_str());
-                    for(int catIdx = 0; catIdx < topLevelItemCount(); catIdx++)
-                    {
-                        QTreeWidgetItem* catItem = topLevelItem(catIdx);
-                        if(catItem->text(0) == catStr)
-                        {
-                            for(int kidIdx = 0;
-                                kidIdx < catItem->childCount();
-                                kidIdx++)
-                            {
-                                QTreeWidgetItem* kidItem =
-                                        catItem->child(kidIdx);
-                                if(kidItem->text(0) == nameStr)
-                                {
-                                    std::string val = datum->getValue();
-                                    val += " " + datum->getUnit();
-                                    kidItem->setText(1, QString(val.c_str()));
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-                (*datums)[pos] = datum;
-
-                break;
-            }
-            pos++;
-        }
-    }
-
-    mutex.unlock();
+    std::cerr << "This should not get called:" << entity << std::endl;
 }
 
 void EntityDataList::notifyEntityRemoved(std::string entity)
@@ -153,20 +122,8 @@ void EntityDataList::notifyEntityRemoved(std::string entity)
 void EntityDataList::notifyAllDatumsInvalid()
 {
     mutex.lock();
-    while(topLevelItemCount() > 0)
-    {
-        QTreeWidgetItem* item = takeTopLevelItem(0);
-        if(item != NULL)
-            delete item;
-        else
-        {
-            std::cerr << "EntityDataList Error: Delete all items failed!";
-            break;
-        }
-    }
+
     clear();
-
-
     std::map<std::string, std::vector<const DatumInfo*>* >::iterator it;
     for(it = datum_map.begin(); it != datum_map.end(); it++)
     {
@@ -174,5 +131,6 @@ void EntityDataList::notifyAllDatumsInvalid()
         delete vecPtr;
     }
     datum_map.clear();
+
     mutex.unlock();
 }

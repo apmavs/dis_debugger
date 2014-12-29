@@ -30,7 +30,7 @@ protected:
     std::string getStrippedName(std::string entityName);
 
 private slots:
-    void on_EntityView_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void on_EntityView_currentItemChanged(QListWidgetItem *current);
     void openXml();
 
 private:

@@ -3,6 +3,7 @@
 
 #include "DatumObserver.h"
 #include "DataModelController.h"
+#include "DatumItem.h"
 
 #include <string>
 #include <map>
@@ -21,6 +22,10 @@ protected:
     std::string active_entity;
 
     void addItem(const DatumInfo* datum);
+
+protected slots:
+    void activateItem(QModelIndex idx);
+    void deactivateItem(QModelIndex idx);
 
 public:
     explicit EntityDataList(QWidget *parent = 0);

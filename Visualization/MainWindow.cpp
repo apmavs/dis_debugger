@@ -88,7 +88,7 @@ std::string MainWindow::getStrippedName(std::string entityName)
     return entityName;
 }
 
-void MainWindow::on_EntityView_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+void MainWindow::on_EntityView_currentItemChanged(QListWidgetItem *current)
 {
     if(current != NULL)
     {

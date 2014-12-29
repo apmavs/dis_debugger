@@ -42,9 +42,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 SOURCES += main.cpp\
         MainWindow.cpp \
-    EntityDataList.cpp
+    EntityDataList.cpp \
+    DatumItem.cpp
 
 HEADERS  += MainWindow.h \
-    EntityDataList.h
+    EntityDataList.h \
+    DatumItem.h
 
 FORMS    += MainWindow.ui
