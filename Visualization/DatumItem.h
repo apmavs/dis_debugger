@@ -4,28 +4,25 @@
 #include "DatumInfo.h"
 #include "DataModelController.h"
 
-#include <QTreeWidgetItem>
 #include <set>
 
-class DatumItem : public QTreeWidgetItem, public DatumObserver
+class DatumItem : public DatumObserver
 {
-private:
+protected:
     DataModelController* controller;
     std::set<const void*> interested_widgets;
     const DatumInfo* watched_datum;
     QString category_name;
-
     std::string entity_removed;
     const DatumInfo* new_datum;
 
-protected:
+    DatumItem(QString categoryName); // For category items with no datum
+    DatumItem(const DatumInfo* d);
     QString getCategoryName();
-    void setDisplay();
-    void clearDisplay();
+    virtual void setDisplay() = 0;
+    virtual void clearDisplay() = 0;
 
 public:
-    DatumItem(QString categoryName); // For category items with no datum
-    DatumItem(DatumItem* parent, const DatumInfo* d);
     virtual ~DatumItem();
 
     // Satisfy DatumObserver interface
@@ -35,8 +32,8 @@ public:
     virtual void notifyAllDatumsInvalid();
 
     // Call with pointer to caller
-    void activate(const void* widgetPtr);    // Update whenever datum changes
-    void deactivate(const void* widgetPtr);  // Stop updating with datum changes
+    virtual void activate(const void* widgetPtr);    // Update whenever datum changes
+    virtual void deactivate(const void* widgetPtr);  // Stop updating with datum changes
 };
 
 #endif // DATUMITEM_H

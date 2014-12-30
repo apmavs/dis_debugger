@@ -3,7 +3,7 @@
 
 #include "DatumObserver.h"
 #include "DataModelController.h"
-#include "DatumItem.h"
+#include "EntityDatumItem.h"
 
 #include <string>
 #include <map>

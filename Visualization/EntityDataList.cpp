@@ -14,14 +14,14 @@ EntityDataList::EntityDataList(QWidget *parent) :
 void EntityDataList::addItem(const DatumInfo* datum)
 {
     QString catStr = QString(datum->getCategory().c_str());
-    DatumItem* catItem = NULL;
+    EntityDatumItem* catItem = NULL;
 
     // Check if category already exists
     for(int cat = 0; cat < topLevelItemCount(); cat++)
     {
         if(topLevelItem(cat)->text(0) == catStr)
         {
-            catItem = (DatumItem*)(topLevelItem(cat));
+            catItem = (EntityDatumItem*)(topLevelItem(cat));
             break;
         }
     }
@@ -29,11 +29,11 @@ void EntityDataList::addItem(const DatumInfo* datum)
     // If not found, create category
     if(catItem == NULL)
     {
-        catItem = new DatumItem(catStr);
+        catItem = new EntityDatumItem(catStr);
         addTopLevelItem(catItem);
     }
 
-    DatumItem* newItem = new DatumItem(catItem, datum);
+    EntityDatumItem* newItem = new EntityDatumItem(catItem, datum);
     if(catItem->isExpanded())
         newItem->activate(this);
     else
@@ -42,7 +42,7 @@ void EntityDataList::addItem(const DatumInfo* datum)
 
 void EntityDataList::activateItem(QModelIndex idx)
 {
-    DatumItem* dItem = (DatumItem*)(this->itemFromIndex(idx));
+    EntityDatumItem* dItem = (EntityDatumItem*)(this->itemFromIndex(idx));
     if(dItem != NULL)
         dItem->activate(this);
     else
@@ -51,7 +51,7 @@ void EntityDataList::activateItem(QModelIndex idx)
 
 void EntityDataList::deactivateItem(QModelIndex idx)
 {
-    DatumItem* dItem = (DatumItem*)(this->itemFromIndex(idx));
+    EntityDatumItem* dItem = (EntityDatumItem*)(this->itemFromIndex(idx));
     if(dItem != NULL)
         dItem->deactivate(this);
     else
