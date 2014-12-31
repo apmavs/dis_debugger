@@ -44,11 +44,15 @@ SOURCES += main.cpp\
         MainWindow.cpp \
     EntityDataList.cpp \
     DatumItem.cpp \
-    EntityDatumItem.cpp
+    WatchList.cpp \
+    EntityDatumItem.cpp \
+    WatchDatumItem.cpp
 
 HEADERS  += MainWindow.h \
     EntityDataList.h \
     DatumItem.h \
-    EntityDatumItem.h
+    WatchList.h \
+    EntityDatumItem.h \
+    WatchDatumItem.h
 
 FORMS    += MainWindow.ui

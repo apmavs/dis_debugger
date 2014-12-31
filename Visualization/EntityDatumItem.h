@@ -7,6 +7,11 @@
 
 class EntityDatumItem : public QTreeWidgetItem, public DatumItem
 {
+private:
+    EntityDatumItem();
+    EntityDatumItem(const EntityDatumItem& rhs);
+    EntityDatumItem& operator=(const EntityDatumItem& rhs);
+
 protected:
     virtual void setDisplay();
     virtual void clearDisplay();

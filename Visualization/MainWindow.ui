@@ -73,7 +73,7 @@
             <bool>true</bool>
            </property>
            <property name="dragDropMode">
-            <enum>QAbstractItemView::DragDrop</enum>
+            <enum>QAbstractItemView::DragOnly</enum>
            </property>
            <property name="defaultDropAction">
             <enum>Qt::MoveAction</enum>
@@ -112,6 +112,54 @@
        <property name="title">
         <string>Watched Values</string>
        </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="WatchList" name="WatchView">
+          <property name="acceptDrops">
+           <bool>true</bool>
+          </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QAbstractScrollArea::AdjustToContents</enum>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="dragEnabled">
+           <bool>true</bool>
+          </property>
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::DropOnly</enum>
+          </property>
+          <property name="defaultDropAction">
+           <enum>Qt::IgnoreAction</enum>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="indentation">
+           <number>10</number>
+          </property>
+          <property name="columnCount">
+           <number>3</number>
+          </property>
+          <column>
+           <property name="text">
+            <string>Entity</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Variable</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Value</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QGroupBox" name="PlotGroupBox">
        <property name="sizePolicy">
@@ -178,6 +226,11 @@
    <class>EntityDataList</class>
    <extends>QTreeWidget</extends>
    <header>EntityDataList.h</header>
+  </customwidget>
+  <customwidget>
+   <class>WatchList</class>
+   <extends>QTreeWidget</extends>
+   <header>WatchList.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
