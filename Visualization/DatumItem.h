@@ -8,6 +8,11 @@
 
 class DatumItem : public DatumObserver
 {
+private:
+    DatumItem();
+    DatumItem(const DatumItem& rhs);
+    DatumItem& operator=(const DatumItem& rhs);
+
 protected:
     DataModelController* controller;
     std::set<const void*> interested_widgets;
@@ -18,12 +23,14 @@ protected:
 
     DatumItem(QString categoryName); // For category items with no datum
     DatumItem(const DatumInfo* d);
-    QString getCategoryName();
     virtual void setDisplay() = 0;
     virtual void clearDisplay() = 0;
 
 public:
     virtual ~DatumItem();
+
+    const DatumInfo* getWatchedDatum();
+    QString getCategoryName();
 
     // Satisfy DatumObserver interface
     virtual void notifyNewDatum(const DatumInfo* datum);

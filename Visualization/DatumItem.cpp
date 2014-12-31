@@ -23,6 +23,18 @@ DatumItem::~DatumItem()
         controller->unregisterDatumObserver(this, watched_datum);
 }
 
+const DatumInfo* DatumItem::getWatchedDatum()
+{
+    return watched_datum;
+}
+
+QString DatumItem::getCategoryName()
+{
+    return category_name;
+}
+
+// Track how many widgets are displaying the item
+
 void DatumItem::notifyNewDatum(const DatumInfo* datum)
 {
     new_datum = datum;
@@ -46,13 +58,6 @@ void DatumItem::notifyAllDatumsInvalid()
     entity_removed = "";
 }
 
-
-QString DatumItem::getCategoryName()
-{
-    return category_name;
-}
-
-// Track how many widgets are displaying the item
 // Register for datum updates if anybody is displaying
 void DatumItem::activate(const void* widgetPtr)
 {
