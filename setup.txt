@@ -2,6 +2,7 @@ Download QT installer and install, select MinGW 4.8.2 checkbox
 Download and install CMake
 Download KDIS v.2.8.0
 Download gtest-1.7.0
+Download qwt-6.1.2.zip
 
 Extract KDIS
 In KDIS, create directory called "build"
@@ -42,3 +43,32 @@ cd to the gtest/build you created
 mingw32-make all
 Copy gtest-1.7.0/include/gtest to directory that dis_debugger is in
 Copy 2 gtest libraries from gtest-1.7.0/build to copied gtest directory
+
+
+Extract qwt-6.1.2.zip to C:\Qwt-6.1.2
+Make using mingw for use with project:
+Open cygwin:
+cd /c/Qwt-6.1.2
+qmake qwt.pro
+mingw32-make
+mingw32-make install
+Create environment variable:
+QT_PLUGIN_PATH=C:\Qwt-6.1.2\plugins
+
+
+// NOTE: In order to use the QWT designer plugin for using in drag/dropping plot widgets,
+// you have to build QtCreator under mingw (binary package was built with vc10):
+Download QtCreator source 3.3.0
+Extract to c:\qt-creator-opensource-src-3.3.0
+Open cygwin, cd to /c/qt-creator-opensource-src-3.3.0
+mingw32-make -j<NUM AVAILABLE CORES>  // this took over an hour on my laptop
+// Backup old QtCreator directories if they existed
+cd /c/Qt/Tools/QtCreator
+mv lib lib.bak
+mv bin bin.bak
+mv share share.bak
+// Copy new build to QtCreator directory
+cd /c/qt-creator-opensource-src-3.3.0
+cp -r bin /c/Qt/Tools/QtCreator/
+cp -r lib /c/Qt/Tools/QtCreator/
+cp -r share /c/Qt/Tools/QtCreator/

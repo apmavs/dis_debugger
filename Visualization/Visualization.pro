@@ -9,6 +9,7 @@ QT       += core gui xml
 DEFINES += DIS_VERSION=6
 
 TARGET = dis_visualization
+CONFIG   += qwt
 CONFIG   += console
 CONFIG   -= app_bundle
 
