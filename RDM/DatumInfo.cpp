@@ -26,21 +26,21 @@ DatumInfo::~DatumInfo()
     delete mutex;
 }
 
-DatumInfo* DatumInfo::createDatum(std::string type, QByteArray value)
+DatumInfo* DatumInfo::createDatum(double time, std::string type, QByteArray value)
 {
     DatumInfo* datum = new DatumInfo();
     datum->type = type;
-    datum->addValue(-1.0, value); // TODO: Add timestamp
+    datum->addValue(time, value);
     return datum;
 }
 
-double DatumInfo::getLastTimestamp()
+double DatumInfo::getLastTimestamp() const
 {
     double time = -1.0;
 
     mutex->lock();
     // Get most current value if any values exist
-    std::vector<DatumValue*>::reverse_iterator it = values.rbegin();
+    std::vector<DatumValue*>::const_reverse_iterator it = values.rbegin();
     if(it != values.rend())
         time = (*it)->getTimestamp();
     mutex->unlock();

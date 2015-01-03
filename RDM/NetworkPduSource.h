@@ -16,6 +16,9 @@
 
 class NetworkPduSource : public PduSource
 {
+private:
+    time_t start_time;
+
 protected:
     const static uint32_t MAX_BUFFER_SIZE;
 

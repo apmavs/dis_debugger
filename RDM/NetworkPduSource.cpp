@@ -9,6 +9,7 @@ const uint32_t NetworkPduSource::MAX_BUFFER_SIZE = 100;
 NetworkPduSource::NetworkPduSource(std::string ifaceAddr, uint32_t ifacePort) :
     connection(ifaceAddr, ifacePort)
 {
+    start_time = time(NULL); // current time
     address = ifaceAddr;
     port = ifacePort;
     connection.SetBlockingModeEnabled(true);
@@ -37,7 +38,8 @@ void NetworkPduSource::run()
                                                         MAX_PDU_SIZE);
             if(ui32Recv)
             {
-                notifyObservers(raw_buffer, ui32Recv);
+                double timeSinceStart = difftime(time(NULL), start_time);
+                notifyObservers(timeSinceStart, raw_buffer, ui32Recv);
             }
         }
     }

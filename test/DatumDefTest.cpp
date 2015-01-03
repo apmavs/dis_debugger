@@ -241,7 +241,7 @@ TEST_F(DatumDefTest, EntityDefTest)
     uint16_t bufSize = pduStream.GetBufferSize();
     unsigned char* data = (unsigned char *)pduStream.GetBufferPtr();
     std::vector<DatumInfo*> datums;
-    base_entity->getDatums(&entity_pdu, data, bufSize, &datums);
+    base_entity->getDatums(-1.0, &entity_pdu, data, bufSize, &datums);
     ASSERT_EQ(1, datums.size());
 
     DatumInfo* datum = datums[0];
@@ -266,7 +266,7 @@ TEST_F(DatumDefTest, FixedDefTest)
     PduDef pduDef;
     pduDef.add(base_fixed);
     base_fixed = NULL; // Let PduDef handle destruction
-    pduDef.getDatums(&fixed_pdu, data, bufSize, &datums);
+    pduDef.getDatums(-1.0, &fixed_pdu, data, bufSize, &datums);
     ASSERT_EQ(1, datums.size());
 
     DatumInfo* datum = datums[0];
@@ -295,7 +295,7 @@ TEST_F(DatumDefTest, VariableDefTest)
     pduDef.add(base_variable2);
     base_variable1 = NULL; // Let PduDef handle destruction
     base_variable2 = NULL; // Let PduDef handle destruction
-    pduDef.getDatums(&variable_pdu, data, bufSize, &datums);
+    pduDef.getDatums(-1.0, &variable_pdu, data, bufSize, &datums);
     ASSERT_EQ(2, datums.size());
 
     DatumInfo* datum = datums[0];

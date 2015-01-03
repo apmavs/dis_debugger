@@ -30,8 +30,8 @@ protected:
 public:
     ~DatumInfo();
 
-    static DatumInfo* createDatum(std::string type, QByteArray value);
-    double getLastTimestamp();
+    static DatumInfo* createDatum(double time, std::string type, QByteArray value);
+    double getLastTimestamp() const;
     QByteArray getLastRawValue();
 
     bool hasSameId(DatumInfo* rhs);

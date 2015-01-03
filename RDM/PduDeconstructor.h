@@ -19,7 +19,7 @@ private:
 public:
     PduDeconstructor();
     bool loadXml(std::string filename);
-    std::vector<DatumInfo*> deconstruct(KDIS::PDU::Header* pdu);
+    std::vector<DatumInfo*> deconstruct(double timestamp, KDIS::PDU::Header* pdu);
     static std::string getEntityMarking(uint16_t site, uint16_t app, uint16_t entity);
     static std::string getEntityIdentifier(uint16_t site, uint16_t app, uint16_t entity);
 };

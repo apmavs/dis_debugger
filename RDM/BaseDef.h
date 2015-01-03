@@ -9,7 +9,8 @@ public:
     BaseDef();
     virtual ~BaseDef();
 
-    virtual void getDatums(const KDIS::PDU::Header* pdu,
+    virtual void getDatums(double timestamp,
+                           const KDIS::PDU::Header* pdu,
                            const unsigned char* data,
                            uint32_t size, std::vector<DatumInfo*>* datums);
 };

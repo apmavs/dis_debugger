@@ -11,7 +11,7 @@ BaseDef::~BaseDef()
 {
 }
 
-void BaseDef::getDatums(const KDIS::PDU::Header* pdu,
+void BaseDef::getDatums(double timestamp, const KDIS::PDU::Header* pdu,
                         const unsigned char* data,
                         uint32_t size, std::vector<DatumInfo*>* datums)
 {
@@ -36,7 +36,7 @@ void BaseDef::getDatums(const KDIS::PDU::Header* pdu,
             }
         }
         DatumInfo* newDatum;
-        newDatum = DatumInfo::createDatum(type, value);
+        newDatum = DatumInfo::createDatum(timestamp, type, value);
         newDatum->setCategory(category);
         newDatum->setDescription(description);
         newDatum->setName(name);

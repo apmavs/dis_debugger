@@ -20,8 +20,9 @@ PduSource::~PduSource()
     }
 }
 
-void PduSource::notifyObservers(KDIS::KOCTET *raw_data,
-                                       KDIS::KUINT32 size)
+void PduSource::notifyObservers(double timestamp,
+                                KDIS::KOCTET *raw_data,
+                                KDIS::KUINT32 size)
 {
     KDIS::UTILS::PDU_Factory factory;
     std::auto_ptr<KDIS::PDU::Header> pHeader;
@@ -43,7 +44,7 @@ void PduSource::notifyObservers(KDIS::KOCTET *raw_data,
         try
         {
             for(it = observers.begin(); it != observers.end(); it++)
-                (*it)->notifyPdu(pdu);
+                (*it)->notifyPdu(timestamp, pdu);
         }
         catch(std::exception &e)
         {

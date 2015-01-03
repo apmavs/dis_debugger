@@ -12,7 +12,7 @@ protected:
     uint64_t unknown_pdu_count;
     QMutex observer_mutex;
     std::vector<PduObserver*> observers;
-    void notifyObservers(KDIS::KOCTET *raw_data, KDIS::KUINT32 size);
+    void notifyObservers(double timestamp, KDIS::KOCTET *raw_data, KDIS::KUINT32 size);
 
 public:
     PduSource();

@@ -35,7 +35,7 @@ bool PduDeconstructor::loadXml(std::string filename)
     return success;
 }
 
-std::vector<DatumInfo*> PduDeconstructor::deconstruct(KDIS::PDU::Header* pdu)
+std::vector<DatumInfo*> PduDeconstructor::deconstruct(double timestamp, KDIS::PDU::Header* pdu)
 {
     std::vector<DatumInfo*> retVal;
     KDIS::DATA_TYPE::ENUMS::PDUType type = pdu->GetPDUType();
@@ -63,7 +63,7 @@ std::vector<DatumInfo*> PduDeconstructor::deconstruct(KDIS::PDU::Header* pdu)
         KDIS::KDataStream pduStream = pdu->Encode();
         uint16_t bufSize = pduStream.GetBufferSize();
         unsigned char* data = (unsigned char *)pduStream.GetBufferPtr();
-        definitions[type]->getDatums(pdu, data, bufSize, &retVal);
+        definitions[type]->getDatums(timestamp, pdu, data, bufSize, &retVal);
     }
 
     return retVal;

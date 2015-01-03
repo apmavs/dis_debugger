@@ -73,9 +73,9 @@ void PduDef::add(DatumDef* d)
     }
 }
 
-void PduDef::getDatums(const KDIS::PDU::Header* pdu,
-                           const unsigned char* data,
-                           uint32_t size, std::vector<DatumInfo*>* datums)
+void PduDef::getDatums(double timestamp, const KDIS::PDU::Header* pdu,
+                       const unsigned char* data,
+                       uint32_t size, std::vector<DatumInfo*>* datums)
 {
     // Snap the starting address of data before we start parsing it
     const unsigned char* dataStart = data;
@@ -83,7 +83,7 @@ void PduDef::getDatums(const KDIS::PDU::Header* pdu,
     std::vector<DatumDef*>::iterator it;
     for(it = base_defs.begin(); it != base_defs.end(); it++)
     {
-        (*it)->getDatums(pdu, data, size, datums);
+        (*it)->getDatums(timestamp, pdu, data, size, datums);
     }
 
     if(((pdu->GetPDUType() == KDIS::DATA_TYPE::ENUMS::Set_Data_PDU_Type) ||
@@ -101,7 +101,7 @@ void PduDef::getDatums(const KDIS::PDU::Header* pdu,
             data += 4; // offset to first fixed/variable datum
             for(uint32_t fixedIdx = 0; fixedIdx < numFixed; fixedIdx++)
             {
-                parseFixedDatum(pdu, data, datums);
+                parseFixedDatum(timestamp, pdu, data, datums);
                 data += 8;
             }
             for(uint32_t varIdx = 0; varIdx < numVar; varIdx++)
@@ -115,7 +115,7 @@ void PduDef::getDatums(const KDIS::PDU::Header* pdu,
                 uint32_t sizeSoFar = (data - dataStart) + varSize;
                 if(size >= sizeSoFar)
                 {
-                    parseVariableDatums(pdu, data, datums);
+                    parseVariableDatums(timestamp, pdu, data, datums);
                 }
                 else
                 {
@@ -138,9 +138,10 @@ void PduDef::getDatums(const KDIS::PDU::Header* pdu,
 }
 
 // Parse through each fixed datum and add it to the vector
-void PduDef::parseFixedDatum(const KDIS::PDU::Header* pdu,
-                                 const unsigned char* fixedDatum,
-                                 std::vector<DatumInfo*>* datums)
+void PduDef::parseFixedDatum(double timestamp,
+                             const KDIS::PDU::Header* pdu,
+                             const unsigned char* fixedDatum,
+                             std::vector<DatumInfo*>* datums)
 {
     uint32_t fixedId = __builtin_bswap32(*((uint32_t*)fixedDatum));
     if(fixed_defs.count(fixedId))
@@ -150,15 +151,16 @@ void PduDef::parseFixedDatum(const KDIS::PDU::Header* pdu,
         for(it = defs->begin(); it != defs->end(); it++)
         {
             const unsigned char* datumPtr = fixedDatum + 4;
-            (*it)->getDatums(pdu, datumPtr, 4, datums);
+            (*it)->getDatums(timestamp, pdu, datumPtr, 4, datums);
         }
     }
 }
 
 // Parse through each variable datum and add it to the vector
-void PduDef::parseVariableDatums(const KDIS::PDU::Header* pdu,
-                             const unsigned char* varDatum,
-                             std::vector<DatumInfo*>* datums)
+void PduDef::parseVariableDatums(double timestamp,
+                                 const KDIS::PDU::Header* pdu,
+                                 const unsigned char* varDatum,
+                                 std::vector<DatumInfo*>* datums)
 {
     uint32_t varId = __builtin_bswap32(*((uint32_t*)varDatum));
     if(variable_defs.count(varId))
@@ -170,7 +172,7 @@ void PduDef::parseVariableDatums(const KDIS::PDU::Header* pdu,
         std::vector<DatumDef*>::iterator it;
         for(it = defs->begin(); it != defs->end(); it++)
         {
-            (*it)->getDatums(pdu, varDatum, size, datums);
+            (*it)->getDatums(timestamp, pdu, varDatum, size, datums);
         }
     }
 }

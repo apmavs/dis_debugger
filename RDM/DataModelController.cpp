@@ -127,7 +127,7 @@ void DataModelController::processEntityRemoval(KDIS::PDU::Header* pdu)
     }
 }
 
-void DataModelController::notifyPdu(KDIS::PDU::Header* pdu)
+void DataModelController::notifyPdu(double timestamp, KDIS::PDU::Header* pdu)
 {
     if(pdu->GetPDUType() == KDIS::DATA_TYPE::ENUMS::Detonation_PDU_Type)
     {
@@ -135,7 +135,7 @@ void DataModelController::notifyPdu(KDIS::PDU::Header* pdu)
     }
     else
     {
-        std::vector<DatumInfo*> newDatums = deconstructor->deconstruct(pdu);
+        std::vector<DatumInfo*> newDatums = deconstructor->deconstruct(timestamp, pdu);
         std::vector<DatumInfo*>::iterator newIt;
         for(newIt = newDatums.begin(); newIt != newDatums.end(); newIt++)
         {

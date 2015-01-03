@@ -14,10 +14,12 @@ protected:
     std::map<uint32_t, std::vector<DatumDef*>*> fixed_defs;
     std::map<uint32_t, std::vector<DatumDef*>*> variable_defs;
 
-    void parseFixedDatum(const KDIS::PDU::Header* pdu,
+    void parseFixedDatum(double timestamp,
+                         const KDIS::PDU::Header* pdu,
                          const unsigned char* fixedDatum,
                          std::vector<DatumInfo*>* datums);
-    void parseVariableDatums(const KDIS::PDU::Header* pdu,
+    void parseVariableDatums(double timestamp,
+                             const KDIS::PDU::Header* pdu,
                              const unsigned char* varDatum,
                              std::vector<DatumInfo*>* datums);
 
@@ -25,7 +27,8 @@ public:
     PduDef();
     virtual ~PduDef();
     void add(DatumDef* d);
-    virtual void getDatums(const KDIS::PDU::Header* pdu,
+    virtual void getDatums(double timestamp,
+                           const KDIS::PDU::Header* pdu,
                            const unsigned char* data,
                            uint32_t size, std::vector<DatumInfo*>* datums);
 };

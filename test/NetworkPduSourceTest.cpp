@@ -19,15 +19,16 @@ public:
         NetworkPduSource(addr, p) {}
     virtual ~NetworkPduSourceTestClass(){}
 
-    void testNotifyObservers(KDIS::KOCTET *raw_data, KDIS::KUINT32 size)
+    void testNotifyObservers(double timestamp, KDIS::KOCTET *raw_data, KDIS::KUINT32 size)
     {
-        notifyObservers(raw_data, size);
+        notifyObservers(timestamp, raw_data, size);
     }
 };
 
 class PduObserverTestClass : public PduObserver
 {
 private:
+    double last_time;
     int DataPduCount;
     int SetDataPduCount;
     int EntityStatePduCount;
@@ -49,8 +50,9 @@ public:
     int getSetDataPduCount(){ return SetDataPduCount; }
     int getEntityStatePduCount(){ return EntityStatePduCount; }
 
-    virtual void notifyPdu(KDIS::PDU::Header* pdu)
+    virtual void notifyPdu(double timestamp, KDIS::PDU::Header* pdu)
     {
+        last_time = timestamp;
         uint8_t type = pdu->GetPDUType();
         if(type == KDIS::DATA_TYPE::ENUMS::Entity_State_PDU_Type)
             EntityStatePduCount++;

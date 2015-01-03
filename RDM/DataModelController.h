@@ -33,7 +33,7 @@ private:
 
 public:
     static DataModelController* getInstance();
-    virtual void notifyPdu(KDIS::PDU::Header* pdu);
+    virtual void notifyPdu(double timestamp, KDIS::PDU::Header* pdu);
 
     void removeAllDatums();
     bool loadMetadataXml(std::string filename);
