@@ -49,6 +49,9 @@ Extract qwt-6.1.2.zip to C:\Qwt-6.1.2
 Make using mingw for use with project:
 Open cygwin:
 cd /c/Qwt-6.1.2
+// Remove dll use and force static library
+vi qwtconfig.pri and features/qwtconfig.pri
+In both files, comment out line 75: QWT_CONFIG += QwtDll
 qmake qwt.pro
 mingw32-make
 mingw32-make install

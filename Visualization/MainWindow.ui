@@ -161,7 +161,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QGroupBox" name="PlotGroupBox">
+      <widget class="PlotGroupBox" name="PlotBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -174,9 +174,22 @@
          <height>0</height>
         </size>
        </property>
+       <property name="acceptDrops">
+        <bool>true</bool>
+       </property>
        <property name="title">
         <string>Plots</string>
        </property>
+       <widget class="QwtPlot" name="qwtPlot">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>400</width>
+          <height>200</height>
+         </rect>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -223,6 +236,11 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
+   <class>QwtPlot</class>
+   <extends>QFrame</extends>
+   <header>qwt_plot.h</header>
+  </customwidget>
+  <customwidget>
    <class>EntityDataList</class>
    <extends>QTreeWidget</extends>
    <header>EntityDataList.h</header>
@@ -231,6 +249,12 @@
    <class>WatchList</class>
    <extends>QTreeWidget</extends>
    <header>WatchList.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlotGroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>PlotGroupBox.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
