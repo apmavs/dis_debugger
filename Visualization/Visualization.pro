@@ -60,7 +60,8 @@ SOURCES += main.cpp\
     EntityDatumItem.cpp \
     WatchDatumItem.cpp \
     PlotGroupBox.cpp \
-    PlotCurveItem.cpp
+    PlotCurveItem.cpp \
+    PlotWidget.cpp
 
 HEADERS  += MainWindow.h \
     EntityDataList.h \
@@ -69,6 +70,8 @@ HEADERS  += MainWindow.h \
     EntityDatumItem.h \
     WatchDatumItem.h \
     PlotGroupBox.h \
-    PlotCurveItem.h
+    PlotCurveItem.h \
+    PlotWidget.h
 
-FORMS    += MainWindow.ui
+FORMS    += MainWindow.ui \
+    PlotWidget.ui

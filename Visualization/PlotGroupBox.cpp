@@ -1,16 +1,9 @@
 #include "PlotGroupBox.h"
-#include "PlotCurveItem.h"
+#include "PlotWidget.h"
 #include <iostream>
 #include <QTreeWidget>
-#include <qwt_plot.h>
 
 PlotGroupBox::PlotGroupBox(QWidget* parent) : QGroupBox(parent)
-{
-
-}
-
-PlotGroupBox::PlotGroupBox(const QString & title, QWidget * parent)
-    : QGroupBox(title, parent)
 {
 
 }
@@ -24,12 +17,11 @@ void PlotGroupBox::addCurveToPlots(const DatumInfo* datum)
 {
     if(datum != NULL)
     {
-        QList<QwtPlot*> plots = findChildren<QwtPlot*>();
-        for(int i = 0; i < plots.size(); i++)
+        QList<PlotWidget*> plotWidgets = findChildren<PlotWidget*>();
+        for(int i = 0; i < plotWidgets.size(); i++)
         {
-            QwtPlot* plot = plots.at(i);
-            PlotCurveItem* curve = new PlotCurveItem(plot, datum);
-            curve->activate(this);
+            PlotWidget* plotWidget = plotWidgets.at(i);
+            plotWidget->addCurve(datum);
         }
     }
 }

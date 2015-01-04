@@ -1,7 +1,6 @@
 #ifndef PLOTGROUPBOX_H
 #define PLOTGROUPBOX_H
 
-#include "PlotCurveItem.h"
 #include "DatumInfo.h"
 
 #include <QGroupBox>
@@ -12,7 +11,6 @@
 class PlotGroupBox : public QGroupBox
 {
 private:
-    std::vector<PlotCurveItem*> curves;
     void addCurveToPlots(const DatumInfo* datum);
 
 protected:
@@ -21,7 +19,6 @@ protected:
 
 public:
     PlotGroupBox(QWidget* parent = 0);
-    PlotGroupBox(const QString & title, QWidget * parent = 0);
     virtual ~PlotGroupBox();
 };
 

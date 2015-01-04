@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Set up default ratios of main sections
     ui->MainSplitter->setStretchFactor(0, 1);
     ui->MainSplitter->setStretchFactor(1, 2);
-    ui->MainSplitter->setStretchFactor(2, 3);
+    ui->MainSplitter->setStretchFactor(2, 1);
 
     // Set up default ratios of Entity group
     ui->EntitySplitter->setStretchFactor(0, 1);
