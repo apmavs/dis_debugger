@@ -12,7 +12,8 @@ private:
     EntityDatumItem(const EntityDatumItem& rhs);
     EntityDatumItem& operator=(const EntityDatumItem& rhs);
 
-protected:
+private slots:
+    // These are slots to ensure GUI updates are done in GUI thread
     virtual void setDisplay();
     virtual void clearDisplay();
 

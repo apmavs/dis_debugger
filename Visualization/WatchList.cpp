@@ -20,7 +20,7 @@ void WatchList::dropEvent(QDropEvent* event)
             EntityDatumItem* item = dynamic_cast<EntityDatumItem*>(items.at(itemNum));
             if(item != NULL)
             {
-                WatchDatumItem* watchItem = new WatchDatumItem(item);
+                WatchDatumItem* watchItem = WatchDatumItem::createWatchItem(item);
                 addTopLevelItem(watchItem);
                 if(watchItem->isExpanded())
                     watchItem->activate(this);

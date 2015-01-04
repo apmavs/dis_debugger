@@ -11,15 +11,15 @@ private:
     WatchDatumItem();
     WatchDatumItem(const WatchDatumItem& rhs);
     WatchDatumItem& operator=(const WatchDatumItem& rhs);
+    WatchDatumItem(QString categoryName);
+    WatchDatumItem(EntityDatumItem* parent, const DatumInfo* d);
 
 private slots:
     void dropItem(QTreeWidgetItem* item);
-
-protected:
     virtual void setDisplay();
 
 public:
-    WatchDatumItem(EntityDatumItem* fromThis);
+    static WatchDatumItem* createWatchItem(EntityDatumItem* fromThis);
     virtual ~WatchDatumItem();
 };
 

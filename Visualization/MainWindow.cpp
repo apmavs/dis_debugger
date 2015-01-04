@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <QFileDialog>
+#include <QMetaType>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,6 +24,14 @@ MainWindow::MainWindow(QWidget *parent) :
     controller = DataModelController::getInstance();
     controller->registerObserver(this);
     controller->loadMetadataXml(xml_file);
+
+    qRegisterMetaType<std::string>();
+    QObject::connect(this, SIGNAL(newDatumSignal(const DatumInfo*)), this,
+                     SLOT(newDatumSlot(const DatumInfo*)), Qt::QueuedConnection);
+    QObject::connect(this, SIGNAL(removeEntitySignal(std::string)), this,
+                     SLOT(removeEntitySlot(std::string)), Qt::QueuedConnection);
+    QObject::connect(this, SIGNAL(invalidateAllSignal()), this,
+                     SLOT(entitiesInvalidSlot()), Qt::QueuedConnection);
 }
 
 MainWindow::~MainWindow()
@@ -30,7 +39,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::notifyNewDatum(const DatumInfo* datum)
+void MainWindow::newDatumSlot(const DatumInfo* datum)
 {
     QString newEntityName = QString(datum->getEntityName().c_str());
     mutex.lock();
@@ -40,14 +49,8 @@ void MainWindow::notifyNewDatum(const DatumInfo* datum)
     mutex.unlock();
 }
 
-void MainWindow::notifyNewValue(const DatumInfo* datum)
-{
-    std::cerr << "MainWindow should not be subscribed to datum values:" <<
-                 datum->getEntityName() << std::endl;
-}
-
 static const std::string REMOVED_STR = " <REMOVED>";
-void MainWindow::notifyEntityRemoved(std::string entity)
+void MainWindow::removeEntitySlot(std::string entity)
 {
     mutex.lock();
     for(int row = 0; row < ui->EntityView->count(); row++)
@@ -65,9 +68,30 @@ void MainWindow::notifyEntityRemoved(std::string entity)
     mutex.unlock();
 }
 
-void MainWindow::notifyAllDatumsInvalid()
+void MainWindow::entitiesInvalidSlot()
 {
     ui->EntityView->clear();
+}
+
+void MainWindow::notifyNewDatum(const DatumInfo* datum)
+{
+    emit newDatumSignal(datum);
+}
+
+void MainWindow::notifyNewValue(const DatumInfo* datum)
+{
+    std::cerr << "MainWindow should not be subscribed to datum values:" <<
+                 datum->getEntityName() << std::endl;
+}
+
+void MainWindow::notifyEntityRemoved(std::string entity)
+{
+    emit removeEntitySignal(entity);
+}
+
+void MainWindow::notifyAllDatumsInvalid()
+{
+    emit invalidateAllSignal();
 }
 
 std::string MainWindow::getStrippedName(std::string entityName)

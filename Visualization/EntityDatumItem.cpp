@@ -21,6 +21,7 @@ EntityDatumItem::~EntityDatumItem()
 
 void EntityDatumItem::setDisplay()
 {
+    mutex.lock();
     if(watched_datum == NULL)
     {   // category item
         setText(0, category_name);
@@ -32,19 +33,25 @@ void EntityDatumItem::setDisplay()
         curVal += watched_datum->getUnit();
         setText(1, curVal.c_str());
     }
+    mutex.unlock();
 }
 
 void EntityDatumItem::clearDisplay()
 {
+    mutex.lock();
     if(watched_datum != NULL)
         setText(0, "COLLAPSED");
+    mutex.unlock();
 }
 
 void EntityDatumItem::activate(const void *widgetPtr)
 {
+    mutex.lock();
     if(interested_widgets.count(widgetPtr) == 0)
     {
+        mutex.unlock(); // Next line re-locks mutex
         DatumItem::activate(widgetPtr);
+        mutex.lock();
 
         // If we have childeren, activate them too
         for(int kidIdx = 0; kidIdx < childCount(); kidIdx++)
@@ -53,13 +60,17 @@ void EntityDatumItem::activate(const void *widgetPtr)
             kid->activate(widgetPtr);
         }
     }
+    mutex.unlock();
 }
 
 void EntityDatumItem::deactivate(const void* widgetPtr)
 {
+    mutex.lock();
     if(interested_widgets.count(widgetPtr) != 0)
     {
+        mutex.unlock(); // Next line re-locks mutex
         DatumItem::deactivate(widgetPtr);
+        mutex.lock();
 
         // If we have childeren, deactivate them too
         for(int kidIdx = 0; kidIdx < childCount(); kidIdx++)
@@ -68,4 +79,5 @@ void EntityDatumItem::deactivate(const void* widgetPtr)
             kid->deactivate(widgetPtr);
         }
     }
+    mutex.unlock();
 }

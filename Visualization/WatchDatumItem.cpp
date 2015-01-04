@@ -1,24 +1,40 @@
 #include "WatchDatumItem.h"
 
-WatchDatumItem::WatchDatumItem(EntityDatumItem* fromThis)
-    : EntityDatumItem(fromThis->getCategoryName())
+WatchDatumItem::WatchDatumItem(QString categoryName)
+    : EntityDatumItem(categoryName)
 {
-    watched_datum = fromThis->getWatchedDatum();
+
+}
+
+WatchDatumItem::WatchDatumItem(EntityDatumItem* parent, const DatumInfo* d)
+    : EntityDatumItem(parent, d)
+{
+
+}
+
+WatchDatumItem* WatchDatumItem::createWatchItem(EntityDatumItem* fromThis)
+{
+    WatchDatumItem* newItem;
+    const DatumInfo* datum = fromThis->getWatchedDatum();
+    if(datum != NULL)
+    {
+        newItem = new WatchDatumItem(NULL, datum);
+        newItem->setToolTip(0, QString(datum->getDescription().c_str()));
+        newItem->setToolTip(1, QString(datum->getDescription().c_str()));
+        newItem->setToolTip(2, QString(datum->getDescription().c_str()));
+    }
+    else
+        newItem = new WatchDatumItem(fromThis->getCategoryName());
 
     // Create copies of all children
     for(int kidIdx = 0; kidIdx < fromThis->childCount(); kidIdx++)
     {
         EntityDatumItem* kid = (EntityDatumItem*)(fromThis->child(kidIdx));
-        WatchDatumItem* newKid = new WatchDatumItem(kid);
-        addChild(newKid);
+        WatchDatumItem* newKid = createWatchItem(kid);
+        newItem->addChild(newKid);
     }
 
-    if(watched_datum != NULL)
-    {
-        setToolTip(0, QString(watched_datum->getDescription().c_str()));
-        setToolTip(1, QString(watched_datum->getDescription().c_str()));
-        setToolTip(2, QString(watched_datum->getDescription().c_str()));
-    }
+    return newItem;
 }
 
 
@@ -28,6 +44,7 @@ WatchDatumItem::~WatchDatumItem()
 
 void WatchDatumItem::setDisplay()
 {
+    mutex.lock();
     if(watched_datum == NULL)
     {   // category item
         setText(0, category_name);
@@ -41,6 +58,7 @@ void WatchDatumItem::setDisplay()
         curVal += watched_datum->getUnit();
         setText(2, curVal.c_str());
     }
+    mutex.unlock();
 }
 
 

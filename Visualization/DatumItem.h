@@ -5,26 +5,39 @@
 #include "DataModelController.h"
 
 #include <set>
+#include <QMutex>
+#include <QObject>
 
-class DatumItem : public DatumObserver
+class DatumItem : public QObject, public DatumObserver
 {
+    Q_OBJECT
+
 private:
     DatumItem();
     DatumItem(const DatumItem& rhs);
     DatumItem& operator=(const DatumItem& rhs);
 
+private slots:
+    // These are slots to ensure GUI updates are done in GUI thread
+    virtual void setDisplay() = 0;
+    virtual void clearDisplay() = 0;
+
+signals:
+    void updateDisplay();
+    void stopUpdates();
+
 protected:
+    QMutex mutex;
     DataModelController* controller;
     std::set<const void*> interested_widgets;
-    const DatumInfo* watched_datum;
+    const DatumInfo* const watched_datum;
     QString category_name;
     std::string entity_removed;
     const DatumInfo* new_datum;
+    bool constant_updates;
 
     DatumItem(QString categoryName); // For category items with no datum
-    DatumItem(const DatumInfo* d);
-    virtual void setDisplay() = 0;
-    virtual void clearDisplay() = 0;
+    DatumItem(const DatumInfo* d, bool constantUpdates = false);
 
 public:
     virtual ~DatumItem();
