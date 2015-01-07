@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <qwt_plot.h>
 #include <qwt_plot_zoomer.h>
+#include <QRectF>
 
 namespace Ui {
 class PlotWidget;
@@ -17,6 +18,9 @@ class PlotWidget : public QWidget
 private:
     QwtPlotZoomer* zoomer;
     std::vector<PlotCurveItem*> curves;
+
+private slots:
+    void zoomChanged(const QRectF&);
 
 public:
     explicit PlotWidget(QWidget *parent = 0);
