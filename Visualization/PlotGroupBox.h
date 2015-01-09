@@ -6,11 +6,15 @@
 #include <QGroupBox>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QLabel>
 #include <vector>
 
 class PlotGroupBox : public QGroupBox
 {
 private:
+    QGroupBox* plot_group;
+    QLabel* drop_box_label;
+
     void addCurveToPlots(const DatumInfo* datum);
 
 protected:
@@ -20,6 +24,9 @@ protected:
 public:
     PlotGroupBox(QWidget* parent = 0);
     virtual ~PlotGroupBox();
+
+    void setPlotGroup(QGroupBox* g);
+    void setDropBoxLabel(QLabel* l);
 };
 
 #endif // PLOTGROUPBOX_H

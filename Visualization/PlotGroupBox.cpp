@@ -2,15 +2,26 @@
 #include "PlotWidget.h"
 #include <iostream>
 #include <QTreeWidget>
+#include <QLayout>
 
 PlotGroupBox::PlotGroupBox(QWidget* parent) : QGroupBox(parent)
 {
-
+    drop_box_label = NULL;
 }
 
 PlotGroupBox::~PlotGroupBox()
 {
 
+}
+
+void PlotGroupBox::setPlotGroup(QGroupBox* g)
+{
+    plot_group = g;
+}
+
+void PlotGroupBox::setDropBoxLabel(QLabel* l)
+{
+    drop_box_label = l;
 }
 
 void PlotGroupBox::addCurveToPlots(const DatumInfo* datum)
@@ -52,22 +63,27 @@ void PlotGroupBox::dragEnterEvent(QDragEnterEvent* event)
 void PlotGroupBox::dropEvent(QDropEvent* event)
 {
     QTreeWidget* list = dynamic_cast<QTreeWidget*>(event->source());
-    if(list != NULL)
+    if((drop_box_label != NULL) && (plot_group != NULL) &&
+            drop_box_label->underMouse() &&
+            (list != NULL))
     {
+        PlotWidget* newPlot = new PlotWidget(this);
+        plot_group->layout()->addWidget(newPlot);
+
         QList<QTreeWidgetItem*> items = list->selectedItems();
         for(int itemNum = 0; itemNum < items.size(); itemNum++)
         {
             EntityDatumItem* item = dynamic_cast<EntityDatumItem*>(items.at(itemNum));
             if(item != NULL)
             {
-                addCurveToPlots(item->getWatchedDatum());
+                newPlot->addCurve(item->getWatchedDatum());
                 // Also add any children
                 for(int kidIdx = 0; kidIdx < item->childCount(); kidIdx++)
                 {
                     EntityDatumItem* kid =
                             dynamic_cast<EntityDatumItem*>(item->child(kidIdx));
                     if(kid != NULL)
-                        addCurveToPlots(kid->getWatchedDatum());
+                        newPlot->addCurve(kid->getWatchedDatum());
                 }
             }
         }
