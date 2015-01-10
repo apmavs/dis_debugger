@@ -51,7 +51,7 @@ void PlotGroupBox::dropEvent(QDropEvent* event)
         {
             curPlot = new PlotWidget(this);
             created_plots.append(curPlot);
-            ui->PlotGroup->layout()->addWidget(curPlot);
+            ui->PlotScrollContents->layout()->addWidget(curPlot);
         }
         else // Check if user is adding to existing plot
         {

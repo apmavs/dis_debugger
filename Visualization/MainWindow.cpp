@@ -10,15 +10,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    showMaximized();
 
     // Set up default ratios of main sections
     ui->MainSplitter->setStretchFactor(0, 1);
     ui->MainSplitter->setStretchFactor(1, 2);
     ui->MainSplitter->setStretchFactor(2, 1);
-
-    // Set up default ratios of Entity group
-    ui->EntitySplitter->setStretchFactor(0, 1);
-    ui->EntitySplitter->setStretchFactor(1, 4);
 
     xml_file = "C:\\Comp\\school_work\\CSE\\dis_debugger\\dis_definitions.xml"; // TODO: Replace w/config
     controller = DataModelController::getInstance();
