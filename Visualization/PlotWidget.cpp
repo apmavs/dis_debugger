@@ -46,11 +46,33 @@ void PlotWidget::zoomChanged(const QRectF&)
     }
 }
 
-void PlotWidget::addCurve(const DatumInfo* datum)
+void PlotWidget::addCurve(EntityDatumItem* item)
 {
-    if(datum != NULL)
+    if(item != NULL)
     {
-        PlotCurveItem* curve = new PlotCurveItem(ui->embedded_plot, datum);
-        curve->activate(this);
+        const DatumInfo* datum = item->getWatchedDatum();
+        if(datum != NULL)
+        {
+            PlotCurveItem* curve = new PlotCurveItem(ui->embedded_plot, datum);
+            curve->activate(this);
+        }
+
+        // Also add any children
+        for(int kidIdx = 0; kidIdx < item->childCount(); kidIdx++)
+        {
+            EntityDatumItem* kid =
+                    dynamic_cast<EntityDatumItem*>(item->child(kidIdx));
+            addCurve(kid);
+        }
+    }
+}
+
+void PlotWidget::addCurves(QList<QTreeWidgetItem*> items)
+{
+    for(int itemNum = 0; itemNum < items.size(); itemNum++)
+    {
+        EntityDatumItem* item =
+                dynamic_cast<EntityDatumItem*>(items.at(itemNum));
+        addCurve(item);
     }
 }

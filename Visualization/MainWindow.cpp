@@ -20,9 +20,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->EntitySplitter->setStretchFactor(0, 1);
     ui->EntitySplitter->setStretchFactor(1, 4);
 
-    ui->PlotBox->setPlotGroup(ui->PlotGroup);
-    ui->PlotBox->setDropBoxLabel(ui->PlotDropLabel);
-
     xml_file = "C:\\Comp\\school_work\\CSE\\dis_debugger\\dis_definitions.xml"; // TODO: Replace w/config
     controller = DataModelController::getInstance();
     controller->registerObserver(this);

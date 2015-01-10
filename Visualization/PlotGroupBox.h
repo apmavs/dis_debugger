@@ -2,31 +2,33 @@
 #define PLOTGROUPBOX_H
 
 #include "DatumInfo.h"
+#include "PlotWidget.h"
 
-#include <QGroupBox>
+#include <QWidget>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QLabel>
 #include <vector>
 
-class PlotGroupBox : public QGroupBox
-{
-private:
-    QGroupBox* plot_group;
-    QLabel* drop_box_label;
+namespace Ui {
+class PlotGroupBox;
+}
 
-    void addCurveToPlots(const DatumInfo* datum);
+class PlotGroupBox : public QWidget
+{
+    Q_OBJECT
+
+private:
+    Ui::PlotGroupBox* ui;
+    QList<PlotWidget*> created_plots;
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent* event);
     virtual void dropEvent(QDropEvent* event);
 
 public:
-    PlotGroupBox(QWidget* parent = 0);
+    explicit PlotGroupBox(QWidget* parent = 0);
     virtual ~PlotGroupBox();
-
-    void setPlotGroup(QGroupBox* g);
-    void setDropBoxLabel(QLabel* l);
 };
 
 #endif // PLOTGROUPBOX_H

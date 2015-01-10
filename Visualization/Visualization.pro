@@ -74,4 +74,5 @@ HEADERS  += MainWindow.h \
     PlotWidget.h
 
 FORMS    += MainWindow.ui \
-    PlotWidget.ui
+    PlotWidget.ui \
+    PlotGroupBox.ui
