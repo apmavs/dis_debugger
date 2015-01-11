@@ -10,6 +10,7 @@
 #include <QRectF>
 #include <QList>
 #include <QTreeWidgetItem>
+#include <QColor>
 
 namespace Ui {
 class PlotWidget;
@@ -22,7 +23,10 @@ class PlotWidget : public QWidget
 private:
     Ui::PlotWidget* ui;
     QwtPlotZoomer* zoomer;
-    std::vector<PlotCurveItem*> curves;
+    QList<PlotCurveItem*> curves;
+    unsigned int color_index;
+    static const QColor COLOR_WHEEL[];
+    QColor getNextColor();
 
 private slots:
     void zoomChanged(const QRectF&);
@@ -33,6 +37,7 @@ public:
 
     void addCurve(EntityDatumItem* item);
     void addCurves(QList<QTreeWidgetItem*> items);
+    void clearCurves();
 };
 
 #endif // PLOTWIDGET_H

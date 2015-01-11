@@ -1,9 +1,28 @@
 #include "PlotWidget.h"
 #include "ui_PlotWidget.h"
+#include <qwt_plot_layout.h>
+#include <qwt_legend.h>
+
+const QColor PlotWidget::COLOR_WHEEL[] = {Qt::black,
+                                          Qt::red,
+                                          Qt::blue,
+                                          Qt::green,
+                                          Qt::magenta,
+                                          Qt::cyan,
+                                          Qt::yellow,
+                                          Qt::gray,
+                                          Qt::darkRed,
+                                          Qt::darkBlue,
+                                          Qt::darkGreen,
+                                          Qt::darkMagenta,
+                                          Qt::darkCyan,
+                                          Qt::darkYellow,
+                                          Qt::darkGray};
 
 PlotWidget::PlotWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::PlotWidget)
+    ui(new Ui::PlotWidget),
+    color_index(0)
 {
     ui->setupUi(this);
     QString toolTip = "Select area to zoom\n";
@@ -11,6 +30,11 @@ PlotWidget::PlotWidget(QWidget *parent) :
     toolTip += "Press 'R' to redo zoom\n";
     toolTip += "Press HOME key to return to autoscale";
     setToolTip(toolTip);
+
+    // Put a legend on plot
+    QwtLegend* legend = new QwtLegend();
+    legend->setFrameStyle(QFrame::Box | QFrame::Sunken);
+    ui->embedded_plot->insertLegend(legend, QwtPlot::BottomLegend);
 
     zoomer = new QwtPlotZoomer(ui->embedded_plot->canvas());
     curves.clear();
@@ -25,9 +49,19 @@ PlotWidget::PlotWidget(QWidget *parent) :
 
 PlotWidget::~PlotWidget()
 {
+    clearCurves();
     delete zoomer;
-    delete ui->embedded_plot;
     delete ui;
+}
+
+QColor PlotWidget::getNextColor()
+{
+    QColor retVal = COLOR_WHEEL[color_index];
+    color_index++;
+    size_t numColors = sizeof(COLOR_WHEEL) / sizeof(COLOR_WHEEL[0]);
+    if(color_index >= numColors)
+        color_index = 0;
+    return retVal;
 }
 
 void PlotWidget::zoomChanged(const QRectF&)
@@ -53,7 +87,10 @@ void PlotWidget::addCurve(EntityDatumItem* item)
         const DatumInfo* datum = item->getWatchedDatum();
         if(datum != NULL)
         {
-            PlotCurveItem* curve = new PlotCurveItem(ui->embedded_plot, datum);
+            PlotCurveItem* curve = new PlotCurveItem(ui->embedded_plot,
+                                                     datum,
+                                                     getNextColor());
+            curves.append(curve);
             curve->activate(this);
         }
 
@@ -75,4 +112,16 @@ void PlotWidget::addCurves(QList<QTreeWidgetItem*> items)
                 dynamic_cast<EntityDatumItem*>(items.at(itemNum));
         addCurve(item);
     }
+}
+
+void PlotWidget::clearCurves()
+{
+    while(curves.size())
+    {
+        PlotCurveItem* i = curves.at(0);
+        curves.removeAt(0);
+        i->detach(); // Remove from plot
+        delete i;
+    }
+    ui->embedded_plot->replot();
 }

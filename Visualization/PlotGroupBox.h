@@ -22,6 +22,9 @@ private:
     Ui::PlotGroupBox* ui;
     QList<PlotWidget*> created_plots;
 
+private slots:
+    void on_DeleteAllBtn_clicked();
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent* event);
     virtual void dropEvent(QDropEvent* event);

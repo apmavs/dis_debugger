@@ -1,18 +1,35 @@
 #include "PlotCurveItem.h"
 #include <QByteArray>
 
-PlotCurveItem::PlotCurveItem(QwtPlot* plot, const DatumInfo* d)
-    : QwtPlotCurve(), DatumItem(d, true)
+PlotCurveItem::PlotCurveItem(QwtPlot* plot, const DatumInfo* d, QColor color)
+    : QwtPlotCurve(QString(d->getName().c_str())), DatumItem(d, true)
 {
+    QPen pen;
+    pen.setColor(color);
+    pen.setWidth(1);
+    pen.setStyle(Qt::SolidLine);
+
+    setStyle(QwtPlotCurve::Steps);  // Do not interopolate between points
+    setCurveAttribute(QwtPlotCurve::Inverted, true); // step at new data
+    setPen(pen);
+
+    // Create a second curve for just highlighting the data points
+    curve_dots = new QwtPlotCurve();
+    pen.setWidth(5);
+    curve_dots->setPen(pen);
+    curve_dots->setStyle(QwtPlotCurve::Dots);
+    curve_dots->setItemAttribute(QwtPlotItem::Legend, false);
+
     double time   = d->getLastTimestamp();
     double curVal = convertToDouble(d->getValue());
     datum_points.append(QPointF(time, curVal));
     attach(plot);
+    curve_dots->attach(plot);
 }
 
 PlotCurveItem::~PlotCurveItem()
 {
-
+    delete curve_dots;
 }
 
 double PlotCurveItem::convertToDouble(std::string s)
@@ -25,6 +42,7 @@ void PlotCurveItem::setDisplay()
 {
     mutex.lock();
     setSamples(datum_points);
+    curve_dots->setSamples(datum_points);
     plot()->replot();
     mutex.unlock();
 }

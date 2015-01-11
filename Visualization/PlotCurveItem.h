@@ -19,6 +19,7 @@ private:
     PlotCurveItem(const DatumItem& rhs);
     PlotCurveItem& operator=(const DatumItem& rhs);
     QVector<QPointF> datum_points;
+    QwtPlotCurve* curve_dots;
 
 private slots:
     // These are slots to ensure GUI updates are done in GUI thread
@@ -29,7 +30,7 @@ protected:
     static double convertToDouble(std::string s);
 
 public:
-    PlotCurveItem(QwtPlot* plot, const DatumInfo* d);
+    PlotCurveItem(QwtPlot* plot, const DatumInfo* d, QColor color);
     virtual ~PlotCurveItem();
 
     virtual void notifyNewValue(const DatumInfo* datum);
