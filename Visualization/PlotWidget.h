@@ -30,11 +30,17 @@ private:
 
 private slots:
     void zoomChanged(const QRectF&);
+    void on_ClearBtn_clicked();
+    void on_DeleteBtn_clicked();
+
+signals:
+    void deletePlot(PlotWidget* plot);
 
 public:
     explicit PlotWidget(QWidget* parent = 0);
     ~PlotWidget();
 
+    void hideDelete();
     void addCurve(EntityDatumItem* item);
     void addCurves(QList<QTreeWidgetItem*> items);
     void clearCurves();

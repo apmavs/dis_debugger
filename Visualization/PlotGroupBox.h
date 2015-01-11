@@ -24,6 +24,7 @@ private:
 
 private slots:
     void on_DeleteAllBtn_clicked();
+    void deletePlot(PlotWidget* plot);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent* event);

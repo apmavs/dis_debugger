@@ -9,11 +9,40 @@ PlotGroupBox::PlotGroupBox(QWidget* parent) :
     ui(new Ui::PlotGroupBox)
 {
     ui->setupUi(this);
+    ui->FirstPlot->hideDelete(); // Always keep 1 plot
 }
 
 PlotGroupBox::~PlotGroupBox()
 {
 
+}
+
+void PlotGroupBox::on_DeleteAllBtn_clicked()
+{
+    // Clear permanent plot
+    ui->FirstPlot->clearCurves();
+
+    // Delete created plots
+    while(created_plots.size())
+    {
+        PlotWidget* p = created_plots.at(0);
+        created_plots.removeAt(0);
+        delete p;
+    }
+}
+
+void PlotGroupBox::deletePlot(PlotWidget* plot)
+{
+    for(int plotIdx = 0; plotIdx < created_plots.size(); plotIdx++)
+    {
+        PlotWidget* p = created_plots.at(plotIdx);
+        if(p == plot)
+        {
+            created_plots.removeAt(plotIdx);
+            delete plot;
+            break;
+        }
+    }
 }
 
 void PlotGroupBox::dragEnterEvent(QDragEnterEvent* event)
@@ -50,6 +79,8 @@ void PlotGroupBox::dropEvent(QDropEvent* event)
         if(ui->PlotDropLabel->underMouse())
         {
             curPlot = new PlotWidget(this);
+            connect(curPlot, SIGNAL(deletePlot(PlotWidget*)),
+                    this, SLOT(deletePlot(PlotWidget*)));
             created_plots.append(curPlot);
             ui->PlotScrollContents->layout()->addWidget(curPlot);
         }
@@ -83,18 +114,4 @@ void PlotGroupBox::dropEvent(QDropEvent* event)
     event->setDropAction(Qt::IgnoreAction);
     event->accept();
     QWidget::dropEvent(event);
-}
-
-void PlotGroupBox::on_DeleteAllBtn_clicked()
-{
-    // Clear permanent plot
-    ui->FirstPlot->clearCurves();
-
-    // Delete created plots
-    while(created_plots.size())
-    {
-        PlotWidget* p = created_plots.at(0);
-        created_plots.removeAt(0);
-        delete p;
-    }
 }

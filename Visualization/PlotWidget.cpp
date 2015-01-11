@@ -80,6 +80,21 @@ void PlotWidget::zoomChanged(const QRectF&)
     }
 }
 
+void PlotWidget::on_ClearBtn_clicked()
+{
+   clearCurves();
+}
+
+void PlotWidget::on_DeleteBtn_clicked()
+{
+    emit deletePlot(this);
+}
+
+void PlotWidget::hideDelete()
+{
+    ui->DeleteBtn->hide();
+}
+
 void PlotWidget::addCurve(EntityDatumItem* item)
 {
     if(item != NULL)
