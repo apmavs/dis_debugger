@@ -34,6 +34,7 @@ public:
     virtual ~PlotCurveItem();
 
     virtual void notifyNewValue(const DatumInfo* datum);
+    void showFullHistory();
 };
 
 #endif // PLOTCURVEITEM_H

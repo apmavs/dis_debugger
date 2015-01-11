@@ -9,7 +9,15 @@ PlotGroupBox::PlotGroupBox(QWidget* parent) :
     ui(new Ui::PlotGroupBox)
 {
     ui->setupUi(this);
-    ui->FirstPlot->hideDelete(); // Always keep 1 plot
+    // Re-create the initial plot, QT auto generate screws up the style sheet
+    PlotWidget* permPlot = new PlotWidget(this);
+    PlotWidget* oldPlot = ui->FirstPlot;
+    ui->FirstPlot = permPlot;
+    ui->PlotSplitter->addWidget(permPlot);
+    oldPlot->setParent(NULL);
+    delete oldPlot;
+    ui->FirstPlot->hideDelete(); // Always keep 1 plot, don't allow delete btn
+    ui->HideMeBtn->hide();
 }
 
 PlotGroupBox::~PlotGroupBox()
@@ -27,6 +35,7 @@ void PlotGroupBox::on_DeleteAllBtn_clicked()
     {
         PlotWidget* p = created_plots.at(0);
         created_plots.removeAt(0);
+        p->setParent(NULL);
         delete p;
     }
 }
@@ -39,6 +48,7 @@ void PlotGroupBox::deletePlot(PlotWidget* plot)
         if(p == plot)
         {
             created_plots.removeAt(plotIdx);
+            plot->setParent(NULL);
             delete plot;
             break;
         }
@@ -76,24 +86,30 @@ void PlotGroupBox::dropEvent(QDropEvent* event)
         PlotWidget* curPlot = NULL;
 
         // Check if user is trying to create a new plot
-        if(ui->PlotDropLabel->underMouse())
+        if(ui->PlotDropLabel->rect().contains(
+                    ui->PlotDropLabel->mapFromGlobal(QCursor::pos())))
         {
             curPlot = new PlotWidget(this);
             connect(curPlot, SIGNAL(deletePlot(PlotWidget*)),
                     this, SLOT(deletePlot(PlotWidget*)));
             created_plots.append(curPlot);
-            ui->PlotScrollContents->layout()->addWidget(curPlot);
+            ui->PlotSplitter->addWidget(curPlot);
         }
         else // Check if user is adding to existing plot
         {
-            if(ui->FirstPlot->underMouse())
+            if(ui->FirstPlot->rect().contains(
+               ui->FirstPlot->mapFromGlobal(QCursor::pos())))
+            {
                 curPlot = ui->FirstPlot;
+            }
             else
             {
                 for(int plotIdx = 0; plotIdx < created_plots.size(); plotIdx++)
                 {
                     PlotWidget* p = created_plots.at(plotIdx);
                     if(p->underMouse())
+                    if(p->rect().contains(
+                       p->mapFromGlobal(QCursor::pos())))
                     {
                         curPlot = p;
                         break;

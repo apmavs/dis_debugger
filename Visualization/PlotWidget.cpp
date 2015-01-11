@@ -22,7 +22,9 @@ const QColor PlotWidget::COLOR_WHEEL[] = {Qt::black,
 PlotWidget::PlotWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PlotWidget),
-    color_index(0)
+    color_index(0),
+    delete_always_hidden(false),
+    hidden(false)
 {
     ui->setupUi(this);
     QString toolTip = "Select area to zoom\n";
@@ -45,6 +47,11 @@ PlotWidget::PlotWidget(QWidget *parent) :
     zoomer->setKeyPattern(QwtEventPattern::KeyUndo, Qt::Key_U);
     zoomer->setKeyPattern(QwtEventPattern::KeyHome, Qt::Key_Home );
     connect(zoomer, SIGNAL(zoomed(QRectF)), this, SLOT(zoomChanged(QRectF)));
+
+    min_plot_size   = ui->embedded_plot->minimumSize();
+    max_height      = maximumHeight();
+    normal_size     = size();
+    min_size        = minimumSize();
 }
 
 PlotWidget::~PlotWidget()
@@ -62,6 +69,14 @@ QColor PlotWidget::getNextColor()
     if(color_index >= numColors)
         color_index = 0;
     return retVal;
+}
+
+void PlotWidget::paintEvent(QPaintEvent*)
+{
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 void PlotWidget::zoomChanged(const QRectF&)
@@ -90,8 +105,45 @@ void PlotWidget::on_DeleteBtn_clicked()
     emit deletePlot(this);
 }
 
+void PlotWidget::on_HideBtn_clicked()
+{
+    if(hidden) // unhide
+    {
+        ui->embedded_plot->setMinimumSize(min_plot_size);
+        setMaximumHeight(max_height);
+        setMinimumSize(normal_size); // force normal size
+        setMinimumSize(min_size);
+        ui->ClearBtn->show();
+        ui->embedded_plot->show();
+        if(!delete_always_hidden) ui->DeleteBtn->show();
+        ui->HideBtn->setText("Hide");
+    }
+    else // hide
+    {
+        ui->embedded_plot->setMinimumSize(0, 0);
+        setMinimumHeight(0);
+        setMaximumHeight(ui->ClearBtn->height() + 15);
+        ui->ClearBtn->hide();
+        ui->embedded_plot->hide();
+        ui->DeleteBtn->hide();
+        ui->HideBtn->setText("Unhide");
+    }
+
+    hidden = !hidden;
+}
+
+void PlotWidget::on_FullHistoryBtn_clicked()
+{
+    for(int curveIdx = 0; curveIdx < curves.size(); curveIdx++)
+    {
+        PlotCurveItem* curve = curves.at(curveIdx);
+        curve->showFullHistory();
+    }
+}
+
 void PlotWidget::hideDelete()
 {
+    delete_always_hidden = true;
     ui->DeleteBtn->hide();
 }
 

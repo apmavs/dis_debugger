@@ -27,11 +27,22 @@ private:
     unsigned int color_index;
     static const QColor COLOR_WHEEL[];
     QColor getNextColor();
+    bool delete_always_hidden;
+    bool hidden;
+    QSize min_plot_size;
+    int max_height;
+    QSize normal_size;
+    QSize min_size;
+
+protected:
+    void paintEvent(QPaintEvent*);
 
 private slots:
     void zoomChanged(const QRectF&);
     void on_ClearBtn_clicked();
     void on_DeleteBtn_clicked();
+    void on_HideBtn_clicked();
+    void on_FullHistoryBtn_clicked();
 
 signals:
     void deletePlot(PlotWidget* plot);

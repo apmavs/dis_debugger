@@ -62,3 +62,22 @@ void PlotCurveItem::notifyNewValue(const DatumInfo* datum)
 
     DatumItem::notifyNewValue(datum); // call parent to trigger updates
 }
+
+// Plot all available datapoints instead of
+// just what came in since creation (default)
+void PlotCurveItem::showFullHistory()
+{
+    mutex.lock();
+    datum_points.clear();
+    std::map<double, std::string> hist = watched_datum->getHistory();
+    std::map<double, std::string>::const_iterator it;
+    for(it = hist.begin(); it != hist.end(); it++)
+    {
+        double time = it->first;
+        double val  = convertToDouble(it->second);
+        datum_points.append(QPointF(time, val));
+    }
+    mutex.unlock();
+
+    setDisplay();
+}
