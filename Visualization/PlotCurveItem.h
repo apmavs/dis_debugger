@@ -35,6 +35,7 @@ public:
 
     virtual void notifyNewValue(const DatumInfo* datum);
     void showFullHistory();
+    void truncateHistory();
 };
 
 #endif // PLOTCURVEITEM_H

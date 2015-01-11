@@ -113,20 +113,26 @@ void PlotWidget::on_HideBtn_clicked()
         setMaximumHeight(max_height);
         setMinimumSize(normal_size); // force normal size
         setMinimumSize(min_size);
-        ui->ClearBtn->show();
         ui->embedded_plot->show();
+        ui->ClearBtn->show();
+        ui->ResetBtn->show();
+        ui->FullHistoryBtn->show();
         if(!delete_always_hidden) ui->DeleteBtn->show();
         ui->HideBtn->setText("Hide");
+        ui->HideBtn->setToolTip("Hide plot");
     }
     else // hide
     {
         ui->embedded_plot->setMinimumSize(0, 0);
         setMinimumHeight(0);
         setMaximumHeight(ui->ClearBtn->height() + 15);
-        ui->ClearBtn->hide();
         ui->embedded_plot->hide();
+        ui->ClearBtn->hide();
+        ui->ResetBtn->hide();
+        ui->FullHistoryBtn->hide();
         ui->DeleteBtn->hide();
-        ui->HideBtn->setText("Unhide");
+        ui->HideBtn->setText("Show");
+        ui->HideBtn->setToolTip("Show plot");
     }
 
     hidden = !hidden;
@@ -138,6 +144,15 @@ void PlotWidget::on_FullHistoryBtn_clicked()
     {
         PlotCurveItem* curve = curves.at(curveIdx);
         curve->showFullHistory();
+    }
+}
+
+void PlotWidget::on_ResetBtn_clicked()
+{
+    for(int curveIdx = 0; curveIdx < curves.size(); curveIdx++)
+    {
+        PlotCurveItem* curve = curves.at(curveIdx);
+        curve->truncateHistory();
     }
 }
 

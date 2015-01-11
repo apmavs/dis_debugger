@@ -43,6 +43,7 @@ private slots:
     void on_DeleteBtn_clicked();
     void on_HideBtn_clicked();
     void on_FullHistoryBtn_clicked();
+    void on_ResetBtn_clicked();
 
 signals:
     void deletePlot(PlotWidget* plot);

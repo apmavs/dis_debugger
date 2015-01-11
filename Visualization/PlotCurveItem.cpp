@@ -81,3 +81,12 @@ void PlotCurveItem::showFullHistory()
 
     setDisplay();
 }
+
+void PlotCurveItem::truncateHistory()
+{
+    mutex.lock();
+    datum_points.clear();
+    mutex.unlock();
+
+    setDisplay();
+}
