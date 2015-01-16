@@ -2,6 +2,7 @@
 #include "ui_PlotWidget.h"
 #include <qwt_plot_layout.h>
 #include <qwt_legend.h>
+#include <qwt_plot_canvas.h>
 
 const QColor PlotWidget::COLOR_WHEEL[] = {Qt::black,
                                           Qt::red,
@@ -52,6 +53,14 @@ PlotWidget::PlotWidget(QWidget *parent) :
     max_height      = maximumHeight();
     normal_size     = size();
     min_size        = minimumSize();
+
+    focused_style   = styleSheet();
+    unfocused_style = focused_style;
+    unfocused_style.replace("solid", "dotted");
+    setStyleSheet(unfocused_style);
+    QApplication* app = qApp;
+    connect(app, SIGNAL(focusChanged(QWidget*,QWidget*)),
+            this, SLOT(focusChange(QWidget*, QWidget*)));
 }
 
 PlotWidget::~PlotWidget()
@@ -92,6 +101,22 @@ void PlotWidget::zoomChanged(const QRectF&)
             ui->embedded_plot->setAxisAutoScale(zoomer->yAxis(), true);
             ui->embedded_plot->replot();
         }
+    }
+}
+
+void PlotWidget::focusChange(QWidget* oldWidget, QWidget* newWidget)
+{
+    // When the plot's canvas takes focus, you are able to undo/redo
+    // Change widget's border so user knows what plot they can alter
+    QwtPlotCanvas* canvas = dynamic_cast<QwtPlotCanvas*>
+            (ui->embedded_plot->canvas());
+    if((oldWidget == canvas) && (newWidget != canvas))
+    {
+        setStyleSheet(unfocused_style);
+    }
+    else if((oldWidget != canvas) && (newWidget == canvas))
+    {
+        setStyleSheet(focused_style);
     }
 }
 

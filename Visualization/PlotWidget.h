@@ -33,12 +33,15 @@ private:
     int max_height;
     QSize normal_size;
     QSize min_size;
+    QString focused_style;
+    QString unfocused_style;
 
 protected:
     void paintEvent(QPaintEvent*);
 
 private slots:
     void zoomChanged(const QRectF&);
+    void focusChange(QWidget* oldWidget, QWidget* newWidget);
     void on_ClearBtn_clicked();
     void on_DeleteBtn_clicked();
     void on_HideBtn_clicked();
