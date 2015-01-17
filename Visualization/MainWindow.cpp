@@ -120,6 +120,11 @@ void MainWindow::on_EntityView_currentItemChanged(QListWidgetItem *current)
     }
 }
 
+void MainWindow::on_FilterInput_textChanged(const QString &arg1)
+{
+    ui->AttributeView->filterList(arg1);
+}
+
 void MainWindow::openXml()
 {
     QString file = QFileDialog::getOpenFileName(this, tr("Open XML file"), "");

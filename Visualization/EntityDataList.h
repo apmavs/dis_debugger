@@ -20,6 +20,7 @@ protected:
     std::map<std::string, std::vector<const DatumInfo*>* > datum_map;
     DataModelController* controller;
     std::string active_entity;
+    QString active_filter;
 
     void addItem(const DatumInfo* datum);
 
@@ -31,6 +32,7 @@ public:
     explicit EntityDataList(QWidget *parent = 0);
 
     void setActiveEntity(std::string entity);
+    void filterList(QString str);
 
     // DatumObserver inheritance
     virtual void notifyNewDatum(const DatumInfo* datum);

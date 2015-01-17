@@ -22,6 +22,8 @@ public:
     EntityDatumItem(EntityDatumItem* parent, const DatumInfo* d);
     virtual ~EntityDatumItem();
 
+    QString getName();
+
     // Call with pointer to caller
     virtual void activate(const void* widgetPtr);    // Update whenever datum changes
     virtual void deactivate(const void* widgetPtr);  // Stop updating with datum changes

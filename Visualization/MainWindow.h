@@ -23,6 +23,11 @@ private slots:
     void removeEntitySlot(std::string entity);
     void entitiesInvalidSlot();
 
+    // GUI interaction slots
+    void on_EntityView_currentItemChanged(QListWidgetItem *current);
+    void on_FilterInput_textChanged(const QString &arg1);
+    void openXml();
+
 signals:
     void newDatumSignal(const DatumInfo* datum);
     void removeEntitySignal(std::string entity);
@@ -40,10 +45,6 @@ public:
 
 protected:
     std::string getStrippedName(std::string entityName);
-
-private slots:
-    void on_EntityView_currentItemChanged(QListWidgetItem *current);
-    void openXml();
 
 private:
     QMutex mutex;

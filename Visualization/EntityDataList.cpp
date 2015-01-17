@@ -2,7 +2,8 @@
 
 
 EntityDataList::EntityDataList(QWidget *parent) :
-    QTreeWidget(parent)
+    QTreeWidget(parent),
+    active_filter("")
 {
     controller = DataModelController::getInstance();
     controller->registerObserver(this);
@@ -31,6 +32,9 @@ void EntityDataList::addItem(const DatumInfo* datum)
     {
         catItem = new EntityDatumItem(catStr);
         addTopLevelItem(catItem);
+        // Check filter
+        if(!catStr.contains(active_filter, Qt::CaseInsensitive))
+            catItem->setHidden(true);
     }
 
     EntityDatumItem* newItem = new EntityDatumItem(catItem, datum);
@@ -38,6 +42,16 @@ void EntityDataList::addItem(const DatumInfo* datum)
         newItem->activate(this);
     else
         catItem->setExpanded(true);
+
+    // Check filter
+    if(newItem->getName().contains(active_filter, Qt::CaseInsensitive) ||
+       catItem->getName().contains(active_filter, Qt::CaseInsensitive))
+    {
+        newItem->setHidden(false);
+        catItem->setHidden(false);
+    }
+    else
+        newItem->setHidden(true);
 }
 
 void EntityDataList::activateItem(QModelIndex idx)
@@ -80,6 +94,44 @@ void EntityDataList::setActiveEntity(std::string entity)
     }
 
     mutex.unlock();
+}
+
+// Show/hide items based on whether or not they
+// match the passed in string
+void EntityDataList::filterList(QString str)
+{
+    active_filter = str;
+    for(int idx=0; idx < topLevelItemCount(); idx++)
+    {
+        bool showCategory = false;
+        EntityDatumItem* item = (EntityDatumItem*)(topLevelItem(idx));
+        if(item->getName().contains(active_filter, Qt::CaseInsensitive))
+        {
+            showCategory = true;
+            // For category match, show all children
+            for(int kidIdx = 0; kidIdx < item->childCount(); kidIdx++)
+                item->child(kidIdx)->setHidden(false);
+        }
+        else // Check children for a match
+        {
+            for(int kidIdx = 0; kidIdx < item->childCount(); kidIdx++)
+            {
+                EntityDatumItem* kid = (EntityDatumItem*)(item->child(kidIdx));
+                if(kid->getName().contains(active_filter, Qt::CaseInsensitive))
+                {
+                    showCategory = true;
+                    kid->setHidden(false);
+                }
+                else
+                    kid->setHidden(true);
+            }
+        }
+
+        if(showCategory)
+            item->setHidden(false);
+        else
+            item->setHidden(true);
+    }
 }
 
 void EntityDataList::notifyNewDatum(const DatumInfo *datum)

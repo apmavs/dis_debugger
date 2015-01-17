@@ -19,6 +19,14 @@ EntityDatumItem::~EntityDatumItem()
 {
 }
 
+QString EntityDatumItem::getName()
+{
+    QString retVal = category_name;
+    if(watched_datum != NULL)
+        retVal = QString(watched_datum->getName().c_str());
+    return retVal;
+}
+
 void EntityDatumItem::setDisplay()
 {
     mutex.lock();
