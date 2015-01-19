@@ -1,7 +1,6 @@
 #include "DatumValue.h"
 
 #include <QString>
-#include <stdint.h>
 
 DatumValue::DatumValue()
 {
@@ -21,20 +20,110 @@ DatumValue::~DatumValue()
     delete mutex;
 }
 
-DatumValue & DatumValue::operator=(const DatumValue& copyVal)
+DatumValue* DatumValue::create(std::string v, std::string type)
 {
-    timestamp = copyVal.getTimestamp();
-    value     = copyVal.getRawData();
-    mutex     = new QMutex();
+    QByteArray val;
+    const char* valPtr = NULL;
+    uint8_t u8; uint16_t u16; uint32_t u32; uint64_t u64;
+    int8_t  i8;  int16_t i16;  int32_t i32;  int64_t i64;
+    float fl; double db;
+    const char* str;
+    int byteCount = 0;
 
-    return *this;
+    if(type == "uint8")
+    {
+        u8 = atoi(v.c_str());
+        byteCount = 1;
+        valPtr = (const char*)(&u8);
+    }
+    else if(type == "uint16")
+    {
+        u16 = atoi(v.c_str());
+        byteCount = 2;
+        valPtr = (const char*)(&u16);
+    }
+    else if(type == "uint32")
+    {
+        u32 = atoi(v.c_str());
+        byteCount = 4;
+        valPtr = (const char*)(&u32);
+    }
+    else if(type == "uint64")
+    {
+        u64 = atol(v.c_str());
+        byteCount = 8;
+        valPtr = (const char*)(&u64);
+    }
+    else if(type == "int8")
+    {
+        i8 = atoi(v.c_str());
+        byteCount = 1;
+        valPtr = (const char*)(&i8);
+    }
+    else if(type == "int16")
+    {
+        i16 = atoi(v.c_str());
+        byteCount = 2;
+        valPtr = (const char*)(&i16);
+    }
+    else if(type == "int32")
+    {
+        i32 = atoi(v.c_str());
+        byteCount = 4;
+        valPtr = (const char*)(&i32);
+    }
+    else if(type == "int64")
+    {
+        i64 = atol(v.c_str());
+        byteCount = 8;
+        valPtr = (const char*)(&i64);
+    }
+    else if(type == "float")
+    {
+        fl = atof(v.c_str());
+        byteCount = 4;
+        valPtr = (const char*)(&fl);
+    }
+    else if(type == "double")
+    {
+        db = atof(v.c_str());
+        byteCount = 8;
+        valPtr = (const char*)(&db);
+    }
+    else if(type == "string")
+    {
+        str = v.c_str();
+        byteCount = v.size() + 1;
+        valPtr = (const char*)(&str);
+    }
+
+    for(int i = 0; i < byteCount; i++)
+    {
+        val.append(*valPtr);
+        valPtr++;
+    }
+
+    return create(val, type);
 }
 
-DatumValue::DatumValue(const DatumValue& copyVal)
+DatumValue* DatumValue::create(QByteArray v, std::string type)
 {
-    timestamp = copyVal.getTimestamp();
-    value     = copyVal.getRawData();
-    mutex     = new QMutex();
+    DatumValue* newVal;
+    if(     type == "uint8" )   newVal = new Uint8Value();
+    else if(type == "uint16")   newVal = new Uint16Value();
+    else if(type == "uint32")   newVal = new Uint32Value();
+    else if(type == "uint64")   newVal = new Uint64Value();
+    else if(type == "int8"  )   newVal = new Int8Value();
+    else if(type == "int16" )   newVal = new Int16Value();
+    else if(type == "int32" )   newVal = new Int32Value();
+    else if(type == "int64" )   newVal = new Int64Value();
+    else if(type == "float" )   newVal = new FloatValue();
+    else if(type == "double")   newVal = new DoubleValue();
+    else if(type == "string")   newVal = new StringValue();
+    else                        newVal = new Uint8Value();
+    newVal->value = v;
+
+    return newVal;
 }
 
 void DatumValue::setTimestamp(double t)
@@ -68,156 +157,6 @@ QByteArray DatumValue::getRawData() const
 }
 
 
-// ************************* Uint8Value *************************
-Uint8Value::Uint8Value() : DatumValue() {}
-Uint8Value::~Uint8Value(){}
-
-std::string Uint8Value::getValue() const
-{
-    uint8_t val = 0;
-    mutex->lock();
-    if(value.size() >= 1)
-        val = *((uint8_t*)value.constData());
-    mutex->unlock();
-    return QString("%1").arg(val).toStdString();
-}
-// ************************* Uint8Value *************************
-
-// ************************* Uint16Value *************************
-Uint16Value::Uint16Value() : DatumValue() {}
-Uint16Value::~Uint16Value(){}
-
-std::string Uint16Value::getValue() const
-{
-    uint16_t val = 0;
-    mutex->lock();
-    if(value.size() >= 2)
-        val = *((uint16_t*)value.constData());
-    mutex->unlock();
-    return QString("%1").arg(val).toStdString();
-}
-// ************************* Uint32Value *************************
-
-// ************************* Uint32Value *************************
-Uint32Value::Uint32Value() : DatumValue() {}
-Uint32Value::~Uint32Value(){}
-
-std::string Uint32Value::getValue() const
-{
-    uint32_t val = 0;
-    mutex->lock();
-    if(value.size() >= 4)
-        val = *((uint32_t*)value.constData());
-    mutex->unlock();
-    return QString("%1").arg(val).toStdString();
-}
-// ************************* Uint32Value *************************
-
-// ************************* Uint64Value *************************
-Uint64Value::Uint64Value() : DatumValue() {}
-Uint64Value::~Uint64Value(){}
-
-std::string Uint64Value::getValue() const
-{
-    uint64_t val = 0;
-    mutex->lock();
-    if(value.size() >= 8)
-        val = *((uint64_t*)value.constData());
-    mutex->unlock();
-    return QString("%1").arg(val).toStdString();
-}
-// ************************* Uint64Value *************************
-
-// ************************* Int8Value *************************
-Int8Value::Int8Value() : DatumValue() {}
-Int8Value::~Int8Value(){}
-
-std::string Int8Value::getValue() const
-{
-    int8_t val = 0;
-    mutex->lock();
-    if(value.size() >= 1)
-        val = *((int8_t*)value.constData());
-    mutex->unlock();
-    return QString("%1").arg(val).toStdString();
-}
-// ************************* Int8Value *************************
-
-// ************************* Int16Value *************************
-Int16Value::Int16Value() : DatumValue() {}
-Int16Value::~Int16Value(){}
-
-std::string Int16Value::getValue() const
-{
-    int16_t val = 0;
-    mutex->lock();
-    if(value.size() >= 2)
-        val = *((int16_t*)value.constData());
-    mutex->unlock();
-    return QString("%1").arg(val).toStdString();
-}
-// ************************* Int32Value *************************
-
-// ************************* Int32Value *************************
-Int32Value::Int32Value() : DatumValue() {}
-Int32Value::~Int32Value(){}
-
-std::string Int32Value::getValue() const
-{
-    int32_t val = 0;
-    mutex->lock();
-    if(value.size() >= 4)
-        val = *((int32_t*)value.constData());
-    mutex->unlock();
-    return QString("%1").arg(val).toStdString();
-}
-// ************************* Int32Value *************************
-
-// ************************* Int64Value *************************
-Int64Value::Int64Value() : DatumValue() {}
-Int64Value::~Int64Value(){}
-
-std::string Int64Value::getValue() const
-{
-    int64_t val = 0;
-    mutex->lock();
-    if(value.size() >= 8)
-        val = *((int64_t*)value.constData());
-    mutex->unlock();
-    return QString("%1").arg(val).toStdString();
-}
-// ************************* Int64Value *************************
-
-// ************************* FloatValue *************************
-FloatValue::FloatValue() : DatumValue() {}
-FloatValue::~FloatValue(){}
-
-std::string FloatValue::getValue() const
-{
-    float val = 0.0f;
-    mutex->lock();
-    if(value.size() >= 4)
-        val = *((float*)value.constData());
-    mutex->unlock();
-    return QString("%1").arg(val).toStdString();
-}
-// ************************* FloatValue *************************
-
-// ************************* DoubleValue *************************
-DoubleValue::DoubleValue() : DatumValue() {}
-DoubleValue::~DoubleValue(){}
-
-std::string DoubleValue::getValue() const
-{
-    double val = 0.0;
-    mutex->lock();
-    if(value.size() >= 8)
-        val = *((double*)(value.constData()));
-    mutex->unlock();
-    return QString("%1").arg(val).toStdString();
-}
-// ************************* DoubleValue *************************
-
 // ************************* StringValue *************************
 StringValue::StringValue() : DatumValue() {}
 StringValue::~StringValue(){}
@@ -241,5 +180,29 @@ std::string StringValue::getValue() const
         val = "Error:NoNull!";
     mutex->unlock();
     return val.toStdString();
+}
+
+DatumValue* StringValue::createCopy() const
+{
+    StringValue* copy = new StringValue();
+    mutex->lock();
+    copy->value     = value;
+    copy->timestamp = timestamp;
+    mutex->unlock();
+    return copy;
+}
+
+bool StringValue::lessThan(DatumValue* rhs) const
+{
+    std::string val1 = getValue();
+    std::string val2 = rhs->getValue();
+    return (val1 < val2);
+}
+
+bool StringValue::greaterThan(DatumValue* rhs) const
+{
+    std::string val1 = getValue();
+    std::string val2 = rhs->getValue();
+    return (val1 > val2);
 }
 // ************************* StringValue *************************

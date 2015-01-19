@@ -42,6 +42,8 @@ void BaseDef::getDatums(double timestamp, const KDIS::PDU::Header* pdu,
         newDatum->setName(name);
         newDatum->setUnit(unit);
         newDatum->setUnitClass(unit_class);
+        if(has_minimum) newDatum->setMinimum(minimum->createCopy());
+        if(has_maximum) newDatum->setMaximum(maximum->createCopy());
         setDatumInfoId(pdu, newDatum);
         datums->push_back(newDatum);
     }

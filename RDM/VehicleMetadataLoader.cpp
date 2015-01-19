@@ -156,10 +156,9 @@ void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, Datum
     def->setDescription(description.toStdString());
     def->setUnitClass(unitClass.toStdString());
     def->setUnit(unit.toStdString());
-    //def->setMin(minVal.toStdString());  // TODO: FIX
-    //def->setMax(maxVal.toStdString());
+    def->setMin(minVal.toStdString(), varType.toStdString());
+    def->setMax(maxVal.toStdString(), varType.toStdString());
     def->setEnumType(enumType.toStdString());
-
 }
 
 void VehicleMetadataLoader::addDefToPduDef(BaseDef* def, uint8_t pduType,

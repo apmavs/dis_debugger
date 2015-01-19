@@ -46,13 +46,17 @@ protected:
     std::string name;
     std::string category;
     std::string description;
-    QByteArray minimum;
-    QByteArray maximum;
+    DatumValue* minimum;
+    bool has_minimum;
+    DatumValue* maximum;
+    bool has_maximum;
     std::string enum_type;
 
     DatumDef();
     void setDatumInfoId(const KDIS::PDU::Header* pdu, DatumInfo* datum);
     uint32_t generateId();
+    DatumDef & operator=(const DatumDef& copyVal);
+    DatumDef(const DatumDef& copyVal);
 
 public:
     virtual ~DatumDef();
@@ -70,8 +74,8 @@ public:
     void setName(std::string n);
     void setCategory(std::string c);
     void setDescription(std::string d);
-    void setMin(QByteArray m);
-    void setMax(QByteArray m);
+    void setMin(std::string minVal, std::string type);
+    void setMax(std::string maxVal, std::string type);
     void setEnumType(std::string enumType);
 
     virtual void getDatums(double timestamp,

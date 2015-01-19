@@ -11,6 +11,10 @@ DatumInfo::DatumInfo()
     category    = "";
     description = "";
     mutex = new QMutex();
+    has_minimum = false;
+    has_maximum = false;
+    minimum     = NULL;
+    maximum     = NULL;
 }
 
 DatumInfo::~DatumInfo()
@@ -24,6 +28,22 @@ DatumInfo::~DatumInfo()
         delete v;
     }
     delete mutex;
+    if(minimum != NULL) delete minimum;
+    if(maximum != NULL) delete maximum;
+}
+
+DatumValue* DatumInfo::getLastRawDatumValue()
+{
+    DatumValue* val = NULL;
+
+    mutex->lock();
+    // Get most current value if any values exist
+    std::vector<DatumValue*>::reverse_iterator it = values.rbegin();
+    if(it != values.rend())
+        val = (*it);
+    mutex->unlock();
+
+    return val;
 }
 
 DatumInfo* DatumInfo::createDatum(double time, std::string type, QByteArray value)
@@ -106,6 +126,24 @@ void DatumInfo::setDescription(std::string d)
 {
     mutex->lock();
     description = d;
+    mutex->unlock();
+}
+
+void DatumInfo::setMinimum(DatumValue* min)
+{
+    mutex->lock();
+    if(minimum != NULL) delete minimum;
+    minimum = min;
+    has_minimum = true;
+    mutex->unlock();
+}
+
+void DatumInfo::setMaximum(DatumValue* max)
+{
+    mutex->lock();
+    if(maximum != NULL) delete maximum;
+    maximum = max;
+    has_maximum = true;
     mutex->unlock();
 }
 
@@ -206,24 +244,39 @@ std::map<double, std::string> DatumInfo::getHistory() const
     return retVec;
 }
 
+bool DatumInfo::isLessThanMin()
+{
+    // If no min defined, always return false
+    bool lessThanMin = false;
+    if(has_minimum)
+    {
+        DatumValue* curVal = getLastRawDatumValue();
+        DatumValue* minVal = minimum;
+        lessThanMin = curVal->lessThan(minVal);
+    }
+    return lessThanMin;
+}
+
+bool DatumInfo::isGreaterThanMax()
+{
+    // If no max defined, always return false
+    bool greaterThanMax = false;
+    if(has_maximum)
+    {
+        DatumValue* curVal = getLastRawDatumValue();
+        DatumValue* maxVal = maximum;
+        greaterThanMax = curVal->greaterThan(maxVal);
+    }
+    return greaterThanMax;
+}
+
 bool DatumInfo::addValue(double time, QByteArray value)
 {
     bool valueChanged = false;
     DatumValue* newVal;
 
     mutex->lock();
-    if(type == "uint8" )        newVal = new Uint8Value();
-    else if(type == "uint16")   newVal = new Uint16Value();
-    else if(type == "uint32")   newVal = new Uint32Value();
-    else if(type == "uint64")   newVal = new Uint64Value();
-    else if(type == "int8"  )   newVal = new Int8Value();
-    else if(type == "int16" )   newVal = new Int16Value();
-    else if(type == "int32" )   newVal = new Int32Value();
-    else if(type == "int64" )   newVal = new Int64Value();
-    else if(type == "float" )   newVal = new FloatValue();
-    else if(type == "double")   newVal = new DoubleValue();
-    else if(type == "string")   newVal = new StringValue();
-    else                        newVal = new Uint8Value();
+    newVal = DatumValue::create(value, type);
     mutex->unlock();
 
     newVal->setTimestamp(time);

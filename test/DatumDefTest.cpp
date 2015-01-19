@@ -85,8 +85,6 @@ protected:
         base_entity->setName(ENTITY_NAME);
         base_entity->setCategory(ENTITY_CATEGORY);
         base_entity->setDescription(ENTITY_DESCRIPTION);
-        base_entity->setMin(NULL);    // TODO
-        base_entity->setMax(NULL);    // TODO
         base_entity->setEnumType(""); // TODO
     }
 
@@ -123,8 +121,8 @@ protected:
         base_fixed->setName(FIXED_NAME);
         base_fixed->setCategory(FIXED_CATEGORY);
         base_fixed->setDescription(FIXED_DESCRIPTION);
-        base_fixed->setMin(NULL);    // TODO
-        base_fixed->setMax(NULL);    // TODO
+        base_fixed->setMin("0", "uint32");
+        base_fixed->setMax("5000000", "uint32");
         base_fixed->setEnumType(""); // TODO
     }
 
@@ -159,8 +157,8 @@ protected:
         base_variable1->setName(VARIABLE_NAME);
         base_variable1->setCategory(VARIABLE_CATEGORY);
         base_variable1->setDescription(VARIABLE_DESCRIPTION);
-        base_variable1->setMin(NULL);    // TODO
-        base_variable1->setMax(NULL);    // TODO
+        base_variable1->setMin("-50.0", "double");
+        base_variable1->setMax("100.0", "double");
         base_variable1->setEnumType(""); // TODO
 
         base_variable2 = new BaseDef();
@@ -175,8 +173,6 @@ protected:
         base_variable2->setName(VARIABLE_NAME);
         base_variable2->setCategory(VARIABLE_CATEGORY);
         base_variable2->setDescription(VARIABLE_DESCRIPTION);
-        base_variable2->setMin(NULL);    // TODO
-        base_variable2->setMax(NULL);    // TODO
         base_variable2->setEnumType(""); // TODO
     }
 
@@ -278,6 +274,11 @@ TEST_F(DatumDefTest, FixedDefTest)
     EXPECT_EQ(FIXED_CATEGORY,      datum->getCategory());
     EXPECT_EQ(FIXED_DESCRIPTION,   datum->getDescription());
 
+    bool belowMin = datum->isLessThanMin();
+    bool aboveMax = datum->isGreaterThanMax();
+    EXPECT_FALSE(belowMin);
+    EXPECT_TRUE (aboveMax);
+
     std::ostringstream ss;
     ss << FIXED_VALUE;
     std::string val = ss.str();
@@ -306,6 +307,11 @@ TEST_F(DatumDefTest, VariableDefTest)
     EXPECT_EQ(VARIABLE_NAME,          datum->getName());
     EXPECT_EQ(VARIABLE_CATEGORY,      datum->getCategory());
     EXPECT_EQ(VARIABLE_DESCRIPTION,   datum->getDescription());
+
+    bool belowMin = datum->isLessThanMin();
+    bool aboveMax = datum->isGreaterThanMax();
+    EXPECT_TRUE (belowMin);
+    EXPECT_FALSE(aboveMax);
 
     std::ostringstream ss1;
     ss1 << VARIABLE_DOUBLE;

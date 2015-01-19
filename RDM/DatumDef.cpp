@@ -14,12 +14,18 @@ DatumDef::DatumDef()
     name        = "";
     category    = "";
     description = "";
-    minimum     = "";
-    maximum     = "";
+    minimum     = NULL;
+    has_minimum = false;
+    maximum     = NULL;
+    has_maximum = false;
     my_id       = generateId();
 }
 
-DatumDef::~DatumDef() {}
+DatumDef::~DatumDef()
+{
+    if(minimum != NULL) delete minimum;
+    if(maximum != NULL) delete maximum;
+}
 
 void DatumDef::setDatumInfoId(const KDIS::PDU::Header* pdu, DatumInfo* datum)
 {
@@ -118,14 +124,18 @@ void DatumDef::setDescription(std::string d)
     description = d;
 }
 
-void DatumDef::setMin(QByteArray m)
+void DatumDef::setMin(std::string minVal, std::string type)
 {
-    minimum = m;
+    if(minimum != NULL) delete minimum;
+    minimum = DatumValue::create(minVal, type);
+    has_minimum = true;
 }
 
-void DatumDef::setMax(QByteArray m)
+void DatumDef::setMax(std::string maxVal, std::string type)
 {
-    maximum = m;
+    if(maximum != NULL) delete maximum;
+    maximum = DatumValue::create(maxVal, type);
+    has_maximum = true;
 }
 
 void DatumDef::setEnumType(std::string enumType)

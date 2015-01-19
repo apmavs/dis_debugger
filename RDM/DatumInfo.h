@@ -21,11 +21,17 @@ private:
     std::string category;
     std::string description;
     std::vector<DatumValue*> values;
+    DatumValue* minimum;
+    DatumValue* maximum;
+    bool has_minimum;
+    bool has_maximum;
 
     DatumInfo();
+    DatumInfo & operator=(const DatumInfo& copyVal);
+    DatumInfo(const DatumInfo& copyVal);
 
 protected:
-    DatumValue* getRawDatumValue();
+    DatumValue* getLastRawDatumValue();
 
 public:
     ~DatumInfo();
@@ -41,6 +47,8 @@ public:
     void setName(std::string n);
     void setCategory(std::string c);
     void setDescription(std::string d);
+    void setMinimum(DatumValue* min);
+    void setMaximum(DatumValue* max);
     DatumIdentifier getId() const;
     std::string getEntityName() const;
     std::string getType() const;
@@ -51,6 +59,9 @@ public:
     std::string getDescription() const;
     std::string getValue() const;
     std::map<double, std::string> getHistory() const;
+    bool isLessThanMin();    // Current value is less than min
+    bool isGreaterThanMax(); // Current value is greater than max
+
     bool addValue(double time, QByteArray value);
     void truncateHistory(double currentTime);
 };
