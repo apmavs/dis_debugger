@@ -3,13 +3,11 @@
 WatchDatumItem::WatchDatumItem(QString categoryName)
     : EntityDatumItem(categoryName)
 {
-
 }
 
 WatchDatumItem::WatchDatumItem(EntityDatumItem* parent, const DatumInfo* d)
     : EntityDatumItem(parent, d)
 {
-
 }
 
 WatchDatumItem* WatchDatumItem::createWatchItem(EntityDatumItem* fromThis)
@@ -58,6 +56,7 @@ void WatchDatumItem::setDisplay()
         curVal += watched_datum->getUnit();
         setText(2, curVal.c_str());
     }
+    setColor(2);
     mutex.unlock();
 }
 

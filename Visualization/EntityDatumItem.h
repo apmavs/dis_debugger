@@ -17,6 +17,9 @@ private slots:
     virtual void setDisplay();
     virtual void clearDisplay();
 
+protected:
+    void setColor(int column);
+
 public:
     EntityDatumItem(QString categoryName); // For category items with no datum
     EntityDatumItem(EntityDatumItem* parent, const DatumInfo* d);

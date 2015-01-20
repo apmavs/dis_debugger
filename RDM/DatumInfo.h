@@ -30,9 +30,6 @@ private:
     DatumInfo & operator=(const DatumInfo& copyVal);
     DatumInfo(const DatumInfo& copyVal);
 
-protected:
-    DatumValue* getLastRawDatumValue();
-
 public:
     ~DatumInfo();
 
@@ -59,8 +56,10 @@ public:
     std::string getDescription() const;
     std::string getValue() const;
     std::map<double, std::string> getHistory() const;
-    bool isLessThanMin();    // Current value is less than min
-    bool isGreaterThanMax(); // Current value is greater than max
+    bool isLessThanMin() const;    // Current value is less than min
+    bool isGreaterThanMax() const; // Current value is greater than max
+    bool isLessThanMin(double timestamp) const;
+    bool isGreaterThanMax(double timestamp) const;
 
     bool addValue(double time, QByteArray value);
     void truncateHistory(double currentTime);

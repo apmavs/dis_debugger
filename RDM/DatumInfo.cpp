@@ -32,20 +32,6 @@ DatumInfo::~DatumInfo()
     if(maximum != NULL) delete maximum;
 }
 
-DatumValue* DatumInfo::getLastRawDatumValue()
-{
-    DatumValue* val = NULL;
-
-    mutex->lock();
-    // Get most current value if any values exist
-    std::vector<DatumValue*>::reverse_iterator it = values.rbegin();
-    if(it != values.rend())
-        val = (*it);
-    mutex->unlock();
-
-    return val;
-}
-
 DatumInfo* DatumInfo::createDatum(double time, std::string type, QByteArray value)
 {
     DatumInfo* datum = new DatumInfo();
@@ -244,29 +230,69 @@ std::map<double, std::string> DatumInfo::getHistory() const
     return retVec;
 }
 
-bool DatumInfo::isLessThanMin()
+bool DatumInfo::isLessThanMin() const
 {
+    return isLessThanMin(getLastTimestamp());
+}
+
+bool DatumInfo::isGreaterThanMax() const
+{
+    return isGreaterThanMax(getLastTimestamp());
+}
+
+bool DatumInfo::isLessThanMin(double timestamp) const
+{
+    DatumValue* checkVal = NULL;
+
+    mutex->lock();
+    // Get most current value if any values exist
+    std::vector<DatumValue*>::const_iterator it;
+    for(it = values.begin(); it != values.end(); it++)
+    {
+        if((*it)->getTimestamp() == timestamp)
+        {
+            checkVal = (*it);
+            break;
+        }
+    }
+
     // If no min defined, always return false
     bool lessThanMin = false;
-    if(has_minimum)
+    if(has_minimum && (checkVal != NULL))
     {
-        DatumValue* curVal = getLastRawDatumValue();
         DatumValue* minVal = minimum;
-        lessThanMin = curVal->lessThan(minVal);
+        lessThanMin = checkVal->lessThan(minVal);
     }
+    mutex->unlock();
+
     return lessThanMin;
 }
 
-bool DatumInfo::isGreaterThanMax()
+bool DatumInfo::isGreaterThanMax(double timestamp) const
 {
+    DatumValue* checkVal = NULL;
+
+    mutex->lock();
+    // Get most current value if any values exist
+    std::vector<DatumValue*>::const_iterator it;
+    for(it = values.begin(); it != values.end(); it++)
+    {
+        if((*it)->getTimestamp() == timestamp)
+        {
+            checkVal = (*it);
+            break;
+        }
+    }
+
     // If no max defined, always return false
     bool greaterThanMax = false;
-    if(has_maximum)
+    if(has_maximum && (checkVal != NULL))
     {
-        DatumValue* curVal = getLastRawDatumValue();
         DatumValue* maxVal = maximum;
-        greaterThanMax = curVal->greaterThan(maxVal);
+        greaterThanMax = checkVal->greaterThan(maxVal);
     }
+    mutex->unlock();
+
     return greaterThanMax;
 }
 

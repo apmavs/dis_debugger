@@ -33,6 +33,7 @@ void EntityDatumItem::setDisplay()
     if(watched_datum == NULL)
     {   // category item
         setText(0, category_name);
+        setTextColor(1, Qt::black);
     }
     else
     {
@@ -41,6 +42,7 @@ void EntityDatumItem::setDisplay()
         curVal += watched_datum->getUnit();
         setText(1, curVal.c_str());
     }
+    setColor(1);
     mutex.unlock();
 }
 
@@ -50,6 +52,21 @@ void EntityDatumItem::clearDisplay()
     if(watched_datum != NULL)
         setText(0, "COLLAPSED");
     mutex.unlock();
+}
+
+void EntityDatumItem::setColor(int column)
+{
+    if(watched_datum != NULL)
+    {
+        if(watched_datum->isGreaterThanMax())
+            setTextColor(column, Qt::red);
+        else if(watched_datum->isLessThanMin())
+            setTextColor(column, Qt::blue);
+        else
+            setTextColor(column, Qt::black);
+    }
+    else
+        setTextColor(column, Qt::black);
 }
 
 void EntityDatumItem::activate(const void *widgetPtr)

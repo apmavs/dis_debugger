@@ -32,8 +32,6 @@ protected:
     std::set<const void*> interested_widgets;
     const DatumInfo* const watched_datum;
     QString category_name;
-    std::string entity_removed;
-    const DatumInfo* new_datum;
     bool constant_updates;
 
     DatumItem(QString categoryName); // For category items with no datum
@@ -46,9 +44,9 @@ public:
     QString getCategoryName();
 
     // Satisfy DatumObserver interface
-    virtual void notifyNewDatum(const DatumInfo* datum);
-    virtual void notifyNewValue(const DatumInfo* datum);
-    virtual void notifyEntityRemoved(std::string entity);
+    virtual void notifyNewDatum(const DatumInfo*);
+    virtual void notifyNewValue(const DatumInfo*);
+    virtual void notifyEntityRemoved(std::string);
     virtual void notifyAllDatumsInvalid();
 
     // Call with pointer to caller

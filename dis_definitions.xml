@@ -84,17 +84,23 @@
       <Category>Velocity</Category>
       <Description>X velocity of entity</Description>
       <Unit>m/s</Unit>
+      <MinValue>-20.0</MinValue>
+      <MaxValue>100.0</MaxValue>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="40" size="4" byte_order="network">
       <Name>Y</Name>
       <Category>Velocity</Category>
       <Description>Y velocity of entity</Description>
       <Unit>m/s</Unit>
+      <MinValue>-20.0</MinValue>
+      <MaxValue>100.0</MaxValue>
    </DatumInfo>
    <DatumInfo source="EntityState" type="float" offset="44" size="4" byte_order="network">
       <Name>Z</Name>
       <Category>Velocity</Category>
       <Description>Z velocity of entity</Description>
+      <MinValue>-20.0</MinValue>
+      <MaxValue>100.0</MaxValue>
       <Unit>m/s</Unit>
    </DatumInfo>
    <DatumInfo source="EntityState" type="double" offset="48" size="8" byte_order="network">

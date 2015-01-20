@@ -46,28 +46,21 @@ QString DatumItem::getCategoryName()
     return category_name;
 }
 
-void DatumItem::notifyNewDatum(const DatumInfo* datum)
+void DatumItem::notifyNewDatum(const DatumInfo*)
 {
-    new_datum = datum;
 }
 
-void DatumItem::notifyNewValue(const DatumInfo* datum)
+void DatumItem::notifyNewValue(const DatumInfo*)
 {
-    new_datum = datum;
     emit updateDisplay();
 }
 
-void DatumItem::notifyEntityRemoved(std::string entity)
+void DatumItem::notifyEntityRemoved(std::string)
 {
-    entity_removed = entity;
 }
 
 void DatumItem::notifyAllDatumsInvalid()
 {
-    mutex.lock();
-    new_datum = NULL;
-    entity_removed = "";
-    mutex.unlock();
 }
 
 // Register for datum updates if anybody is displaying

@@ -19,7 +19,9 @@ private:
     PlotCurveItem(const DatumItem& rhs);
     PlotCurveItem& operator=(const DatumItem& rhs);
     QVector<QPointF> datum_points;
+    QVector<QPointF> bad_points; // Track values out of min/max range
     QwtPlotCurve* curve_dots;
+    QwtPlotCurve* bad_value_dots;
 
 private slots:
     // These are slots to ensure GUI updates are done in GUI thread

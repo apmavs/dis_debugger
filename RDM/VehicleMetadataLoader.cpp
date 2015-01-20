@@ -156,8 +156,8 @@ void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, Datum
     def->setDescription(description.toStdString());
     def->setUnitClass(unitClass.toStdString());
     def->setUnit(unit.toStdString());
-    def->setMin(minVal.toStdString(), varType.toStdString());
-    def->setMax(maxVal.toStdString(), varType.toStdString());
+    if(minVal != "") def->setMin(minVal.toStdString(), varType.toStdString());
+    if(maxVal != "") def->setMax(maxVal.toStdString(), varType.toStdString());
     def->setEnumType(enumType.toStdString());
 }
 
