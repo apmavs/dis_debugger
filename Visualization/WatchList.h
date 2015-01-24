@@ -12,6 +12,8 @@ class WatchList : public QTreeWidget
 
 protected:
     virtual void dropEvent(QDropEvent* event);
+    void addItems(QList<QTreeWidgetItem*> items, QModelIndex toIdx);
+    void moveItems(QList<QTreeWidgetItem*> items, QModelIndex toIdx);
 
 protected slots:
     void activateItem(QModelIndex idx);
