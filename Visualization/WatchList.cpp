@@ -3,8 +3,18 @@
 #include "WatchDatumItem.h"
 
 WatchList::WatchList(QWidget *parent) :
-    QTreeWidget(parent)
+    QTreeWidget(parent),
+    right_click_menu(tr(""), this),
+    delete_action("Delete", this)
 {
+    // Create right click menu
+    connect(&delete_action, SIGNAL(triggered()), this, SLOT(deleteSelectedItems()));
+    right_click_menu.addAction(&delete_action);
+
+    // Setup signal to show the right click menu
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showRightClickMenu(QPoint)));
+
     connect(this, SIGNAL(expanded(QModelIndex)), this, SLOT(activateItem(QModelIndex)));
     connect(this, SIGNAL(collapsed(QModelIndex)), this, SLOT(deactivateItem(QModelIndex)));
 }
@@ -107,6 +117,14 @@ void WatchList::moveItems(QList<QTreeWidgetItem*> items, QModelIndex toIdx)
     }
 }
 
+void WatchList::keyPressEvent(QKeyEvent* event)
+{
+    if(event->key() == Qt::Key_Delete)
+        deleteSelectedItems();
+    else
+        QWidget::keyPressEvent(event);
+}
+
 void WatchList::activateItem(QModelIndex idx)
 {
     EntityDatumItem* dItem = (EntityDatumItem*)(this->itemFromIndex(idx));
@@ -123,6 +141,36 @@ void WatchList::deactivateItem(QModelIndex idx)
         dItem->deactivate(this);
     else
         std::cerr << "EntityDataList::deactivateItem ERROR: " << idx.row() << " does not exist!" << std::endl;
+}
+
+void WatchList::deleteSelectedItems()
+{
+    // Continuously grab all selected items after each single delete to
+    // prevent calling delete on children multiple times if the user
+    // selected both child and it's parent for the delete.
+    QList<QTreeWidgetItem*> items = selectedItems();
+    while(items.size() > 0)
+    {
+        QTreeWidgetItem* item = items.at(0);
+        QTreeWidgetItem* itemParent = item->parent();
+        if(itemParent != NULL)
+        {
+            int itemIdx = itemParent->indexOfChild(item);
+            item = itemParent->takeChild(itemIdx);
+        }
+        else
+        {
+            int itemIdx = item->treeWidget()->indexOfTopLevelItem(item);
+            item = item->treeWidget()->takeTopLevelItem(itemIdx);
+        }
+        delete item;
+        items = selectedItems();
+    }
+}
+
+void WatchList::showRightClickMenu(const QPoint& pos)
+{
+    right_click_menu.exec(mapToGlobal(pos));
 }
 
 
