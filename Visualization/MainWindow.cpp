@@ -68,6 +68,8 @@ void MainWindow::removeEntitySlot(std::string entity)
 void MainWindow::entitiesInvalidSlot()
 {
     ui->EntityView->clear();
+    ui->WatchView->clear();
+    ui->PlotsGroup->deleteAllPlots();
 }
 
 void MainWindow::notifyNewDatum(const DatumInfo* datum)

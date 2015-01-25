@@ -33,6 +33,7 @@ protected:
 public:
     explicit PlotGroupBox(QWidget* parent = 0);
     virtual ~PlotGroupBox();
+    void deleteAllPlots();
 };
 
 #endif // PLOTGROUPBOX_H

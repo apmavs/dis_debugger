@@ -391,7 +391,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="PlotGroupBox" name="Plot1" native="true"/>
+         <widget class="PlotGroupBox" name="PlotsGroup" native="true"/>
         </item>
        </layout>
       </widget>

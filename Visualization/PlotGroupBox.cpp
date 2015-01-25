@@ -27,17 +27,7 @@ PlotGroupBox::~PlotGroupBox()
 
 void PlotGroupBox::on_DeleteAllBtn_clicked()
 {
-    // Clear permanent plot
-    ui->FirstPlot->clearCurves();
-
-    // Delete created plots
-    while(created_plots.size())
-    {
-        PlotWidget* p = created_plots.at(0);
-        created_plots.removeAt(0);
-        p->setParent(NULL);
-        delete p;
-    }
+    deleteAllPlots();
 }
 
 void PlotGroupBox::deletePlot(PlotWidget* plot)
@@ -130,4 +120,18 @@ void PlotGroupBox::dropEvent(QDropEvent* event)
     event->setDropAction(Qt::IgnoreAction);
     event->accept();
     QWidget::dropEvent(event);
+}
+
+void PlotGroupBox::deleteAllPlots()
+{
+    // Clear permanent plot
+    ui->FirstPlot->clearCurves();
+
+    // Delete created plots
+    while(created_plots.size())
+    {
+        PlotWidget* p = created_plots.takeAt(0);
+        p->setParent(NULL);
+        delete p;
+    }
 }
