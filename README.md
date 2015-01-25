@@ -7,3 +7,4 @@ Using Qt Creator 3.3.0
 Building with KDIS 2.8.0
 Running with DIS v6
 Unit testing with gtest-1.7.0
+Using Qwt 6.1.2
