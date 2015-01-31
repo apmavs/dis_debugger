@@ -37,6 +37,9 @@ template<class DatumType>
 class DatumValueTemplate : public DatumValue
 {
 private:
+    DatumValueTemplate & operator=(const DatumValueTemplate& copyVal);
+    DatumValueTemplate(const DatumValueTemplate& copyVal);
+
     DatumType getVal() const
     {
         DatumType val = 0;
@@ -84,115 +87,16 @@ public:
     }
 };
 
-class Uint8Value : public DatumValueTemplate<uint8_t>
-{
-private:
-    Uint8Value & operator=(const Uint8Value& copyVal);
-    Uint8Value(const Uint8Value& copyVal);
-
-public:
-    Uint8Value(){}
-    virtual ~Uint8Value(){}
-};
-
-class Uint16Value : public DatumValueTemplate<uint16_t>
-{
-private:
-    Uint16Value & operator=(const Uint16Value& copyVal);
-    Uint16Value(const Uint16Value& copyVal);
-
-public:
-    Uint16Value(){}
-    virtual ~Uint16Value(){}
-};
-
-class Uint32Value : public DatumValueTemplate<uint32_t>
-{
-private:
-    Uint32Value & operator=(const Uint32Value& copyVal);
-    Uint32Value(const Uint32Value& copyVal);
-
-public:
-    Uint32Value(){}
-    virtual ~Uint32Value(){}
-};
-
-class Uint64Value : public DatumValueTemplate<uint64_t>
-{
-private:
-    Uint64Value & operator=(const Uint64Value& copyVal);
-    Uint64Value(const Uint64Value& copyVal);
-
-public:
-    Uint64Value(){}
-    virtual ~Uint64Value(){}
-};
-
-class Int8Value : public DatumValueTemplate<int8_t>
-{
-private:
-    Int8Value & operator=(const Int8Value& copyVal);
-    Int8Value(const Int8Value& copyVal);
-
-public:
-    Int8Value(){}
-    virtual ~Int8Value(){}
-};
-
-class Int16Value : public DatumValueTemplate<int16_t>
-{
-private:
-    Int16Value & operator=(const Int16Value& copyVal);
-    Int16Value(const Int16Value& copyVal);
-
-public:
-    Int16Value(){}
-    virtual ~Int16Value(){}
-};
-
-class Int32Value : public DatumValueTemplate<int32_t>
-{
-private:
-    Int32Value & operator=(const Int32Value& copyVal);
-    Int32Value(const Int32Value& copyVal);
-
-public:
-    Int32Value(){}
-    virtual ~Int32Value(){}
-};
-
-class Int64Value : public DatumValueTemplate<int64_t>
-{
-private:
-    Int64Value & operator=(const Int64Value& copyVal);
-    Int64Value(const Int64Value& copyVal);
-
-public:
-    Int64Value(){}
-    virtual ~Int64Value(){}
-};
-
-class FloatValue : public DatumValueTemplate<float>
-{
-private:
-    FloatValue & operator=(const FloatValue& copyVal);
-    FloatValue(const FloatValue& copyVal);
-
-public:
-    FloatValue(){}
-    virtual ~FloatValue(){}
-};
-
-class DoubleValue : public DatumValueTemplate<double>
-{
-private:
-    DoubleValue & operator=(const DoubleValue& copyVal);
-    DoubleValue(const DoubleValue& copyVal);
-
-public:
-    DoubleValue(){}
-    virtual ~DoubleValue(){}
-};
+typedef DatumValueTemplate<uint8_t>  Uint8Value;
+typedef DatumValueTemplate<uint16_t> Uint16Value;
+typedef DatumValueTemplate<uint32_t> Uint32Value;
+typedef DatumValueTemplate<uint64_t> Uint64Value;
+typedef DatumValueTemplate<int8_t>   Int8Value;
+typedef DatumValueTemplate<int16_t>  Int16Value;
+typedef DatumValueTemplate<int32_t>  Int32Value;
+typedef DatumValueTemplate<int64_t>  Int64Value;
+typedef DatumValueTemplate<float>    FloatValue;
+typedef DatumValueTemplate<double>   DoubleValue;
 
 class StringValue : public DatumValue
 {
