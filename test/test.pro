@@ -53,4 +53,5 @@ win32:LIBS += -lws2_32
 
 SOURCES += main.cpp \
     NetworkPduSourceTest.cpp \
-    DatumDefTest.cpp
+    DatumDefTest.cpp \
+    DataModelControllerTest.cpp

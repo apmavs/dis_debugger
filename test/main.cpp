@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "DatumDefTest.cpp"
 #include "NetworkPduSourceTest.cpp"
+#include "DataModelControllerTest.cpp"
 
 int main(int argc, char *argv[])
 {
