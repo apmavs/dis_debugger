@@ -119,7 +119,7 @@ void DatumInfo::setMinimum(DatumValue* min)
 {
     mutex->lock();
     if(minimum != NULL) delete minimum;
-    minimum = min;
+    minimum = min->createCopy();
     has_minimum = true;
     mutex->unlock();
 }
@@ -128,7 +128,7 @@ void DatumInfo::setMaximum(DatumValue* max)
 {
     mutex->lock();
     if(maximum != NULL) delete maximum;
-    maximum = max;
+    maximum = max->createCopy();
     has_maximum = true;
     mutex->unlock();
 }

@@ -55,4 +55,5 @@ SOURCES += main.cpp \
     NetworkPduSourceTest.cpp \
     DatumDefTest.cpp \
     DataModelControllerTest.cpp \
-    DatumIdentifierTest.cpp
+    DatumIdentifierTest.cpp \
+    DatumInfoTest.cpp

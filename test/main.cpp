@@ -3,6 +3,7 @@
 #include "NetworkPduSourceTest.cpp"
 #include "DataModelControllerTest.cpp"
 #include "DatumIdentifierTest.cpp"
+#include "DatumInfoTest.cpp"
 
 int main(int argc, char *argv[])
 {
