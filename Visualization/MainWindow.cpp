@@ -17,10 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->MainSplitter->setStretchFactor(1, 2);
     ui->MainSplitter->setStretchFactor(2, 1);
 
-    xml_file = "C:\\Comp\\school_work\\CSE\\dis_debugger\\dis_definitions.xml"; // TODO: Replace w/config
     controller = DataModelController::getInstance();
     controller->registerObserver(this);
-    controller->loadMetadataXml(xml_file);
 
     qRegisterMetaType<std::string>();
     QObject::connect(this, SIGNAL(newDatumSignal(const DatumInfo*)), this,

@@ -6,6 +6,7 @@
 #include "PduDeconstructor.h"
 #include "DatumIdentifier.h"
 #include "DatumObserver.h"
+#include "Configuration.h"
 
 #include <string>
 #include <vector>
@@ -26,6 +27,7 @@ private:
     std::vector<DatumObserver*> new_datum_observers;
     std::map<DatumObserver*, std::vector<DatumIdentifier>*> rx_observers;
     std::map<DatumObserver*, std::vector<DatumIdentifier>*> change_observers;
+    Configuration* config;
 
     void processNewDatum(DatumInfo* datum);
     void processDatumChange(DatumInfo* datum, bool newVal);

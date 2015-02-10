@@ -6,11 +6,16 @@ DataModelController* DataModelController::instance = NULL;
 
 DataModelController::DataModelController()
 {
-    pdu_source = new NetworkPduSource("127.0.0.1");
+    config = Configuration::getInstance();
+    std::string ip = config->getValue(CONFIG::BROADCAST_IP);
+    uint32_t port = atoi(config->getValue(CONFIG::BROADCAST_PORT).c_str());
+    pdu_source = new NetworkPduSource(ip, port);
     pdu_source->registerPduObserver(this);
     pdu_source->start();
 
     deconstructor = new PduDeconstructor();
+    std::string xml = config->getValue(CONFIG::METADATA_XML);
+    loadMetadataXml(xml);
 }
 
 DataModelController::~DataModelController()
@@ -211,6 +216,7 @@ bool DataModelController::loadMetadataXml(std::string filename)
 {
     mutex.lock();
     bool retVal = deconstructor->loadXml(filename);
+    if(retVal) config->setValue(CONFIG::METADATA_XML, filename);
     mutex.unlock();
     return retVal;
 }
