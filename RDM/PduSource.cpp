@@ -6,6 +6,9 @@
 // KDIS includes
 #include "KDIS/Extras/PDU_Factory.h"
 
+// Set current time
+time_t PduSource::start_time = time(NULL);
+
 PduSource::PduSource()
 {
     unknown_pdu_count = 0;
@@ -82,4 +85,9 @@ void PduSource::removePduObserver(PduObserver *obs)
     observers.erase(std::remove(observers.begin(), observers.end(), obs),
                     observers.end());
     observer_mutex.unlock();
+}
+
+double PduSource::getTimeSinceStart()
+{
+   return difftime(time(NULL), start_time);
 }

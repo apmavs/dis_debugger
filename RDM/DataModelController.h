@@ -32,6 +32,7 @@ private:
     void processNewDatum(DatumInfo* datum);
     void processDatumChange(DatumInfo* datum, bool newVal);
     void processEntityRemoval(KDIS::PDU::Header* pdu);
+    void createNetworkConnection(std::string ip, uint32_t port);
 
 public:
     static DataModelController* getInstance();
@@ -45,6 +46,10 @@ public:
                                bool notifyAlways = false);
     void unregisterObserver(DatumObserver* obs);
     void unregisterDatumObserver(DatumObserver* obs, const DatumInfo* datum);
+    std::string getBroadcastIp();
+    uint32_t    getBroadcastPort();
+    bool changeBroadcastIp(std::string newIp);
+    bool changeBroadcastPort(uint32_t newPort);
 
 };
 

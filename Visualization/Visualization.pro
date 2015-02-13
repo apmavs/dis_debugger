@@ -61,7 +61,8 @@ SOURCES += main.cpp\
     WatchDatumItem.cpp \
     PlotGroupBox.cpp \
     PlotCurveItem.cpp \
-    PlotWidget.cpp
+    PlotWidget.cpp \
+    TextEntryPopup.cpp
 
 HEADERS  += MainWindow.h \
     EntityDataList.h \
@@ -71,8 +72,10 @@ HEADERS  += MainWindow.h \
     WatchDatumItem.h \
     PlotGroupBox.h \
     PlotCurveItem.h \
-    PlotWidget.h
+    PlotWidget.h \
+    TextEntryPopup.h
 
 FORMS    += MainWindow.ui \
     PlotWidget.ui \
-    PlotGroupBox.ui
+    PlotGroupBox.ui \
+    TextEntryPopup.ui

@@ -4,7 +4,6 @@
 #include <QThread>
 #include <QMutex>
 #include <iostream>
-#include <time.h>
 #include <vector>
 #include <stdint.h>
 
@@ -16,9 +15,6 @@
 
 class NetworkPduSource : public PduSource
 {
-private:
-    time_t start_time;
-
 protected:
     const static uint32_t MAX_BUFFER_SIZE;
 
@@ -32,6 +28,8 @@ public:
     virtual ~NetworkPduSource();
 
     virtual void run();
+    std::string getBroadcastAddress();
+    uint32_t    getBroadcastPort();
 };
 
 #endif // NETWORKTHREAD_H

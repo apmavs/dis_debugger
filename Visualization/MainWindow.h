@@ -3,6 +3,7 @@
 
 #include "DataModelController.h"
 #include "DatumObserver.h"
+#include "TextEntryPopup.h"
 
 #include <QMainWindow>
 #include <QMutex>
@@ -16,6 +17,16 @@ Q_DECLARE_METATYPE(std::string)
 class MainWindow : public QMainWindow, public DatumObserver
 {
     Q_OBJECT
+private:
+    QMutex mutex;
+    std::string xml_file;
+    Ui::MainWindow *ui;
+    DataModelController* controller;
+    TextEntryPopup entry_dialog;
+    QString last_entry_request;
+
+protected:
+    std::string getStrippedName(std::string entityName);
 
 private slots:
     // These are slots to ensure GUI updates are done in GUI thread
@@ -27,6 +38,9 @@ private slots:
     void on_EntityView_currentItemChanged(QListWidgetItem *current);
     void on_FilterInput_textChanged(const QString &arg1);
     void openXml();
+    void changeBroadcastIp();
+    void changeBroadcastPort();
+    void handleDialogEntry(QString value);
 
 signals:
     void newDatumSignal(const DatumInfo* datum);
@@ -42,15 +56,6 @@ public:
     virtual void notifyNewValue(const DatumInfo* datum);
     virtual void notifyEntityRemoved(std::string entity);
     virtual void notifyAllDatumsInvalid();
-
-protected:
-    std::string getStrippedName(std::string entityName);
-
-private:
-    QMutex mutex;
-    std::string xml_file;
-    Ui::MainWindow *ui;
-    DataModelController* controller;
 };
 
 #endif // MAINWINDOW_H

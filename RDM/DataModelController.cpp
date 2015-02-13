@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 #include "DataModelController.h"
 
@@ -9,9 +10,8 @@ DataModelController::DataModelController()
     config = Configuration::getInstance();
     std::string ip = config->getValue(CONFIG::BROADCAST_IP);
     uint32_t port = atoi(config->getValue(CONFIG::BROADCAST_PORT).c_str());
-    pdu_source = new NetworkPduSource(ip, port);
-    pdu_source->registerPduObserver(this);
-    pdu_source->start();
+    pdu_source = NULL;
+    createNetworkConnection(ip, port);
 
     deconstructor = new PduDeconstructor();
     std::string xml = config->getValue(CONFIG::METADATA_XML);
@@ -130,6 +130,20 @@ void DataModelController::processEntityRemoval(KDIS::PDU::Header* pdu)
     {
         (*it)->notifyEntityRemoved(entityName);
     }
+}
+
+void DataModelController::createNetworkConnection(std::string ip, uint32_t port)
+{
+    // Delete source if it already exists
+    if(pdu_source != NULL)
+    {
+        pdu_source->terminate();
+        delete pdu_source;
+    }
+
+    pdu_source = new NetworkPduSource(ip, port);
+    pdu_source->registerPduObserver(this);
+    pdu_source->start();
 }
 
 void DataModelController::notifyPdu(double timestamp, KDIS::PDU::Header* pdu)
@@ -310,4 +324,60 @@ void DataModelController::unregisterDatumObserver(DatumObserver* obs, const Datu
         }
     }
     mutex.unlock();
+}
+
+std::string DataModelController::getBroadcastIp()
+{
+    std::string retVal;
+    NetworkPduSource* netSource = dynamic_cast<NetworkPduSource*>(pdu_source);
+    if(netSource != NULL)
+        retVal = netSource->getBroadcastAddress();
+    else
+        retVal = config->getValue(CONFIG::BROADCAST_IP);
+
+    return config->getValue(CONFIG::BROADCAST_IP);
+}
+
+uint32_t DataModelController::getBroadcastPort()
+{
+    uint32_t retVal;
+    NetworkPduSource* netSource = dynamic_cast<NetworkPduSource*>(pdu_source);
+    if(netSource != NULL)
+        retVal = netSource->getBroadcastPort();
+    else
+        retVal = atoi(config->getValue(CONFIG::BROADCAST_PORT).c_str());
+
+    return retVal;
+}
+
+bool DataModelController::changeBroadcastIp(std::string newIp)
+{
+    bool retVal = false;
+    NetworkPduSource* netSource = dynamic_cast<NetworkPduSource*>(pdu_source);
+    if(netSource != NULL)
+    {
+        config->setValue(CONFIG::BROADCAST_IP, newIp);
+        uint32_t port = netSource->getBroadcastPort();
+        createNetworkConnection(newIp, port);
+        retVal = true;
+    }
+
+    return retVal;
+}
+
+bool DataModelController::changeBroadcastPort(uint32_t newPort)
+{
+    bool retVal = false;
+    NetworkPduSource* netSource = dynamic_cast<NetworkPduSource*>(pdu_source);
+    if(netSource != NULL)
+    {
+        std::ostringstream s;
+        s << newPort;
+        config->setValue(CONFIG::BROADCAST_PORT, s.str());
+        std::string ip = netSource->getBroadcastAddress();
+        createNetworkConnection(ip, newPort);
+        retVal = true;
+    }
+
+    return retVal;
 }

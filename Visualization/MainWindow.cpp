@@ -5,9 +5,14 @@
 #include <QFileDialog>
 #include <QMetaType>
 
+static QString REQ_BROADCAST_IP     = "Broadcast IP";
+static QString REQ_BROADCAST_PORT   = "Broadcast Port";
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    entry_dialog(this),
+    last_entry_request("")
 {
     ui->setupUi(this);
     showMaximized();
@@ -27,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
                      SLOT(removeEntitySlot(std::string)), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(invalidateAllSignal()), this,
                      SLOT(entitiesInvalidSlot()), Qt::QueuedConnection);
+    QObject::connect(&entry_dialog, SIGNAL(confirmedEdit(QString)), this,
+                     SLOT(handleDialogEntry(QString)), Qt::QueuedConnection);
 }
 
 MainWindow::~MainWindow()
@@ -134,4 +141,28 @@ void MainWindow::openXml()
         xml_file = file.toStdString();
         controller->loadMetadataXml(xml_file);
     }
+}
+
+void MainWindow::changeBroadcastIp()
+{
+    last_entry_request = REQ_BROADCAST_IP;
+    QString req(controller->getBroadcastIp().c_str());
+    entry_dialog.popup(last_entry_request, req);
+}
+
+void MainWindow::changeBroadcastPort()
+{
+    last_entry_request = REQ_BROADCAST_PORT;
+    QString req = QString::number(controller->getBroadcastPort());
+    entry_dialog.popup(last_entry_request, req);
+}
+
+void MainWindow::handleDialogEntry(QString value)
+{
+    if(last_entry_request == REQ_BROADCAST_IP)
+        controller->changeBroadcastIp(value.toStdString());
+    else if(last_entry_request == REQ_BROADCAST_PORT)
+        controller->changeBroadcastPort(value.toUInt());
+    else
+        std::cerr << "Received edit for unknown request:" << value.toStdString() << std::endl;
 }
