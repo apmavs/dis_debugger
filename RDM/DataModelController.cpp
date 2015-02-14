@@ -226,11 +226,11 @@ void DataModelController::removeAllDatums()
     datums.clear();
 }
 
-bool DataModelController::loadMetadataXml(std::string filename)
+bool DataModelController::loadMetadataXml(std::string filename, bool save)
 {
     mutex.lock();
     bool retVal = deconstructor->loadXml(filename);
-    if(retVal) config->setValue(CONFIG::METADATA_XML, filename);
+    if(retVal) config->setValue(CONFIG::METADATA_XML, filename, save);
     mutex.unlock();
     return retVal;
 }
@@ -350,13 +350,13 @@ uint32_t DataModelController::getBroadcastPort()
     return retVal;
 }
 
-bool DataModelController::changeBroadcastIp(std::string newIp)
+bool DataModelController::changeBroadcastIp(std::string newIp, bool save)
 {
     bool retVal = false;
     NetworkPduSource* netSource = dynamic_cast<NetworkPduSource*>(pdu_source);
     if(netSource != NULL)
     {
-        config->setValue(CONFIG::BROADCAST_IP, newIp);
+        config->setValue(CONFIG::BROADCAST_IP, newIp, save);
         uint32_t port = netSource->getBroadcastPort();
         createNetworkConnection(newIp, port);
         retVal = true;
@@ -365,7 +365,7 @@ bool DataModelController::changeBroadcastIp(std::string newIp)
     return retVal;
 }
 
-bool DataModelController::changeBroadcastPort(uint32_t newPort)
+bool DataModelController::changeBroadcastPort(uint32_t newPort, bool save)
 {
     bool retVal = false;
     NetworkPduSource* netSource = dynamic_cast<NetworkPduSource*>(pdu_source);
@@ -373,7 +373,7 @@ bool DataModelController::changeBroadcastPort(uint32_t newPort)
     {
         std::ostringstream s;
         s << newPort;
-        config->setValue(CONFIG::BROADCAST_PORT, s.str());
+        config->setValue(CONFIG::BROADCAST_PORT, s.str(), save);
         std::string ip = netSource->getBroadcastAddress();
         createNetworkConnection(ip, newPort);
         retVal = true;

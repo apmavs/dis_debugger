@@ -4,6 +4,7 @@
 
 #include "gtest/gtest.h"
 #include <QFile>
+#include <time.h>
 
 class DatumObserverTestClass : public DatumObserver
 {
@@ -89,7 +90,7 @@ TEST(DataModelControllerTest, PduTest)
     f.write(line5);
     f.write(line6);
     f.close();
-    controller->loadMetadataXml(FILE_NAME);
+    controller->loadMetadataXml(FILE_NAME, false);
 
     const KDIS::KFLOAT32 X1 = 535.7,
                          X2 = 5.0;

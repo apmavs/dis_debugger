@@ -39,7 +39,7 @@ public:
     virtual void notifyPdu(double timestamp, KDIS::PDU::Header* pdu);
 
     void removeAllDatums();
-    bool loadMetadataXml(std::string filename);
+    bool loadMetadataXml(std::string filename, bool save = true);
     void registerObserver(DatumObserver* obs);
     void registerDatumObserver(DatumObserver* obs,
                                const DatumInfo* datum,
@@ -48,8 +48,8 @@ public:
     void unregisterDatumObserver(DatumObserver* obs, const DatumInfo* datum);
     std::string getBroadcastIp();
     uint32_t    getBroadcastPort();
-    bool changeBroadcastIp(std::string newIp);
-    bool changeBroadcastPort(uint32_t newPort);
+    bool changeBroadcastIp(std::string newIp, bool save = true);
+    bool changeBroadcastPort(uint32_t newPort, bool save = true);
 
 };
 
