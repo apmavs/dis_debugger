@@ -4,6 +4,7 @@
 #include "DataModelControllerTest.cpp"
 #include "DatumIdentifierTest.cpp"
 #include "DatumInfoTest.cpp"
+#include "DatumValueTest.cpp"
 
 int main(int argc, char *argv[])
 {

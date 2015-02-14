@@ -56,4 +56,7 @@ SOURCES += main.cpp \
     DatumDefTest.cpp \
     DataModelControllerTest.cpp \
     DatumIdentifierTest.cpp \
-    DatumInfoTest.cpp
+    DatumInfoTest.cpp \
+    DatumValueTest.cpp
+
+HEADERS +=
