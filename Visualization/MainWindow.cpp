@@ -51,23 +51,9 @@ void MainWindow::newDatumSlot(const DatumInfo* datum)
     mutex.unlock();
 }
 
-static const std::string REMOVED_STR = " <REMOVED>";
-void MainWindow::removeEntitySlot(std::string entity)
+void MainWindow::removeEntitySlot(std::string)
 {
-    mutex.lock();
-    for(int row = 0; row < ui->EntityView->count(); row++)
-    {
-        QListWidgetItem* item = ui->EntityView->item(row);
-        if(item->text().toStdString() == entity)
-        {
-            QString remName(item->text());
-            remName.append(REMOVED_STR.c_str());
-            item->setText(remName);
-            item->setForeground(Qt::red);
-            break;
-        }
-    }
-    mutex.unlock();
+    // Do not remove, still want to see old data from it
 }
 
 void MainWindow::entitiesInvalidSlot()
@@ -98,31 +84,11 @@ void MainWindow::notifyAllDatumsInvalid()
     emit invalidateAllSignal();
 }
 
-std::string MainWindow::getStrippedName(std::string entityName)
-{
-    // If removed was appended to name, remove appended string
-    if(entityName.length() >= REMOVED_STR.length())
-    {
-        if(0 == entityName.compare(
-                    entityName.length() - REMOVED_STR.length(),
-                    REMOVED_STR.length(),
-                    REMOVED_STR))
-        {
-            entityName = entityName.substr(0,
-                        entityName.length() - REMOVED_STR.length());
-        }
-    }
-
-    return entityName;
-}
-
 void MainWindow::on_EntityView_currentItemChanged(QListWidgetItem *current)
 {
     if(current != NULL)
     {
         std::string entitySelected = current->text().toStdString();
-        entitySelected = getStrippedName(entitySelected);
-
         ui->AttributeView->setActiveEntity(entitySelected);
     }
 }

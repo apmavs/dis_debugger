@@ -25,13 +25,10 @@ private:
     TextEntryPopup entry_dialog;
     QString last_entry_request;
 
-protected:
-    std::string getStrippedName(std::string entityName);
-
 private slots:
     // These are slots to ensure GUI updates are done in GUI thread
     void newDatumSlot(const DatumInfo* datum);
-    void removeEntitySlot(std::string entity);
+    void removeEntitySlot(std::string);
     void entitiesInvalidSlot();
 
     // GUI interaction slots
