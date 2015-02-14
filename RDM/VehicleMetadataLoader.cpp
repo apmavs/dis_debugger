@@ -66,6 +66,462 @@ void VehicleMetadataLoader::createDatumDefinitions(QDomElement e,
             populateDatumInfo(e, def);
             addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Entity_State_PDU_Type, defs);
         }
+        else if(source == "Other")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Other_PDU_Type, defs);
+        }
+        else if(source == "Fire")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Fire_PDU_Type, defs);
+        }
+        else if(source == "Detonation")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Detonation_PDU_Type, defs);
+        }
+        else if(source == "Collision")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Collision_PDU_Type, defs);
+        }
+        else if(source == "ServiceRequest")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Service_Request_PDU_Type, defs);
+        }
+        else if(source == "ResupplyOffer")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Resupply_Offer_PDU_Type, defs);
+        }
+        else if(source == "ResupplyReceived")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Resupply_Received_PDU_Type, defs);
+        }
+        else if(source == "ResupplyCancel")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Resupply_Cancel_PDU_Type, defs);
+        }
+        else if(source == "RepairComplete")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Repair_Complete_PDU_Type, defs);
+        }
+        else if(source == "RepairResponse")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Repair_Response_PDU_Type, defs);
+        }
+        else if(source == "CreateEntity")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Create_Entity_PDU_Type, defs);
+        }
+        else if(source == "RemoveEntity")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Remove_Entity_PDU_Type, defs);
+        }
+        else if(source == "StartResume")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Start_Resume_PDU_Type, defs);
+        }
+        else if(source == "StopFreeze")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Stop_Freeze_PDU_Type, defs);
+        }
+        else if(source == "Acknowledge")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Acknowledge_PDU_Type, defs);
+        }
+        else if(source == "ActionRequest")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Action_Request_PDU_Type, defs);
+        }
+        else if(source == "ActionResponse")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Action_Response_PDU_Type, defs);
+        }
+        else if(source == "DataQuery")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Data_Query_PDU_Type, defs);
+        }
+        else if(source == "EventReport")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Event_Report_PDU_Type, defs);
+        }
+        else if(source == "Message")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Message_PDU_Type, defs);
+        }
+        else if(source == "ElectromagneticEmission")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Electromagnetic_Emission_PDU_Type, defs);
+        }
+        else if(source == "Designator")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Designator_PDU_Type, defs);
+        }
+        else if(source == "Transmitter")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Transmitter_PDU_Type, defs);
+        }
+        else if(source == "Signal")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Signal_PDU_Type, defs);
+        }
+        else if(source == "Receiver")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Receiver_PDU_Type, defs);
+        }
+        else if(source == "IFF_ATC_NAVAID")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::IFF_ATC_NAVAIDS_PDU_Type, defs);
+        }
+        else if(source == "UnderwaterAcoustic")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::UnderwaterAcoustic_PDU_Type, defs);
+        }
+        else if(source == "SupplementalEmission")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::SupplementalEmission_EntityState_PDU_Type, defs);
+        }
+        else if(source == "IntercomSignal")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::IntercomSignal_PDU_Type, defs);
+        }
+        else if(source == "IntercomControl")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::IntercomControl_PDU_Type, defs);
+        }
+        else if(source == "AggregateState")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::AggregateState_PDU_Type, defs);
+        }
+        else if(source == "IsGroupOf")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::IsGroupOf_PDU_Type, defs);
+        }
+        else if(source == "TransferControl")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::TransferControl_PDU_Type, defs);
+        }
+        else if(source == "IsPartOf")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::IsPartOf_PDU_Type, defs);
+        }
+        else if(source == "MinefieldState")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::MinefieldState_PDU_Type, defs);
+        }
+        else if(source == "MinefieldQuery")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::MinefieldQuery_PDU_Type, defs);
+        }
+        else if(source == "MinefieldData")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::MinefieldData_PDU_Type, defs);
+        }
+        else if(source == "MinefieldResponseNak")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::MinefieldResponseNAK_PDU_Type, defs);
+        }
+        else if(source == "EnvironmentalProcess")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::EnvironmentalProcess_PDU_Type, defs);
+        }
+        else if(source == "GriddedData")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::GriddedData_PDU_Type, defs);
+        }
+        else if(source == "PointObjectState")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::PointObjectState_PDU_Type, defs);
+        }
+        else if(source == "LinearObjectState")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::LinearObjectState_PDU_Type, defs);
+        }
+        else if(source == "ArealObjectState")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::ArealObjectState_PDU_Type, defs);
+        }
+        else if(source == "TSPI")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::TSPI_PDU_Type, defs);
+        }
+        else if(source == "Appearance")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Appearance_PDU_Type, defs);
+        }
+        else if(source == "ArticulatedParts")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::ArticulatedParts_PDU_Type, defs);
+        }
+        else if(source == "LEFire")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::LEFire_PDU_Type, defs);
+        }
+        else if(source == "LEDetonation")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::LEDetonation_PDU_Type, defs);
+        }
+        else if(source == "CreateEntityR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::CreateEntity_R_PDU_Type, defs);
+        }
+        else if(source == "RemoveEntityR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::RemoveEntity_R_PDU_Type, defs);
+        }
+        else if(source == "StartResumeR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Start_Resume_R_PDU_Type, defs);
+        }
+        else if(source == "StopFreezeR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Stop_Freeze_R_PDU_Type, defs);
+        }
+        else if(source == "AcknowledgeR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Acknowledge_R_PDU_Type, defs);
+        }
+        else if(source == "ActionRequestR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::ActionRequest_R_PDU_Type, defs);
+        }
+        else if(source == "ActionResponseR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::ActionResponse_R_PDU_Type, defs);
+        }
+        else if(source == "DataQueryR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::DataQuery_R_PDU_Type, defs);
+        }
+        else if(source == "SetDataR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::SetData_R_PDU_Type, defs);
+        }
+        else if(source == "DataR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Data_R_PDU_Type, defs);
+        }
+        else if(source == "EventReportR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::EventReport_R_PDU_Type, defs);
+        }
+        else if(source == "CommentR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Comment_R_PDU_Type, defs);
+        }
+        else if(source == "RecordR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Record_R_PDU_Type, defs);
+        }
+        else if(source == "SetRecordR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::SetRecord_R_PDU_Type, defs);
+        }
+        else if(source == "RecordQueryR")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::RecordQuery_R_PDU_Type, defs);
+        }
+        else if(source == "CollisionElastic")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Collision_Elastic_PDU_Type, defs);
+        }
+        else if(source == "EntityStateUpdate")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::EntityStateUpdate_PDU_Type, defs);
+        }
+        else if(source == "DirectedEnergyFire")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::DirectedEnergyFire_PDU_Type, defs);
+        }
+        else if(source == "EntityDamageStatus")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::EntityDamageStatus_PDU_Type, defs);
+        }
+        else if(source == "IO_Action")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::IO_Action_PDU_Type, defs);
+        }
+        else if(source == "IO_Report")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::IO_Report_PDU_Type, defs);
+        }
+        else if(source == "Attribute")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Attribute_PDU_Type, defs);
+        }
+        else if(source == "AnnounceObject")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Announce_Object_PDU_Type, defs);
+        }
+        else if(source == "DeleteObject")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Delete_Object_PDU_Type, defs);
+        }
+        else if(source == "DescribeEvent")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Describe_Event_PDU_Type, defs);
+        }
+        else if(source == "DescribeObject")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Describe_Object_PDU_Type, defs);
+        }
+        else if(source == "RequestEvent")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Request_Event_PDU_Type, defs);
+        }
+        else if(source == "RequestObject")
+        {
+            BaseDef* def = new BaseDef();
+            populateDatumInfo(e, def);
+            addDefToPduDef(def, KDIS::DATA_TYPE::ENUMS::Request_Object_PDU_Type, defs);
+        }
         else if(source == "FixedDatum")
         {
             uint32_t fixedId = id.toUInt();
