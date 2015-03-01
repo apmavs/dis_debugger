@@ -68,9 +68,37 @@ QByteArray DatumInfo::getLastRawValue()
     return val;
 }
 
-bool DatumInfo::hasSameId(DatumInfo* rhs)
+bool DatumInfo::equivalentTo(DatumInfo* rhs)
 {
-    return (identifier == rhs->identifier);
+    bool equiv = true; // Assume equal
+
+    // If any definition part is different, then not equivalent
+    if(identifier != rhs->identifier)
+        equiv = false;
+    else if(type != rhs->type)
+        equiv = false;
+    else if(unit != rhs->unit)
+        equiv = false;
+    else if(unit_class != rhs->unit_class)
+        equiv = false;
+    else if(name != rhs->name)
+        equiv = false;
+    else if(category != rhs->category)
+        equiv = false;
+    else if(description != rhs->description)
+        equiv = false;
+    else if(has_minimum && rhs->has_minimum &&
+            minimum->getValue() != rhs->minimum->getValue())
+        equiv = false;
+    else if(has_maximum && rhs->has_maximum &&
+            maximum->getValue() != rhs->maximum->getValue())
+        equiv = false;
+    else if(has_minimum != rhs->has_minimum)
+        equiv = false;
+    else if(has_maximum != rhs->has_maximum)
+        equiv = false;
+
+    return equiv;
 }
 
 void DatumInfo::setId(DatumIdentifier id)

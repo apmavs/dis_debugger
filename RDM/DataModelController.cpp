@@ -168,7 +168,7 @@ void DataModelController::notifyPdu(double timestamp, KDIS::PDU::Header* pdu)
             for(existingIt = datums.begin(); existingIt != datums.end(); existingIt++)
             {
                 DatumInfo* existingDatum = *existingIt;
-                if(existingDatum->hasSameId(newDatum))
+                if(existingDatum->equivalentTo(newDatum))
                 {
                     seenBefore = true;
                     // Add updated value to stored datum

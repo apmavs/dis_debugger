@@ -37,7 +37,7 @@ public:
     double getLastTimestamp() const;
     QByteArray getLastRawValue();
 
-    bool hasSameId(DatumInfo* rhs);
+    bool equivalentTo(DatumInfo* rhs);
     void setId(DatumIdentifier id);
     void setUnit(std::string u);
     void setUnitClass(std::string u);

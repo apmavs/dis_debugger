@@ -18,7 +18,6 @@ DatumDef::DatumDef()
     has_minimum = false;
     maximum     = NULL;
     has_maximum = false;
-    my_id       = generateId();
 }
 
 DatumDef::~DatumDef()
@@ -35,16 +34,7 @@ void DatumDef::setDatumInfoId(const KDIS::PDU::Header* pdu, DatumInfo* datum)
     id.setSite(sender.site);
     id.setApp(sender.app);
     id.setEntity(sender.entity);
-    id.setDatumId(my_id);
     datum->setId(id);
-}
-
-// Assign a different ID to each datum definition
-uint32_t DatumDef::generateId()
-{
-    static uint32_t lastId = 0;
-    lastId++;
-    return lastId;
 }
 
 SenderId DatumDef::getSender(const KDIS::PDU::Header* pdu)

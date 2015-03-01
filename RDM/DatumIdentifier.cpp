@@ -5,7 +5,6 @@ DatumIdentifier::DatumIdentifier()
     site   = 0;
     app    = 0;
     entity = 0;
-    datum_id = 0;
 }
 
 bool DatumIdentifier::operator==(DatumIdentifier rhs)
@@ -14,13 +13,17 @@ bool DatumIdentifier::operator==(DatumIdentifier rhs)
 
     if((site     == rhs.site)   &&
        (app      == rhs.app)    &&
-       (entity   == rhs.entity) &&
-       (datum_id == rhs.datum_id))
+       (entity   == rhs.entity))
     {
         retVal = true;
     }
 
     return retVal;
+}
+
+bool DatumIdentifier::operator!=(DatumIdentifier rhs)
+{
+    return !(operator==(rhs));
 }
 
 void DatumIdentifier::setSite(uint16_t s)
@@ -38,11 +41,6 @@ void DatumIdentifier::setEntity(uint16_t e)
     entity = e;
 }
 
-void DatumIdentifier::setDatumId(uint32_t d)
-{
-    datum_id = d;
-}
-
 uint16_t DatumIdentifier::getSite()
 {
     return site;
@@ -56,9 +54,4 @@ uint16_t DatumIdentifier::getApp()
 uint16_t DatumIdentifier::getEntity()
 {
     return entity;
-}
-
-uint32_t DatumIdentifier::getDatumId()
-{
-    return datum_id;
 }

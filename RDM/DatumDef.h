@@ -36,7 +36,6 @@ public:
 class DatumDef
 {
 protected:
-    uint32_t my_id;
     uint32_t length; // bytes
     uint32_t offset; // bytes
     std::string byte_order;
@@ -54,7 +53,6 @@ protected:
 
     DatumDef();
     void setDatumInfoId(const KDIS::PDU::Header* pdu, DatumInfo* datum);
-    uint32_t generateId();
     DatumDef & operator=(const DatumDef& copyVal);
     DatumDef(const DatumDef& copyVal);
 

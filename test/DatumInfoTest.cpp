@@ -21,11 +21,9 @@ public:
         datum1 = DatumInfo::createDatum(1.0, "uint8", QByteArray());
         datum2 = DatumInfo::createDatum(1.0, "uint8", QByteArray());
         id1.setApp(1);
-        id1.setDatumId(2);
         id1.setEntity(3);
         id1.setSite(4);
         id2.setApp(1);
-        id2.setDatumId(2);
         id2.setEntity(3);
         id2.setSite(4);
         min1.setValue(QByteArray(1, (char)MIN));
@@ -69,7 +67,20 @@ TEST(DatumInfoTest, BasicTest)
     EXPECT_EQ(test.datum1->getDescription(), DESC1);
     EXPECT_EQ(test.datum1->getType(),        "uint8");
     EXPECT_TRUE(test.datum1->getId()   ==    test.id1);
-    EXPECT_TRUE(test.datum1->hasSameId(test.datum2));
+    EXPECT_FALSE(test.datum1->equivalentTo(test.datum2));
+
+    // Set datum2 parameters to datum1's data to make sure equivalent
+    // routine works correctly
+    test.datum2->setUnit(UNIT1);
+    test.datum2->setUnitClass(UNIT_CLASS1);
+    test.datum2->setName(NAME1);
+    test.datum2->setCategory(CAT1);
+    test.datum2->setDescription(DESC1);
+    // MUST be created with the same type
+    test.datum2->setId(test.id1);
+    test.datum2->setMinimum(&test.min1);
+    test.datum2->setMaximum(&test.max1);
+    EXPECT_TRUE(test.datum1->equivalentTo(test.datum2));
 }
 
 // Test that min and max violations are detected
