@@ -44,6 +44,9 @@ public:
                   bool persistent=true);
     bool loadConfigFile(std::string fileName);
     bool saveConfig();
+
+    // helper function
+    static std::string getTagValue(std::string fromStr, std::string tag);
 };
 
 #endif // CONFIGURATION_H

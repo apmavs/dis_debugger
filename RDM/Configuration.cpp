@@ -97,3 +97,24 @@ bool Configuration::saveConfig()
     return success;
 }
 
+// Return value from tag <Tag>value</Tag>
+// Returns empty string if not found
+std::string Configuration::getTagValue(std::string fromStr, std::string tag)
+{
+    std::string ret("");
+    std::string beginTag("<" + tag + ">");
+    std::string endTag("</" + tag + ">");
+    size_t begin = fromStr.find(beginTag);
+    if(begin != std::string::npos)
+    {
+        begin     += beginTag.length();
+        size_t end = fromStr.find(endTag);
+        if((end != std::string::npos) && (end > begin))
+        {
+            size_t tagLen = end - begin;
+            ret = fromStr.substr(begin, tagLen);
+        }
+    }
+    return ret;
+}
+

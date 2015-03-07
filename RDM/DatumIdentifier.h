@@ -2,6 +2,7 @@
 #define DATUMIDENTIFIER_H
 
 #include <stdint.h>
+#include <iostream>
 
 class DatumIdentifier
 {
@@ -21,6 +22,9 @@ public:
     uint16_t getApp();
     uint16_t getEntity();
     uint32_t getDatumId();
+
+    std::string getStringRepresentation();
+    static DatumIdentifier fromStringRepresentation(std::string rep);
 };
 
 #endif // DATUMIDENTIFIER_H

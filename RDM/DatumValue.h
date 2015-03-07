@@ -28,9 +28,13 @@ public:
     void setTimestamp(double t);
     void setValue(QByteArray v);
     double getTimestamp() const;
+    virtual std::string getType() const = 0;
     virtual std::string getValue() const = 0;
     QByteArray getRawData() const;
     virtual DatumValue* createCopy() const = 0;
+
+    std::string getStringRepresentation();
+    static DatumValue* createFromStringRepresentation(std::string rep);
 };
 
 template<class DatumType>
@@ -60,6 +64,8 @@ public:
         return QString("%1").arg(val).toStdString();
     }
 
+    virtual std::string getType() const;
+
     virtual DatumValue* createCopy() const
     {
         DatumValueTemplate<DatumType>* copy = new DatumValueTemplate<DatumType>();
@@ -87,6 +93,17 @@ public:
     }
 };
 
+template <> inline std::string DatumValueTemplate<uint8_t> ::getType() const { return "uint8";  }
+template <> inline std::string DatumValueTemplate<uint16_t>::getType() const { return "uint16"; }
+template <> inline std::string DatumValueTemplate<uint32_t>::getType() const { return "uint32"; }
+template <> inline std::string DatumValueTemplate<uint64_t>::getType() const { return "uint64"; }
+template <> inline std::string DatumValueTemplate<int8_t>  ::getType() const { return "int8";   }
+template <> inline std::string DatumValueTemplate<int16_t> ::getType() const { return "int16";  }
+template <> inline std::string DatumValueTemplate<int32_t> ::getType() const { return "int32";  }
+template <> inline std::string DatumValueTemplate<int64_t> ::getType() const { return "int64";  }
+template <> inline std::string DatumValueTemplate<float>   ::getType() const { return "float";  }
+template <> inline std::string DatumValueTemplate<double>  ::getType() const { return "double"; }
+
 typedef DatumValueTemplate<uint8_t>  Uint8Value;
 typedef DatumValueTemplate<uint16_t> Uint16Value;
 typedef DatumValueTemplate<uint32_t> Uint32Value;
@@ -108,6 +125,7 @@ public:
     StringValue();
     virtual ~StringValue();
     virtual std::string getValue() const;
+    virtual std::string getType() const;
     virtual DatumValue* createCopy() const;
     virtual bool lessThan(DatumValue* rhs) const;
     virtual bool greaterThan(DatumValue* rhs) const;

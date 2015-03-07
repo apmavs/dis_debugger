@@ -1,4 +1,7 @@
 #include "DatumIdentifier.h"
+#include "Configuration.h"
+
+#include <stdlib.h>
 
 DatumIdentifier::DatumIdentifier()
 {
@@ -55,3 +58,48 @@ uint16_t DatumIdentifier::getEntity()
 {
     return entity;
 }
+
+std::string DatumIdentifier::getStringRepresentation()
+{
+    std::string rep("<DatumIdentifier>\n");
+
+    char siteStr[100];
+    char appStr[100];
+    char entityStr[100];
+    sprintf(siteStr,   "%d", site);
+    sprintf(appStr,    "%d", app);
+    sprintf(entityStr, "%d", entity);
+    rep += "<SiteID>"        + std::string(siteStr)   + "</SiteID>\n";
+    rep += "<ApplicationID>" + std::string(appStr)    + "</ApplicationID>\n";
+    rep += "<EntityID>"      + std::string(entityStr) + "</EntityID>\n";
+    rep += "</DatumIdentifier>\n";
+
+    return rep;
+}
+
+DatumIdentifier DatumIdentifier::fromStringRepresentation(std::string rep)
+{
+    DatumIdentifier id;
+
+    std::string siteStr   = Configuration::getTagValue(rep, "SiteID");
+    std::string appStr    = Configuration::getTagValue(rep, "ApplicationID");
+    std::string entityStr = Configuration::getTagValue(rep, "EntityID");
+
+    if(siteStr == "")
+        std::cerr << __FILE__ << ": site not found:"   << rep << std::endl;
+    if(appStr == "")
+        std::cerr << __FILE__ << ": app not found:"    << rep << std::endl;
+    if(entityStr == "")
+        std::cerr << __FILE__ << ": entity not found:" << rep << std::endl;
+
+    id.site   = atoi(siteStr.c_str());
+    id.app    = atoi(appStr.c_str());
+    id.entity = atoi(entityStr.c_str());
+
+    return id;
+}
+
+
+
+
+

@@ -1,6 +1,8 @@
 #include "DatumValue.h"
+#include "Configuration.h"
 
 #include <QString>
+#include <stdlib.h>
 
 DatumValue::DatumValue()
 {
@@ -93,8 +95,8 @@ DatumValue* DatumValue::create(std::string v, std::string type)
     else if(type == "string")
     {
         str = v.c_str();
-        byteCount = v.size() + 1;
-        valPtr = (const char*)(&str);
+        byteCount = v.length() + 1;
+        valPtr = str;
     }
 
     for(int i = 0; i < byteCount; i++)
@@ -109,18 +111,22 @@ DatumValue* DatumValue::create(std::string v, std::string type)
 DatumValue* DatumValue::create(QByteArray v, std::string type)
 {
     DatumValue* newVal;
-    if(     type == "uint8" )   newVal = new Uint8Value();
-    else if(type == "uint16")   newVal = new Uint16Value();
-    else if(type == "uint32")   newVal = new Uint32Value();
-    else if(type == "uint64")   newVal = new Uint64Value();
-    else if(type == "int8"  )   newVal = new Int8Value();
-    else if(type == "int16" )   newVal = new Int16Value();
-    else if(type == "int32" )   newVal = new Int32Value();
-    else if(type == "int64" )   newVal = new Int64Value();
-    else if(type == "float" )   newVal = new FloatValue();
-    else if(type == "double")   newVal = new DoubleValue();
-    else if(type == "string")   newVal = new StringValue();
-    else                        newVal = new Uint8Value();
+    if(     type == "uint8" ) newVal = new Uint8Value();
+    else if(type == "uint16") newVal = new Uint16Value();
+    else if(type == "uint32") newVal = new Uint32Value();
+    else if(type == "uint64") newVal = new Uint64Value();
+    else if(type == "int8"  ) newVal = new Int8Value();
+    else if(type == "int16" ) newVal = new Int16Value();
+    else if(type == "int32" ) newVal = new Int32Value();
+    else if(type == "int64" ) newVal = new Int64Value();
+    else if(type == "float" ) newVal = new FloatValue();
+    else if(type == "double") newVal = new DoubleValue();
+    else if(type == "string") newVal = new StringValue();
+    else
+    {
+        std::cerr << "Unknown type for DatumValue:" << type << std::endl;
+        newVal = new Uint8Value();
+    }
     newVal->value = v;
 
     return newVal;
@@ -156,6 +162,61 @@ QByteArray DatumValue::getRawData() const
     return v;
 }
 
+std::string DatumValue::getStringRepresentation()
+{
+    std::string rep("<DatumValue>");
+
+    rep += "<DatumValueType>" + getType() + "</DatumValueType>\n";
+    for(int i = 0; i < value.size(); i++)
+    {
+        uint8_t byte = uint8_t(value.at(i));
+        char byteStr[100];
+        sprintf(byteStr, "%d", byte);
+        rep += "<DatumValueByte>" + std::string(byteStr) + "</DatumValueByte>\n";
+    }
+
+    rep += "</DatumValue>\n";
+
+    return rep;
+}
+
+DatumValue* DatumValue::createFromStringRepresentation(std::string rep)
+{
+    DatumValue* datum = NULL;
+
+    std::string typeStr = Configuration::getTagValue(rep, "DatumValueType");
+    if(typeStr != "")
+    {
+        QByteArray bytes;
+        std::string valBeginTag = "<DatumValueByte>";
+        std::string valEndTag   = "</DatumValueByte>";
+        size_t valBegin = rep.find(valBeginTag);
+        while(valBegin != std::string::npos)
+        {
+            valBegin += valBeginTag.length();
+            size_t valEnd = rep.find(valEndTag);
+            if(valEnd > valBegin)
+            {
+                size_t len = valEnd - valBegin;
+                std::string byteStr = rep.substr(valBegin, len);
+                uint8_t byte = atoi(byteStr.c_str());
+                bytes.append(char(byte));
+            }
+
+            // Consume byte we just parsed so we don't see it again
+            rep = rep.substr(valEnd + 1);
+            // Check if another byte is defined
+            valBegin = rep.find("<DatumValueByte>");
+        }
+
+        datum = create(bytes, typeStr);
+    }
+    else
+        std::cerr << __FILE__ << ": FromString: no type:" << rep << std::endl;
+
+    return datum;
+}
+
 
 // ************************* StringValue *************************
 StringValue::StringValue() : DatumValue() {}
@@ -180,6 +241,11 @@ std::string StringValue::getValue() const
         val = "Error:NoNull!";
     mutex->unlock();
     return val.toStdString();
+}
+
+std::string StringValue::getType() const
+{
+    return "string";
 }
 
 DatumValue* StringValue::createCopy() const

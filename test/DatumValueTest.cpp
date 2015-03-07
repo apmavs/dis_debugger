@@ -54,3 +54,44 @@ TEST(DatumValueTest, GreaterLessTest)
     delete dval2;
     delete dval3;
 }
+
+// Test that converted to and from string representations works
+TEST(DatumValueTest, RepresentationTest)
+{
+    uint64_t valU64 = 328734243;
+    QByteArray arrayU64((const char*)(&valU64), 8);
+    int8_t   val8   = -4;
+    QByteArray array8((const char*)(&val8), 1);
+    std::string valStr = "This is a string for testing purposes\n";
+
+    DatumValue* u64val = DatumValue::create(arrayU64, "uint64");
+    DatumValue* i8val  = DatumValue::create(array8, "int8");
+    DatumValue* strval = DatumValue::create(valStr, "string");
+
+    std::string rep64  = u64val->getStringRepresentation();
+    std::string rep8   = i8val ->getStringRepresentation();
+    std::string repStr = strval->getStringRepresentation();
+
+    DatumValue *u64val2 = DatumValue::createFromStringRepresentation(rep64);
+    DatumValue *i8val2  = DatumValue::createFromStringRepresentation(rep8);
+    DatumValue *strval2 = DatumValue::createFromStringRepresentation(repStr);
+
+    EXPECT_FALSE(u64val->greaterThan(u64val2));
+    EXPECT_FALSE(u64val->lessThan(u64val2));
+    EXPECT_EQ(u64val->getValue(), u64val2->getValue());
+    EXPECT_FALSE(i8val->greaterThan(i8val2));
+    EXPECT_FALSE(i8val->lessThan(i8val2));
+    EXPECT_EQ(i8val->getValue(), i8val2->getValue());
+    EXPECT_EQ(valStr, strval->getValue());
+    EXPECT_EQ(strval->getValue(), strval2->getValue());
+    EXPECT_EQ(valStr, strval2->getValue());
+
+
+    // Create calls require deletes
+    delete u64val;
+    delete i8val;
+    delete strval;
+    delete u64val2;
+    delete i8val2;
+    delete strval2;
+}
