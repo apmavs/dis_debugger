@@ -166,7 +166,11 @@ std::string DatumValue::getStringRepresentation()
 {
     std::string rep("<DatumValue>");
 
-    rep += "<DatumValueType>" + getType() + "</DatumValueType>\n";
+    char timeStr[100];
+    sprintf(timeStr, "%0.15f", getTimestamp());
+
+    rep += "<DatumValueType>" + getType()            + "</DatumValueType>\n";
+    rep += "<DatumValueTime>" + std::string(timeStr) + "</DatumValueTime>\n";
     for(int i = 0; i < value.size(); i++)
     {
         uint8_t byte = uint8_t(value.at(i));
@@ -185,6 +189,7 @@ DatumValue* DatumValue::createFromStringRepresentation(std::string rep)
     DatumValue* datum = NULL;
 
     std::string typeStr = Configuration::getTagValue(rep, "DatumValueType");
+    std::string timeStr = Configuration::getTagValue(rep, "DatumValueTime");
     if(typeStr != "")
     {
         QByteArray bytes;
@@ -210,6 +215,7 @@ DatumValue* DatumValue::createFromStringRepresentation(std::string rep)
         }
 
         datum = create(bytes, typeStr);
+        datum->setTimestamp(atof(timeStr.c_str()));
     }
     else
         std::cerr << __FILE__ << ": FromString: no type:" << rep << std::endl;

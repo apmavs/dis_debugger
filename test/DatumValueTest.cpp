@@ -67,6 +67,9 @@ TEST(DatumValueTest, RepresentationTest)
     DatumValue* u64val = DatumValue::create(arrayU64, "uint64");
     DatumValue* i8val  = DatumValue::create(array8, "int8");
     DatumValue* strval = DatumValue::create(valStr, "string");
+    u64val->setTimestamp(-33.0);
+    i8val->setTimestamp(52345234.0);
+    strval->setTimestamp(0.0);
 
     std::string rep64  = u64val->getStringRepresentation();
     std::string rep8   = i8val ->getStringRepresentation();
@@ -79,12 +82,15 @@ TEST(DatumValueTest, RepresentationTest)
     EXPECT_FALSE(u64val->greaterThan(u64val2));
     EXPECT_FALSE(u64val->lessThan(u64val2));
     EXPECT_EQ(u64val->getValue(), u64val2->getValue());
+    EXPECT_EQ(u64val->getTimestamp(), u64val2->getTimestamp());
     EXPECT_FALSE(i8val->greaterThan(i8val2));
     EXPECT_FALSE(i8val->lessThan(i8val2));
     EXPECT_EQ(i8val->getValue(), i8val2->getValue());
+    EXPECT_EQ(i8val->getTimestamp(), i8val2->getTimestamp());
     EXPECT_EQ(valStr, strval->getValue());
     EXPECT_EQ(strval->getValue(), strval2->getValue());
     EXPECT_EQ(valStr, strval2->getValue());
+    EXPECT_EQ(strval->getTimestamp(), strval->getTimestamp());
 
 
     // Create calls require deletes

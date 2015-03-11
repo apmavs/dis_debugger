@@ -142,3 +142,25 @@ TEST(DatumInfoTest, HistoryTest)
     ASSERT_TRUE(history.count(2.0) == 1);
     EXPECT_EQ("7", history[2.0]);
 }
+
+// Test string representation functionality
+TEST(DatumInfoTest, RepresentationTest)
+{
+    DatumInfoTestClass test;
+    DatumInfo* duplicate;
+    duplicate = DatumInfo::createDatum(666.333, "double", QByteArray());
+    EXPECT_FALSE(test.datum1->equivalentTo(duplicate));
+    EXPECT_FALSE(test.datum2->equivalentTo(duplicate));
+    delete duplicate;
+
+    std::string rep1 = test.datum1->getStringRepresentation();
+    std::string rep2 = test.datum2->getStringRepresentation();
+
+    duplicate = DatumInfo::createFromStringRepresentation(rep1);
+    EXPECT_TRUE(test.datum1->equivalentTo(duplicate));
+    EXPECT_FALSE(test.datum2->equivalentTo(duplicate));
+
+    duplicate = DatumInfo::createFromStringRepresentation(rep2);
+    EXPECT_FALSE(test.datum1->equivalentTo(duplicate));
+    EXPECT_TRUE(test.datum2->equivalentTo(duplicate));
+}
