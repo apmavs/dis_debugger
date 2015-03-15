@@ -33,7 +33,7 @@ public:
     QByteArray getRawData() const;
     virtual DatumValue* createCopy() const = 0;
 
-    std::string getStringRepresentation();
+    std::string getStringRepresentation() const;
     static DatumValue* createFromStringRepresentation(std::string rep);
 };
 

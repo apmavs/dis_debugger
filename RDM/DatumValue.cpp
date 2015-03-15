@@ -162,7 +162,7 @@ QByteArray DatumValue::getRawData() const
     return v;
 }
 
-std::string DatumValue::getStringRepresentation()
+std::string DatumValue::getStringRepresentation() const
 {
     std::string rep("<DatumValue>");
 

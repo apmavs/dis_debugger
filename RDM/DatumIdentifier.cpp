@@ -10,7 +10,7 @@ DatumIdentifier::DatumIdentifier()
     entity = 0;
 }
 
-bool DatumIdentifier::operator==(DatumIdentifier rhs)
+bool DatumIdentifier::operator==(const DatumIdentifier rhs) const
 {
     bool retVal = false;
 
@@ -24,7 +24,7 @@ bool DatumIdentifier::operator==(DatumIdentifier rhs)
     return retVal;
 }
 
-bool DatumIdentifier::operator!=(DatumIdentifier rhs)
+bool DatumIdentifier::operator!=(const DatumIdentifier rhs) const
 {
     return !(operator==(rhs));
 }
@@ -59,7 +59,7 @@ uint16_t DatumIdentifier::getEntity()
     return entity;
 }
 
-std::string DatumIdentifier::getStringRepresentation()
+std::string DatumIdentifier::getStringRepresentation() const
 {
     std::string rep("<DatumIdentifier>\n");
 

@@ -37,7 +37,7 @@ public:
     double getLastTimestamp() const;
     QByteArray getLastRawValue();
 
-    bool equivalentTo(DatumInfo* rhs);
+    bool equivalentTo(const DatumInfo* rhs) const;
     void setId(DatumIdentifier id);
     void setUnit(std::string u);
     void setUnitClass(std::string u);
@@ -64,7 +64,7 @@ public:
     bool addValue(double time, QByteArray value);
     void truncateHistory(double currentTime);
 
-    std::string getStringRepresentation();
+    std::string getStringRepresentation() const;
     static DatumInfo* createFromStringRepresentation(std::string rep);
 };
 

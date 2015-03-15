@@ -13,8 +13,8 @@ private:
 
 public:
     DatumIdentifier();
-    bool operator==(DatumIdentifier rhs);
-    bool operator!=(DatumIdentifier rhs);
+    bool operator==(const DatumIdentifier rhs) const;
+    bool operator!=(const DatumIdentifier rhs) const;
     void setSite(uint16_t s);
     void setApp(uint16_t a);
     void setEntity(uint16_t e);
@@ -23,7 +23,7 @@ public:
     uint16_t getEntity();
     uint32_t getDatumId();
 
-    std::string getStringRepresentation();
+    std::string getStringRepresentation() const;
     static DatumIdentifier fromStringRepresentation(std::string rep);
 };
 

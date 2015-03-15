@@ -69,7 +69,7 @@ QByteArray DatumInfo::getLastRawValue()
     return val;
 }
 
-bool DatumInfo::equivalentTo(DatumInfo* rhs)
+bool DatumInfo::equivalentTo(const DatumInfo* rhs) const
 {
     bool equiv = true; // Assume equal
 
@@ -390,7 +390,7 @@ std::string getTagValue(std::string fromStr, std::string tag)
 }
 
 // Return string representation so that object can be saved and loaded.
-std::string DatumInfo::getStringRepresentation()
+std::string DatumInfo::getStringRepresentation() const
 {
     mutex->lock();
 
@@ -421,50 +421,55 @@ std::string DatumInfo::getStringRepresentation()
 
 DatumInfo* DatumInfo::createFromStringRepresentation(std::string rep)
 {
-    DatumInfo* ret = new DatumInfo();
-    std::string idStr = Configuration::getTagValue(rep, "ID");
-    ret->identifier    = DatumIdentifier::fromStringRepresentation(idStr);
-
-    ret->type          = Configuration::getTagValue(rep, "Type");
-    ret->unit          = Configuration::getTagValue(rep, "Unit");
-    ret->unit_class    = Configuration::getTagValue(rep, "UnitClass");
-    ret->name          = Configuration::getTagValue(rep, "Name");
-    ret->category      = Configuration::getTagValue(rep, "Category");
-    ret->description   = Configuration::getTagValue(rep, "Description");
-
-    std::string minStr = Configuration::getTagValue(rep, "Minimum");
-    if(minStr != "")
+    DatumInfo* ret = NULL;
+    rep = Configuration::getTagValue(rep, "DatumInfo");
+    if(rep != "")
     {
-        ret->has_minimum = true;
-        ret->minimum = DatumValue::createFromStringRepresentation(minStr);
-    }
-    std::string maxStr = Configuration::getTagValue(rep, "Maximum");
-    if(maxStr != "")
-    {
-        ret->has_maximum = true;
-        ret->maximum = DatumValue::createFromStringRepresentation(maxStr);
-    }
+        ret = new DatumInfo();
+        std::string idStr = Configuration::getTagValue(rep, "ID");
+        ret->identifier    = DatumIdentifier::fromStringRepresentation(idStr);
 
-    // Get any stored values
-    std::string valBeginTag = "<Value>";
-    std::string valEndTag   = "</Value>";
-    size_t valBegin = rep.find(valBeginTag);
-    while(valBegin != std::string::npos)
-    {
-        valBegin += valBeginTag.length();
-        size_t valEnd = rep.find(valEndTag);
-        if(valEnd > valBegin)
+        ret->type          = Configuration::getTagValue(rep, "Type");
+        ret->unit          = Configuration::getTagValue(rep, "Unit");
+        ret->unit_class    = Configuration::getTagValue(rep, "UnitClass");
+        ret->name          = Configuration::getTagValue(rep, "Name");
+        ret->category      = Configuration::getTagValue(rep, "Category");
+        ret->description   = Configuration::getTagValue(rep, "Description");
+
+        std::string minStr = Configuration::getTagValue(rep, "Minimum");
+        if(minStr != "")
         {
-            size_t len = valEnd - valBegin;
-            std::string valStr = rep.substr(valBegin, len);
-            DatumValue* newVal = DatumValue::createFromStringRepresentation(valStr);
-            ret->values.push_back(newVal);
+            ret->has_minimum = true;
+            ret->minimum = DatumValue::createFromStringRepresentation(minStr);
+        }
+        std::string maxStr = Configuration::getTagValue(rep, "Maximum");
+        if(maxStr != "")
+        {
+            ret->has_maximum = true;
+            ret->maximum = DatumValue::createFromStringRepresentation(maxStr);
         }
 
-        // Consume byte we just parsed so we don't see it again
-        rep = rep.substr(valEnd + 1);
-        // Check if another byte is defined
-        valBegin = rep.find("<Value>");
+        // Get any stored values
+        std::string valBeginTag = "<Value>";
+        std::string valEndTag   = "</Value>";
+        size_t valBegin = rep.find(valBeginTag);
+        while(valBegin != std::string::npos)
+        {
+            valBegin += valBeginTag.length();
+            size_t valEnd = rep.find(valEndTag);
+            if(valEnd > valBegin)
+            {
+                size_t len = valEnd - valBegin;
+                std::string valStr = rep.substr(valBegin, len);
+                DatumValue* newVal = DatumValue::createFromStringRepresentation(valStr);
+                ret->values.push_back(newVal);
+            }
+
+            // Consume byte we just parsed so we don't see it again
+            rep = rep.substr(valEnd + 1);
+            // Check if another byte is defined
+            valBegin = rep.find("<Value>");
+        }
     }
 
     return ret;
