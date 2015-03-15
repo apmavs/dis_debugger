@@ -108,12 +108,31 @@ std::string Configuration::getTagValue(std::string fromStr, std::string tag)
     if(begin != std::string::npos)
     {
         begin     += beginTag.length();
-        size_t end = fromStr.find(endTag);
+        // Find the end position of end tag that matches open tag
+        size_t end = std::string::npos;
+        int level = 0;
+        for(size_t pos = begin; pos < fromStr.length(); pos++)
+        {
+            // Make sure we don't find a duplicate tag from a child
+            // that had the same class type
+            if((level == 0) && (fromStr.substr(pos).find(endTag) == 0))
+            {
+                end = pos;
+                break;
+            }
+            else if(fromStr.substr(pos, endTag.length()) == endTag)
+                level -= 1;
+            else if(fromStr.substr(pos, beginTag.length()) == beginTag)
+                level += 1;
+        }
+
         if((end != std::string::npos) && (end > begin))
         {
             size_t tagLen = end - begin;
             ret = fromStr.substr(begin, tagLen);
         }
+        else if((end == std::string::npos) || (end < begin))
+            std::cerr << "Could not find " << endTag << " in:" << fromStr << std::endl;
     }
     return ret;
 }
