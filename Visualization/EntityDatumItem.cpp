@@ -1,7 +1,7 @@
 #include "EntityDatumItem.h"
 
-EntityDatumItem::EntityDatumItem(QString categoryName)
-    : QTreeWidgetItem(QStringList(categoryName)),
+EntityDatumItem::EntityDatumItem(EntityDatumItem* parent, QString categoryName)
+    : QTreeWidgetItem(parent, QStringList(categoryName)),
       DatumItem(categoryName)
 {
     clearDisplay();
@@ -105,4 +105,101 @@ void EntityDatumItem::deactivate(const void* widgetPtr)
         }
     }
     mutex.unlock();
+}
+
+bool EntityDatumItem::equivalentTo(const EntityDatumItem* rhs) const
+{
+    bool ret = DatumItem::equivalentTo(rhs);
+
+    int myNumChildren = childCount();
+    int rhNumChildren = rhs->childCount();
+    if(myNumChildren == rhNumChildren)
+    {
+        for(int i = 0; i < myNumChildren; i++)
+        {
+            EntityDatumItem* myChild = (EntityDatumItem*)(child(i));
+            EntityDatumItem* rhChild = (EntityDatumItem*)(rhs->child(i));
+            if(!myChild->equivalentTo(rhChild))
+                ret = false;
+        }
+    }
+    else
+        ret = false;
+
+    return ret;
+}
+
+QString EntityDatumItem::getStringRepresentation() const
+{
+    QString rep("<EntityDatumItem>\n");
+    if(watched_datum != NULL)
+    {
+        rep += "<WatchedDatum>" +
+                QString(watched_datum->getStringRepresentation().c_str()) +
+               "</WatchedDatum>\n";
+    }
+    else
+        rep += "<Category>" + category_name + "</Category>\n";
+    for(int kidIdx = 0; kidIdx < childCount(); kidIdx++)
+    {
+        EntityDatumItem* kid = (EntityDatumItem*)(child(kidIdx));
+        rep += "<Child>" + QString(kid->getStringRepresentation()) +
+                "</Child>\n";
+    }
+
+    rep += "</EntityDatumItem>\n";
+
+    return rep;
+}
+
+EntityDatumItem* EntityDatumItem::createFromStringRepresentation(QString rep,
+                                                     EntityDatumItem* parent)
+{
+    EntityDatumItem* ret;
+    QString guts = QString(Configuration::getTagValue(rep.toStdString(),
+                                             "EntityDatumItem").c_str());
+
+    // Truncate children data to make sure we don't grab their stuff
+    QString myData = guts;
+    int child = myData.indexOf("<Child>");
+    if(child >= 0)
+        myData.truncate(child);
+
+    DatumInfo* datum = DataModelController::getInstance()->
+                                    getDatumInfoPtr(myData.toStdString());
+    if(datum != NULL)
+        ret = new EntityDatumItem(parent, datum);
+    else
+    {
+        QString cat = QString(Configuration::getTagValue(myData.toStdString(),
+                                                         "Category").c_str());
+        ret = new EntityDatumItem(parent, cat);
+    }
+
+    // Parse children
+    QString endTag = "</Child>";
+    QString childData = QString(Configuration::getTagValue(guts.toStdString(),
+                                                           "Child").c_str());
+    while(childData != "")
+    {
+        EntityDatumItem* childItem = EntityDatumItem::
+                createFromStringRepresentation(childData, ret);
+        if(childItem == NULL)
+            std::cerr << "this should never happen" << std::endl;
+
+        int endTagPos = guts.indexOf(endTag);
+        if(endTagPos >= 0)
+        {
+            guts = guts.remove(0, endTagPos + endTag.length());
+            childData = QString(Configuration::getTagValue(guts.toStdString(),
+                                                           "Child").c_str());
+        }
+        else
+        {
+            std::cerr << __FILE__ << ": Broken XML:" + rep.toStdString() << std::endl;
+            break;
+        }
+    }
+
+    return ret;
 }

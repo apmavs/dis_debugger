@@ -11,7 +11,7 @@ private:
     WatchDatumItem();
     WatchDatumItem(const WatchDatumItem& rhs);
     WatchDatumItem& operator=(const WatchDatumItem& rhs);
-    WatchDatumItem(QString categoryName);
+    WatchDatumItem(EntityDatumItem* parent, QString categoryName);
     WatchDatumItem(EntityDatumItem* parent, const DatumInfo* d);
 
 private slots:
@@ -21,6 +21,9 @@ private slots:
 public:
     static WatchDatumItem* createWatchItem(EntityDatumItem* fromThis);
     virtual ~WatchDatumItem();
+    virtual QString getStringRepresentation() const;
+    static WatchDatumItem* createFromStringRepresentation(QString rep,
+                                       WatchDatumItem* parent = NULL);
 };
 
 #endif // WATCHDATUMITEM_H

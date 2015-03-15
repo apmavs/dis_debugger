@@ -30,7 +30,7 @@ void EntityDataList::addItem(const DatumInfo* datum)
     // If not found, create category
     if(catItem == NULL)
     {
-        catItem = new EntityDatumItem(catStr);
+        catItem = new EntityDatumItem(NULL, catStr);
         addTopLevelItem(catItem);
         // Check filter
         if(!catStr.contains(active_filter, Qt::CaseInsensitive))

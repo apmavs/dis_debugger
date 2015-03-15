@@ -21,7 +21,7 @@ protected:
     void setColor(int column);
 
 public:
-    EntityDatumItem(QString categoryName); // For category items with no datum
+    EntityDatumItem(EntityDatumItem* parent, QString categoryName); // For category items with no datum
     EntityDatumItem(EntityDatumItem* parent, const DatumInfo* d);
     virtual ~EntityDatumItem();
 
@@ -30,6 +30,11 @@ public:
     // Call with pointer to caller
     virtual void activate(const void* widgetPtr);    // Update whenever datum changes
     virtual void deactivate(const void* widgetPtr);  // Stop updating with datum changes
+
+    virtual bool equivalentTo(const EntityDatumItem* rhs) const;
+    virtual QString getStringRepresentation() const;
+    static EntityDatumItem* createFromStringRepresentation(QString rep,
+                                        EntityDatumItem* parent = NULL);
 };
 
 #endif // ENTITYDATUMITEM_H

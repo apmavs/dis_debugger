@@ -52,6 +52,8 @@ public:
     // Call with pointer to caller
     virtual void activate(const void* widgetPtr);    // Update whenever datum changes
     virtual void deactivate(const void* widgetPtr);  // Stop updating with datum changes
+
+    virtual bool equivalentTo(const DatumItem* rhs) const;
 };
 
 #endif // DATUMITEM_H

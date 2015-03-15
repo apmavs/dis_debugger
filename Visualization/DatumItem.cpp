@@ -102,5 +102,27 @@ void DatumItem::deactivate(const void* widgetPtr)
     mutex.unlock();
 }
 
+bool DatumItem::equivalentTo(const DatumItem* rhs) const
+{
+    bool ret = true;
+
+    if(watched_datum == NULL)
+    {
+        if(rhs->watched_datum == NULL)
+            ret = (category_name == rhs->category_name);
+        else
+            ret = false;
+    }
+    else
+    {
+        if(rhs->watched_datum == NULL)
+            ret = false;
+        else
+            ret = watched_datum->equivalentTo(rhs->watched_datum);
+    }
+
+    return ret;
+}
+
 
 

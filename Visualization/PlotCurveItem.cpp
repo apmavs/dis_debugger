@@ -1,11 +1,12 @@
 #include "PlotCurveItem.h"
 #include <QByteArray>
 
-PlotCurveItem::PlotCurveItem(QwtPlot* plot, const DatumInfo* d, QColor color)
+PlotCurveItem::PlotCurveItem(QwtPlot* plot, const DatumInfo* d, QColor c)
     : QwtPlotCurve(QString(d->getName().c_str())), DatumItem(d, true)
 {
     QPen pen;
-    pen.setColor(color);
+    color = c;
+    pen.setColor(c);
     pen.setWidth(1);
     pen.setStyle(Qt::SolidLine);
 
@@ -111,4 +112,59 @@ void PlotCurveItem::truncateHistory()
     mutex.unlock();
 
     setDisplay();
+}
+
+bool PlotCurveItem::equivalentTo(const PlotCurveItem* rhs) const
+{
+    bool ret = DatumItem::equivalentTo(rhs);
+    if(color != rhs->color)
+        ret = false;
+
+    return ret;
+}
+
+QString PlotCurveItem::getStringRepresentation() const
+{
+    QString rep("<PlotCurveItem>\n");
+    if(watched_datum != NULL)
+    {
+        rep += "<WatchedDatum>" +
+               QString(watched_datum->getStringRepresentation().c_str()) +
+               "</WatchedDatum>\n";
+    }
+    else
+        std::cerr << __FILE__ << ":ERROR watched_datum NULL" << std::endl;
+
+    int red, green, blue, alpha;
+    color.getRgb(&red, &green, &blue, &alpha);
+    rep += "<ColorRed>"   + QString::number(red)   + "</ColorRed>\n";
+    rep += "<ColorGreen>" + QString::number(green) + "</ColorGreen>\n";
+    rep += "<ColorBlue>"  + QString::number(blue)  + "</ColorBlue>\n";
+    rep += "<ColorAlpha>" + QString::number(alpha) + "</ColorAlpha>\n";
+
+    rep += "</PlotCurveItem>\n";
+
+    return rep;
+}
+
+PlotCurveItem* PlotCurveItem::createFromStringRepresentation(QString rep,
+                                                     QwtPlot* p)
+{
+    std::string guts = Configuration::getTagValue(rep.toStdString(),
+                                                  "PlotCurveItem");
+    std::string datumRep  = Configuration::getTagValue(guts, "WatchedDatum");
+    DatumInfo* watchDatum = DataModelController::getInstance()->
+                                        getDatumInfoPtr(datumRep);
+    QString red   = QString(Configuration::getTagValue(guts, "ColorRed").c_str());
+    QString green = QString(Configuration::getTagValue(guts, "ColorGreen").c_str());
+    QString blue  = QString(Configuration::getTagValue(guts, "ColorBlue").c_str());
+    QString alpha = QString(Configuration::getTagValue(guts, "ColorAlpha").c_str());
+    int r = red.toInt();
+    int g = green.toInt();
+    int b = blue.toInt();
+    int a = alpha.toInt();
+    QColor c(r, g, b, a);
+    PlotCurveItem* ret = new PlotCurveItem(p, watchDatum, c);
+
+    return ret;
 }

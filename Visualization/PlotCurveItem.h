@@ -22,6 +22,7 @@ private:
     QVector<QPointF> bad_points; // Track values out of min/max range
     QwtPlotCurve* curve_dots;
     QwtPlotCurve* bad_value_dots;
+    QColor color;
 
 private slots:
     // These are slots to ensure GUI updates are done in GUI thread
@@ -32,12 +33,17 @@ protected:
     static double convertToDouble(std::string s);
 
 public:
-    PlotCurveItem(QwtPlot* plot, const DatumInfo* d, QColor color);
+    PlotCurveItem(QwtPlot* plot, const DatumInfo* d, QColor c);
     virtual ~PlotCurveItem();
 
     virtual void notifyNewValue(const DatumInfo* datum);
     void showFullHistory();
     void truncateHistory();
+
+    virtual bool equivalentTo(const PlotCurveItem* rhs) const;
+    virtual QString getStringRepresentation() const;
+    static PlotCurveItem* createFromStringRepresentation(QString rep,
+                                                     QwtPlot* p);
 };
 
 #endif // PLOTCURVEITEM_H
