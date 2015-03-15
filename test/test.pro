@@ -4,9 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core xml
-
-QT       -= gui
+QT       += core gui xml
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DEFINES += DIS_VERSION=6
 
@@ -35,15 +34,18 @@ QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
 INCLUDEPATH += $$quote($$kdis_inc_path)
 DEPENDPATH += $$quote($$kdis_inc_path)
 
-INCLUDEPATH += ../RDM
+INCLUDEPATH += ../RDM \
+               ../Visualization
 
 CONFIG(debug, debug|release){
     LIBS += -L../../gtest/debug
     LIBS += ../../build/RDM/debug/librdm.a
+    LIBS += ../../build/Visualization/debug/libdis_visualization.a
 }
 CONFIG(release, debug|release){
     LIBS += -L../../gtest/release
     LIBS += ../../build/RDM/release/librdm.a
+    LIBS += ../../build/Visualization/release/libdis_visualization.a
 }
 
 LIBS += -lgtest
@@ -57,6 +59,7 @@ SOURCES += main.cpp \
     DataModelControllerTest.cpp \
     DatumIdentifierTest.cpp \
     DatumInfoTest.cpp \
-    DatumValueTest.cpp
+    DatumValueTest.cpp \
+    EntityDatumItemTest.cpp
 
 HEADERS +=
