@@ -7,6 +7,10 @@ DataModelController* DataModelController::instance = NULL;
 
 DataModelController::DataModelController()
 {
+    datums.clear();
+    new_datum_observers.clear();
+    rx_observers.clear();
+    change_observers.clear();
     config = Configuration::getInstance();
     std::string ip = config->getValue(CONFIG::BROADCAST_IP);
     uint32_t port = atoi(config->getValue(CONFIG::BROADCAST_PORT).c_str());
@@ -380,4 +384,36 @@ bool DataModelController::changeBroadcastPort(uint32_t newPort, bool save)
     }
 
     return retVal;
+}
+
+DatumInfo* DataModelController::getDatumInfoPtr(std::string datumRep)
+{
+    DatumInfo* datum = DatumInfo::createFromStringRepresentation(datumRep);
+    if(datum != NULL)
+    {
+        // Check if we are already watching an equivalent datum
+        // If so, return a pointer to that datum
+        // If not, add it to datums and notify all observers of new datum
+        bool foundExisting = false;
+        std::vector<DatumInfo*>::iterator it;
+        for(it = datums.begin(); it != datums.end(); it++)
+        {
+            if(datum->equivalentTo(*it))
+            {
+                delete datum;
+                datum = *it;
+                foundExisting = true;
+                break;
+            }
+        }
+
+        if(!foundExisting)
+        {
+            // Delete any history that may have been saved in the datum
+            datum->truncateHistory(-1.0);
+            processNewDatum(datum);
+        }
+    }
+
+    return datum;
 }
