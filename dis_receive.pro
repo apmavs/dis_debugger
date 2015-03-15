@@ -10,9 +10,16 @@ QT       -= gui
 
 TEMPLATE = subdirs
 
-SUBDIRS += RDM \
+SUBDIRS += main \
+    RDM \
     test \
     Visualization
 
+Visualization.depends = RDM
+
+main.depends = RDM
+main.depends = Visualization
+
 test.depends = RDM
+test.depends = Visualization
 

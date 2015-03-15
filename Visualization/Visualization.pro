@@ -11,16 +11,21 @@ DEFINES += DIS_VERSION=6
 TARGET = dis_visualization
 CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG   += staticlib
 
-TEMPLATE = app
+TEMPLATE = lib
 
 win32 {
     CONFIG(debug, debug|release){
+        rdm_lib_path  = ../../build/RDM/debug
+        rdm_lib_name  = librdm.a
         kdis_lib_path = C:/Program Files (x86)/KDIS/lib/debug
         kdis_lib_name = libkdisd.a
         qwt_lib_name  = libqwtd.a
     }
     CONFIG(release, debug|release){
+        rdm_lib_path  = ../../build/RDM/release
+        rdm_lib_name  = librdm.a
         kdis_lib_path = C:/Program Files (x86)/KDIS/lib/release
         kdis_lib_name = libkdis.a
         qwt_lib_name  = libqwt.a
@@ -44,7 +49,7 @@ DEPENDPATH += $$quote($$qwt_inc_path)
 
 PRE_TARGETDEPS += $$quote($$kdis_lib_path)/$$kdis_lib_name
 PRE_TARGETDEPS += $$quote($$qwt_lib_path)/$$qwt_lib_name
-LIBS += ../../build/RDM/release/librdm.a
+LIBS += $$quote($$rdm_lib_path/$$rdm_lib_name)
 LIBS += $$quote($$kdis_lib_path/$$kdis_lib_name)
 LIBS -= -lqwt
 LIBS += $$quote($$qwt_lib_path/$$qwt_lib_name)
@@ -52,8 +57,7 @@ win32:LIBS += -lws2_32
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-SOURCES += main.cpp\
-        MainWindow.cpp \
+SOURCES += MainWindow.cpp \
     EntityDataList.cpp \
     DatumItem.cpp \
     WatchList.cpp \

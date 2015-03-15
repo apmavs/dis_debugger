@@ -5,6 +5,7 @@
 #include "DatumIdentifierTest.cpp"
 #include "DatumInfoTest.cpp"
 #include "DatumValueTest.cpp"
+#include "EntityDatumItemTest.cpp"
 
 int main(int argc, char *argv[])
 {
