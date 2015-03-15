@@ -116,6 +116,8 @@ TEST(DataModelControllerTest, PduTest)
     EXPECT_EQ(1, obs->new_datum_count);
     EXPECT_EQ(1, obs->new_value_count);
 
+    controller->unregisterDatumObserver(obs, obs->last_new_datum);
+    controller->unregisterObserver(obs);
     f.remove(); // Delete temporary file
     delete obs;
 }
