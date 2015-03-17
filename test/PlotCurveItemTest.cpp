@@ -14,9 +14,9 @@ TEST(PlotCurveItemTest, RepresentationTest)
 
     QwtPlot TestPlot;
     DatumInfo* datum1 = DatumInfo::createDatum(55.0, "uint8", QByteArray(1, 'c'));
-    DatumInfo* datum2 = DatumInfo::createDatum(45.0, "int8", QByteArray(1, 'c'));
+    DatumInfo* datum2 = DatumInfo::createDatum(45.0, "int8", QByteArray(1, '&'));
     PlotCurveItem* item1 = new PlotCurveItem(&TestPlot, datum1, QColor(255, 0, 0));
-    PlotCurveItem* item2 = new PlotCurveItem(&TestPlot, datum2, QColor(255, 0, 0));
+    PlotCurveItem* item2 = new PlotCurveItem(&TestPlot, datum2, QColor(255, 255, 255));
 
     QString rep1 = item1->getStringRepresentation();
     QString rep2 = item2->getStringRepresentation();

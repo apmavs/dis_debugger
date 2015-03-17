@@ -134,6 +134,11 @@ void EntityDataList::filterList(QString str)
     }
 }
 
+QString EntityDataList::getActiveFilter()
+{
+    return active_filter;
+}
+
 void EntityDataList::notifyNewDatum(const DatumInfo *datum)
 {
     mutex.lock();
@@ -186,3 +191,25 @@ void EntityDataList::notifyAllDatumsInvalid()
 
     mutex.unlock();
 }
+
+QString EntityDataList::getStringRepresentation() const
+{
+    QString rep("<EntityDataList>\n");
+    rep += "<Filter>" + active_filter + "</Filter>\n";
+    rep += "</EntityDataList>\n";
+
+    return rep;
+}
+
+EntityDataList* EntityDataList::createFromStringRepresentation(QString rep,
+                                                           QWidget* parent)
+{
+    EntityDataList* ret = new EntityDataList(parent);
+    std::string guts = Configuration::getTagValue(rep.toStdString(), "EntityDataList");
+    ret->active_filter = QString(Configuration::getTagValue(guts, "Filter").c_str());
+    return ret;
+}
+
+
+
+

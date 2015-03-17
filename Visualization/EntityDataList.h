@@ -33,6 +33,7 @@ public:
 
     void setActiveEntity(std::string entity);
     void filterList(QString str);
+    QString getActiveFilter();
 
     // DatumObserver inheritance
     virtual void notifyNewDatum(const DatumInfo* datum);
@@ -40,6 +41,9 @@ public:
     virtual void notifyEntityRemoved(std::string entity);
     virtual void notifyAllDatumsInvalid();
 
+    virtual QString getStringRepresentation() const;
+    static EntityDataList* createFromStringRepresentation(QString rep,
+                                               QWidget* parent = NULL);
 };
 
 #endif // ENTITYDATALIST_H

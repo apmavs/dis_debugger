@@ -8,6 +8,7 @@
 #include "EntityDatumItemTest.cpp"
 #include "WatchDatumItemTest.cpp"
 #include "PlotCurveItemTest.cpp"
+#include "EntityDataListTest.cpp"
 
 int main(int argc, char *argv[])
 {
