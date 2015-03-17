@@ -6,6 +6,8 @@
 #include "DatumInfoTest.cpp"
 #include "DatumValueTest.cpp"
 #include "EntityDatumItemTest.cpp"
+#include "WatchDatumItemTest.cpp"
+#include "PlotCurveItemTest.cpp"
 
 int main(int argc, char *argv[])
 {
