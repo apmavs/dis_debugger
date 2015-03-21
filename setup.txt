@@ -1,4 +1,4 @@
-Download QT installer and install, select MinGW 4.8.2 checkbox
+﻿Download QT installer and install, select MinGW 4.8.2 checkbox
 Download and install CMake
 Download KDIS v.2.8.0
 Download gtest-1.7.0
@@ -9,6 +9,9 @@ In KDIS, create directory called "build"
 
 Right click Computer->Properties->Advanced system settings. Advanced tab->Environment Variables
 Under System variables, edit "Path". Add the following to the end ";C:\Program Files (x86)\CMake\bin;C:\Qt\5.3\mingw482_32\bin;C:\Qt\Tools\mingw482_32\bin"
+Note this path changes with different versions of Qt. Qt 5.3.2 has them at:
+C:\Qt\Qt5.3.2\Tools\mingw482_32\bin
+C:\Qt\Qt5.3.2\5.3\mingw482_32\bin
 
 Open CMake
 For "where is the source code:" select the extracted KDIS
@@ -26,6 +29,18 @@ mingw32-make
 <takes a while>
 mingw32-make install
 If install fails, make sure you open command prompt as administrator
+Navigate to where KDIS libraries were installed (C:\Program Files (x86)\KDIS\lib)
+mkdir release
+mkdir debug
+Copy libraries into release
+In command promp, navigate to KDIS source build directory
+Type: cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug ..
+Note that if you leave out the -G "MinGW Makefiles" you'll need to delete the CMakeCache.txt and CMakeFiles directory, 
+then regenerate them using the CMake gui after manually adding the -lws2_32 options again.
+Type: mingw32-make
+Type: mingw32-make install
+Navigate to where KDIS libraries were installed (C:\Program Files (x86)\KDIS\lib)
+Copy libraries into debug
 
 In QT: Tools->options->Version Control->Git
 Set "Prepend to PATH:" to your Git/bin directory
@@ -42,20 +57,27 @@ Open the command prompt
 cd to the gtest/build you created
 mingw32-make all
 Copy gtest-1.7.0/include/gtest to directory that dis_debugger is in
-Copy 2 gtest libraries from gtest-1.7.0/build to copied gtest directory
+cd into the copied gtest directory
+mkdir release
+mkdir debug
+Copy 2 gtest libraries from gtest-1.7.0/build to the created gtest/release/
+cd into gtest-1.7.0/build
+Type: cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug ..
+Type: mingw32-make
+Copy 2 gtest libraries from gtest-1.7.0/build to the created gtest/debug/
 
 
-Extract qwt-6.1.2.zip to C:\Qwt-6.1.2
+Extract qwt-6.1.2.zip to C:\Qwt-6.1.2 (note that you'll have to rename it so Q is capitalized)
 Make using mingw for use with project:
-Open cygwin:
+Open cygwin or git bash:
 cd /c/Qwt-6.1.2
 // Remove dll use and force static library
-vi qwtconfig.pri and features/qwtconfig.pri
+vi qwtconfig.pri and features/qwtconfig.pri (if it exists)
 In both files, comment out line 75: QWT_CONFIG += QwtDll
 qmake qwt.pro
 mingw32-make
 mingw32-make install
-Create environment variable:
+Create environment variable (Computer->Properties->Advanced->Environment Variables->New):
 QT_PLUGIN_PATH=C:\Qwt-6.1.2\plugins
 
 
@@ -64,9 +86,10 @@ QT_PLUGIN_PATH=C:\Qwt-6.1.2\plugins
 Download QtCreator source 3.3.0
 Extract to c:\qt-creator-opensource-src-3.3.0
 Open cygwin, cd to /c/qt-creator-opensource-src-3.3.0
-mingw32-make -j<NUM AVAILABLE CORES>  // this took over an hour on my laptop
+qmake
+mingw32-make -j<NUM AVAILABLE CORES>  // this took over an hour on my old laptop, about 20 minutes on newer laptop
 // Backup old QtCreator directories if they existed
-cd /c/Qt/Tools/QtCreator
+cd /c/Qt/Tools/QtCreator (or /c/Qt/Qt5.3.2/Tools/QtCreator)
 mv lib lib.bak
 mv bin bin.bak
 mv share share.bak
@@ -75,3 +98,17 @@ cd /c/qt-creator-opensource-src-3.3.0
 cp -r bin /c/Qt/Tools/QtCreator/
 cp -r lib /c/Qt/Tools/QtCreator/
 cp -r share /c/Qt/Tools/QtCreator/
+
+// Clone repository
+In git bash terminal:
+cd C:\Comp\school_work\CSE
+git clone https://github.com/prk223/dis_debugger.git
+
+Open QT Creator and open the project
+The first time you might have to go into Tools->Options and set up a kit that uses mingw by selecting the 
+device type (desktop), compiler, debugger, QT version, etc.
+Additionally, QT likes to re-do the dis_receiver.pro.user file. Specifically, it screws up the target directory:
+Ensure the 2 lines for "BuildConfiguration.BuildDirectory" have a value of C:\Comp\school_work\CSE\build as this is 
+the path that the libraries are linked from.
+Also note, dis_receiver.pro.user is overwritten every time QT Creator closes, so make sure you close QT Creator, THEN
+edit and save the file, then re-open QT Creator.
