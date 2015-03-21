@@ -112,3 +112,15 @@ Ensure the 2 lines for "BuildConfiguration.BuildDirectory" have a value of C:\Co
 the path that the libraries are linked from.
 Also note, dis_receiver.pro.user is overwritten every time QT Creator closes, so make sure you close QT Creator, THEN
 edit and save the file, then re-open QT Creator.
+
+
+QT Creator interfaces with git, but it does not provide a way for you to type inputs when git is prompting for 
+login information. To work around this, you can do git commands manually from the git bash, or configure your
+git repository to remember your credentals by doing the following:
+Open git bash
+cd to dis_debugger repository (created from git clone above)
+git config credential.helper store
+git push origin
+Type in your user name and password
+This saves your user name and password in the local repository. Note that it is not encrypted so this is not as 
+secure as manually typing the git commands (instead of using QT).
