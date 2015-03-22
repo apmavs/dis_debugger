@@ -232,3 +232,81 @@ void PlotWidget::clearCurves()
     }
     ui->embedded_plot->replot();
 }
+
+bool PlotWidget::equivalentTo(PlotWidget* rhs)
+{
+    bool ret = true;
+    if(color_index != rhs->color_index)
+        ret = false;
+    else if(delete_always_hidden != rhs->delete_always_hidden)
+        ret = false;
+    else if(hidden != rhs->hidden)
+        ret = false;
+    else if(curves.length() != rhs->curves.length())
+        ret = false;
+    else
+    {
+        for(int idx = 0; idx < curves.length(); idx++)
+        {
+            if(!(curves.at(idx)->equivalentTo(rhs->curves.at(idx))))
+            {
+                ret = false;
+                break;
+            }
+        }
+    }
+
+    return ret;
+}
+
+QString PlotWidget::getStringRepresentation() const
+{
+    QString rep("<PlotWidget>\n");
+    rep += "<LastColor>"    + QString::number(color_index)          + "</LastColor>\n";
+    rep += "<DeleteHidden>" + QString::number(delete_always_hidden) + "</DeleteHidden>\n";
+    rep += "<Hidden>"       + QString::number(hidden) 				+ "</Hidden>\n";
+    for(int idx = 0; idx < curves.length(); idx++)
+        rep += "<Curve>" + curves.at(idx)->getStringRepresentation() + "</Curve>\n";
+    rep += "</PlotWidget>\n";
+
+    return rep;
+}
+
+PlotWidget* PlotWidget::createFromStringRepresentation(QString rep,
+                                                    QWidget* parent)
+{
+    PlotWidget* ret = new PlotWidget(parent);
+    QString guts = QString(Configuration::getTagValue(rep.toStdString(), "PlotWidget").c_str());
+    ret->color_index = QString(Configuration::getTagValue(guts.toStdString(), "LastColor").c_str()).toInt();
+    bool hideDelete = QString(Configuration::getTagValue(guts.toStdString(), "DeleteHidden").c_str()).toInt() != 0;
+    if(hideDelete) ret->hideDelete();
+    bool hide = QString(Configuration::getTagValue(guts.toStdString(), "Hidden").c_str()).toInt() != 0;
+    if(hide) ret->on_HideBtn_clicked();
+
+    // Get all curves
+    QString endTag = "</Curve>";
+    QString curveData = QString(Configuration::getTagValue(guts.toStdString(),
+                                               "Curve").c_str());
+    while(curveData != "")
+    {
+        PlotCurveItem* curveItem = PlotCurveItem::
+                createFromStringRepresentation(curveData, ret->ui->embedded_plot);
+        ret->curves.append(curveItem);
+        curveItem->activate(ret);
+
+        int endTagPos = guts.indexOf(endTag);
+        if(endTagPos >= 0)
+        {
+            guts = guts.remove(0, endTagPos + endTag.length());
+            curveData = QString(Configuration::getTagValue(guts.toStdString(),
+                                                           "Curve").c_str());
+        }
+        else
+        {
+            std::cerr << __FILE__ << ": Broken XML:" + rep.toStdString() << std::endl;
+            break;
+        }
+    }
+
+    return ret;
+}

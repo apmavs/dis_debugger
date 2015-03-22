@@ -9,6 +9,7 @@
 #include "WatchDatumItemTest.cpp"
 #include "PlotCurveItemTest.cpp"
 #include "EntityDataListTest.cpp"
+#include "PlotWidgetTest.cpp"
 
 int main(int argc, char *argv[])
 {

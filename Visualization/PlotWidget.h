@@ -59,6 +59,11 @@ public:
     void addCurve(EntityDatumItem* item);
     void addCurves(QList<QTreeWidgetItem*> items);
     void clearCurves();
+
+    bool equivalentTo(PlotWidget* rhs);
+    virtual QString getStringRepresentation() const;
+    static PlotWidget* createFromStringRepresentation(QString rep,
+                                           QWidget* parent = NULL);
 };
 
 #endif // PLOTWIDGET_H

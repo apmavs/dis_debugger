@@ -76,6 +76,7 @@ SOURCES += main.cpp \
     EntityDatumItemTest.cpp \
     WatchDatumItemTest.cpp \
     PlotCurveItemTest.cpp \
-    EntityDataListTest.cpp
+    EntityDataListTest.cpp \
+    PlotWidgetTest.cpp
 
 HEADERS +=
