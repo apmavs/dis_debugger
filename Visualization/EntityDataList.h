@@ -30,6 +30,7 @@ protected slots:
 
 public:
     explicit EntityDataList(QWidget *parent = 0);
+    virtual ~EntityDataList();
 
     void setActiveEntity(std::string entity);
     void filterList(QString str);

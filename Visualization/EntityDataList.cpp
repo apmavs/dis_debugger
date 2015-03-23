@@ -12,6 +12,11 @@ EntityDataList::EntityDataList(QWidget *parent) :
     connect(this, SIGNAL(collapsed(QModelIndex)), this, SLOT(deactivateItem(QModelIndex)));
 }
 
+EntityDataList::~EntityDataList()
+{
+    controller->unregisterObserver(this);
+}
+
 void EntityDataList::addItem(const DatumInfo* datum)
 {
     QString catStr = QString(datum->getCategory().c_str());
