@@ -8,7 +8,7 @@
 TEST(PlotCurveItemTest, RepresentationTest)
 {
     // Create QApplication so that we can create QwtPlot which is a widget
-    int argc;
+    int argc = 0;
     QApplication app(argc, NULL);
     app.closeAllWindows();
 

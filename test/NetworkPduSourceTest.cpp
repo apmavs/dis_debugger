@@ -1,3 +1,4 @@
+#include "gtest/gtest.h"
 #include <QThread>
 
 #include "NetworkPduSource.h"

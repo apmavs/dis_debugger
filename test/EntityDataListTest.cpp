@@ -7,7 +7,7 @@
 TEST(EntityDataListTest, RepresentationTest)
 {
     // Create QApplication so that we can create QWidgets
-    int argc;
+    int argc = 0;
     QApplication app(argc, NULL);
     app.closeAllWindows();
 
