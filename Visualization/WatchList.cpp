@@ -173,4 +173,81 @@ void WatchList::showRightClickMenu(const QPoint& pos)
     right_click_menu.exec(mapToGlobal(pos));
 }
 
+bool WatchList::equivalentTo(WatchList* rhs)
+{
+    bool ret = true;
+
+    if(topLevelItemCount() != rhs->topLevelItemCount())
+        ret = false;
+    else
+    {
+        for(int idx = 0; idx < topLevelItemCount(); idx++)
+        {
+            WatchDatumItem* myItem  = (WatchDatumItem*)(topLevelItem(idx));
+            WatchDatumItem* rhsItem = (WatchDatumItem*)(rhs->topLevelItem(idx));
+            if(!(myItem->equivalentTo(rhsItem)))
+            {
+                ret = false;
+                break;
+            }
+        }
+    }
+
+    return ret;
+}
+
+QString WatchList::getStringRepresentation() const
+{
+    QString rep = "<WatchList>\n";
+
+    for(int idx = 0; idx < topLevelItemCount(); idx++)
+    {
+        WatchDatumItem* item = (WatchDatumItem*)(topLevelItem(idx));
+        rep += "<WatchItem>\n";
+        rep += item->getStringRepresentation();
+        rep += "</WatchItem>\n";
+    }
+
+    rep += "</WatchList>\n";
+
+    return rep;
+}
+
+WatchList* WatchList::createFromStringRepresentation(QString rep,
+                                                 QWidget* parent)
+{
+    WatchList* ret = new WatchList(parent);
+    QString guts = QString(Configuration::getTagValue(rep.toStdString(), "WatchList").c_str());
+
+    // Get all watch items
+    QString endTag = "</WatchItem>";
+    QString watchData = QString(Configuration::getTagValue(guts.toStdString(),
+                                                         "WatchItem").c_str());
+    QList<QTreeWidgetItem*> items;
+    while(watchData != "")
+    {
+        WatchDatumItem* watchItem = WatchDatumItem::
+                createFromStringRepresentation(watchData, NULL);
+        items.append(watchItem);
+
+        int endTagPos = guts.indexOf(endTag);
+        if(endTagPos >= 0)
+        {
+            guts = guts.remove(0, endTagPos + endTag.length());
+            watchData = QString(Configuration::getTagValue(guts.toStdString(),
+                                                         "WatchItem").c_str());
+        }
+        else
+        {
+            std::cerr << __FILE__ << ": Broken XML:" + rep.toStdString() << std::endl;
+            break;
+        }
+    }
+
+    if(!items.empty())
+        ret->addItems(items, QModelIndex());
+
+    return ret;
+}
+
 

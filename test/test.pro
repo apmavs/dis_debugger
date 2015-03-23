@@ -50,13 +50,13 @@ INCLUDEPATH += ../RDM \
 
 CONFIG(debug, debug|release){
     LIBS += -L../../gtest/debug
-    LIBS += ../../build/RDM/debug/librdm.a
     LIBS += ../../build/Visualization/debug/libdis_visualization.a
+    LIBS += ../../build/RDM/debug/librdm.a
 }
 CONFIG(release, debug|release){
     LIBS += -L../../gtest/release
-    LIBS += ../../build/RDM/release/librdm.a
     LIBS += ../../build/Visualization/release/libdis_visualization.a
+    LIBS += ../../build/RDM/release/librdm.a
 }
 
 LIBS += -lgtest
@@ -77,6 +77,8 @@ SOURCES += main.cpp \
     WatchDatumItemTest.cpp \
     PlotCurveItemTest.cpp \
     EntityDataListTest.cpp \
-    PlotWidgetTest.cpp
+    PlotWidgetTest.cpp \
+    WatchListTest.cpp \
+    PlotGroupTest.cpp
 
 HEADERS +=

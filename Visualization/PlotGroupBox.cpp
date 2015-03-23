@@ -80,10 +80,7 @@ void PlotGroupBox::dropEvent(QDropEvent* event)
                     ui->PlotDropLabel->mapFromGlobal(QCursor::pos())))
         {
             curPlot = new PlotWidget(this);
-            connect(curPlot, SIGNAL(deletePlot(PlotWidget*)),
-                    this, SLOT(deletePlot(PlotWidget*)));
-            created_plots.append(curPlot);
-            ui->PlotSplitter->addWidget(curPlot);
+            addPlot(curPlot);
         }
         else // Check if user is adding to existing plot
         {
@@ -122,6 +119,14 @@ void PlotGroupBox::dropEvent(QDropEvent* event)
     QWidget::dropEvent(event);
 }
 
+void PlotGroupBox::addPlot(PlotWidget* plot)
+{
+    connect(plot, SIGNAL(deletePlot(PlotWidget*)),
+            this, SLOT(deletePlot(PlotWidget*)));
+    created_plots.append(plot);
+    ui->PlotSplitter->addWidget(plot);
+}
+
 void PlotGroupBox::deleteAllPlots()
 {
     // Clear permanent plot
@@ -134,4 +139,95 @@ void PlotGroupBox::deleteAllPlots()
         p->setParent(NULL);
         delete p;
     }
+}
+
+void PlotGroupBox::addToFirstPlot(QList<QTreeWidgetItem*> items)
+{
+    ui->FirstPlot->addCurves(items);
+}
+
+bool PlotGroupBox::equivalentTo(PlotGroupBox* rhs)
+{
+    bool ret = true;
+
+    if(!(ui->FirstPlot->equivalentTo(rhs->ui->FirstPlot)))
+        ret = false;
+    else if(created_plots.length() != rhs->created_plots.length())
+        ret = false;
+    else
+    {
+        for(int idx = 0; idx < created_plots.length(); idx++)
+        {
+            PlotWidget* myPlot  = created_plots.at(idx);
+            PlotWidget* rhsPlot = rhs->created_plots.at(idx);
+            if(!(myPlot->equivalentTo(rhsPlot)))
+            {
+                ret = false;
+                break;
+            }
+        }
+    }
+
+    return ret;
+}
+
+QString PlotGroupBox::getStringRepresentation() const
+{
+    QString rep = "<PlotGroupBox>\n";
+
+    rep += "<FirstPlot>\n";
+    rep += ui->FirstPlot->getStringRepresentation();
+    rep += "</FirstPlot>\n";
+
+    for(int idx = 0; idx < created_plots.length(); idx++)
+    {
+        PlotWidget* p = created_plots.at(idx);
+        rep += "<Plot>\n";
+        rep += p->getStringRepresentation();
+        rep += "</Plot>\n";
+    }
+
+    rep += "</PlotGroupBox>\n";
+
+    return rep;
+}
+
+PlotGroupBox* PlotGroupBox::createFromStringRepresentation(QString rep,
+                                                        QWidget* parent)
+{
+    PlotGroupBox* ret = new PlotGroupBox(parent);
+
+    QString guts = QString(Configuration::getTagValue(rep.toStdString(),
+                                                      "PlotGroupBox").c_str());
+
+    QString firstStr = QString(Configuration::getTagValue(guts.toStdString(),
+                                                          "FirstPlot").c_str());
+    PlotWidget* f = PlotWidget::createFromStringRepresentation(firstStr);
+    delete ret->ui->FirstPlot;
+    ret->ui->FirstPlot = f;
+
+    // Get all plots
+    QString endTag = "</Plot>";
+    QString plotData = QString(Configuration::getTagValue(guts.toStdString(),
+                                                             "Plot").c_str());
+    while(plotData != "")
+    {
+        PlotWidget* p = PlotWidget::createFromStringRepresentation(plotData);
+        ret->addPlot(p);
+
+        int endTagPos = guts.indexOf(endTag);
+        if(endTagPos >= 0)
+        {
+            guts = guts.remove(0, endTagPos + endTag.length());
+            plotData = QString(Configuration::getTagValue(guts.toStdString(),
+                                                         "Plot").c_str());
+        }
+        else
+        {
+            std::cerr << __FILE__ << ": Broken XML:" + rep.toStdString() << std::endl;
+            break;
+        }
+    }
+
+    return ret;
 }

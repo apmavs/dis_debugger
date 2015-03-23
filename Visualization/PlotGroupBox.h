@@ -33,7 +33,14 @@ protected:
 public:
     explicit PlotGroupBox(QWidget* parent = 0);
     virtual ~PlotGroupBox();
+    void addPlot(PlotWidget* plot);
     void deleteAllPlots();
+    void addToFirstPlot(QList<QTreeWidgetItem*> items);
+
+    bool equivalentTo(PlotGroupBox* rhs);
+    virtual QString getStringRepresentation() const;
+    static PlotGroupBox* createFromStringRepresentation(QString rep,
+                                             QWidget* parent = NULL);
 };
 
 #endif // PLOTGROUPBOX_H

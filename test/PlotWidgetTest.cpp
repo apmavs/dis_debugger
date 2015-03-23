@@ -9,7 +9,7 @@
 TEST(PlotWidgetTest, RepresentationTest)
 {
     // Create QApplication so that we can create widgets
-    int argc;
+    int argc = 0;
     QApplication app(argc, NULL);
     app.closeAllWindows();
 
@@ -18,19 +18,27 @@ TEST(PlotWidgetTest, RepresentationTest)
     EntityDatumItem* item1 = new EntityDatumItem(NULL, datum1);
     EntityDatumItem* item2 = new EntityDatumItem(NULL, datum2);
 
-    PlotWidget TestPlotWidget(NULL);
-    TestPlotWidget.addCurve(item1);
-    TestPlotWidget.addCurve(item2);
+    PlotWidget* TestPlotWidget = new PlotWidget(NULL);
+    TestPlotWidget->addCurve(item1);
+    TestPlotWidget->addCurve(item2);
 
-    QString rep = TestPlotWidget.getStringRepresentation();
+    QString rep = TestPlotWidget->getStringRepresentation();
 
     PlotWidget* repWidget = PlotWidget::createFromStringRepresentation(rep);
 
-    EXPECT_TRUE (TestPlotWidget.equivalentTo(repWidget));
+    EXPECT_TRUE (TestPlotWidget->equivalentTo(repWidget));
 
+    delete repWidget;
+    TestPlotWidget->hideDelete();
+    rep = TestPlotWidget->getStringRepresentation();
+    repWidget = PlotWidget::createFromStringRepresentation(rep);
+    EXPECT_TRUE(TestPlotWidget->equivalentTo(repWidget));
+
+
+    delete TestPlotWidget;
+    delete repWidget;
     delete item1;
     delete item2;
-    delete repWidget;
     delete datum1;
     delete datum2;
 }

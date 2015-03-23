@@ -16,7 +16,6 @@ protected:
     QAction delete_action;
 
     virtual void dropEvent(QDropEvent* event);
-    void addItems(QList<QTreeWidgetItem*> items, QModelIndex toIdx);
     void moveItems(QList<QTreeWidgetItem*> items, QModelIndex toIdx);
     void keyPressEvent(QKeyEvent* event);
 
@@ -28,6 +27,12 @@ protected slots:
 
 public:
     explicit WatchList(QWidget *parent = 0);
+    void addItems(QList<QTreeWidgetItem*> items, QModelIndex toIdx);
+
+    bool equivalentTo(WatchList* rhs);
+    virtual QString getStringRepresentation() const;
+    static WatchList* createFromStringRepresentation(QString rep,
+                                          QWidget* parent = NULL);
 };
 
 #endif // WATCHLIST_H
