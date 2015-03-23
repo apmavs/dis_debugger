@@ -32,7 +32,7 @@ DatumItem::DatumItem(const DatumInfo* d, bool constantUpdates)
 
 DatumItem::~DatumItem()
 {
-    if(interested_widgets.size() > 0)
+    if(watched_datum != NULL)
         controller->unregisterDatumObserver(this, watched_datum);
 }
 
