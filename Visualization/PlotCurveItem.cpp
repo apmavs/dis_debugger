@@ -41,6 +41,9 @@ PlotCurveItem::PlotCurveItem(QwtPlot* plot, const DatumInfo* d, QColor c)
 
 PlotCurveItem::~PlotCurveItem()
 {
+    curve_dots->detach();
+    bad_value_dots->detach();
+    detach();
     delete curve_dots;
     delete bad_value_dots;
 }
