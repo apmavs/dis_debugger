@@ -1,7 +1,8 @@
 #include "DatumIdentifier.h"
 #include "Configuration.h"
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdio>
 
 DatumIdentifier::DatumIdentifier()
 {
