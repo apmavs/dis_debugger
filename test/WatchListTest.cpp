@@ -26,8 +26,13 @@ TEST(WatchListTest, RepresentationTest)
 
     QString rep = TestList->getStringRepresentation();
 
-    WatchList* repList = WatchList::createFromStringRepresentation(rep, NULL);
+    WatchList* repList = new WatchList(NULL);
+    items.clear();
+    items.append(item2);
+    repList->addItems(items, QModelIndex());
+    EXPECT_FALSE(TestList->equivalentTo(repList));
 
+    repList->setFromStringRepresentation(rep);
     EXPECT_TRUE (TestList->equivalentTo(repList));
 
     delete TestList;

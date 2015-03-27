@@ -43,8 +43,7 @@ public:
     virtual void notifyAllDatumsInvalid();
 
     virtual QString getStringRepresentation() const;
-    static EntityDataList* createFromStringRepresentation(QString rep,
-                                               QWidget* parent = NULL);
+    void setFromStringRepresentation(QString rep);
 };
 
 #endif // ENTITYDATALIST_H

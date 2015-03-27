@@ -62,6 +62,7 @@ public:
 
     bool equivalentTo(PlotWidget* rhs);
     virtual QString getStringRepresentation() const;
+    void setFromStringRepresentation(QString rep);
     static PlotWidget* createFromStringRepresentation(QString rep,
                                            QWidget* parent = NULL);
 };

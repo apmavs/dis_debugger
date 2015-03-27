@@ -192,19 +192,17 @@ QString PlotGroupBox::getStringRepresentation() const
     return rep;
 }
 
-PlotGroupBox* PlotGroupBox::createFromStringRepresentation(QString rep,
-                                                        QWidget* parent)
+void PlotGroupBox::setFromStringRepresentation(QString rep)
 {
-    PlotGroupBox* ret = new PlotGroupBox(parent);
+    // Delete any previous plots and create new ones from string
+    deleteAllPlots();
 
     QString guts = QString(Configuration::getTagValue(rep.toStdString(),
                                                       "PlotGroupBox").c_str());
 
     QString firstStr = QString(Configuration::getTagValue(guts.toStdString(),
                                                           "FirstPlot").c_str());
-    PlotWidget* f = PlotWidget::createFromStringRepresentation(firstStr);
-    delete ret->ui->FirstPlot;
-    ret->ui->FirstPlot = f;
+    ui->FirstPlot->setFromStringRepresentation(firstStr);
 
     // Get all plots
     QString endTag = "</Plot>";
@@ -213,7 +211,7 @@ PlotGroupBox* PlotGroupBox::createFromStringRepresentation(QString rep,
     while(plotData != "")
     {
         PlotWidget* p = PlotWidget::createFromStringRepresentation(plotData);
-        ret->addPlot(p);
+        addPlot(p);
 
         int endTagPos = guts.indexOf(endTag);
         if(endTagPos >= 0)
@@ -228,6 +226,4 @@ PlotGroupBox* PlotGroupBox::createFromStringRepresentation(QString rep,
             break;
         }
     }
-
-    return ret;
 }

@@ -206,13 +206,10 @@ QString EntityDataList::getStringRepresentation() const
     return rep;
 }
 
-EntityDataList* EntityDataList::createFromStringRepresentation(QString rep,
-                                                           QWidget* parent)
+void EntityDataList::setFromStringRepresentation(QString rep)
 {
-    EntityDataList* ret = new EntityDataList(parent);
     std::string guts = Configuration::getTagValue(rep.toStdString(), "EntityDataList");
-    ret->active_filter = QString(Configuration::getTagValue(guts, "Filter").c_str());
-    return ret;
+    active_filter = QString(Configuration::getTagValue(guts, "Filter").c_str());
 }
 
 

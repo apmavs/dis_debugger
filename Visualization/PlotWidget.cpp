@@ -272,16 +272,17 @@ QString PlotWidget::getStringRepresentation() const
     return rep;
 }
 
-PlotWidget* PlotWidget::createFromStringRepresentation(QString rep,
-                                                    QWidget* parent)
+void PlotWidget::setFromStringRepresentation(QString rep)
 {
-    PlotWidget* ret = new PlotWidget(parent);
+    // Clear any curves that were already on the plot
+    clearCurves();
+
     QString guts = QString(Configuration::getTagValue(rep.toStdString(), "PlotWidget").c_str());
-    ret->color_index = QString(Configuration::getTagValue(guts.toStdString(), "LastColor").c_str()).toInt();
-    bool hideDelete = QString(Configuration::getTagValue(guts.toStdString(), "DeleteHidden").c_str()).toInt() != 0;
-    if(hideDelete) ret->hideDelete();
+    color_index = QString(Configuration::getTagValue(guts.toStdString(), "LastColor").c_str()).toInt();
+    bool cannotDelete = QString(Configuration::getTagValue(guts.toStdString(), "DeleteHidden").c_str()).toInt() != 0;
+    if(cannotDelete) hideDelete();
     bool hide = QString(Configuration::getTagValue(guts.toStdString(), "Hidden").c_str()).toInt() != 0;
-    if(hide) ret->on_HideBtn_clicked();
+    if(hide) on_HideBtn_clicked();
 
     // Get all curves
     QString endTag = "</Curve>";
@@ -290,9 +291,9 @@ PlotWidget* PlotWidget::createFromStringRepresentation(QString rep,
     while(curveData != "")
     {
         PlotCurveItem* curveItem = PlotCurveItem::
-                createFromStringRepresentation(curveData, ret->ui->embedded_plot);
-        ret->curves.append(curveItem);
-        curveItem->activate(ret);
+                createFromStringRepresentation(curveData, ui->embedded_plot);
+        curves.append(curveItem);
+        curveItem->activate(this);
 
         int endTagPos = guts.indexOf(endTag);
         if(endTagPos >= 0)
@@ -307,6 +308,12 @@ PlotWidget* PlotWidget::createFromStringRepresentation(QString rep,
             break;
         }
     }
+}
 
+PlotWidget* PlotWidget::createFromStringRepresentation(QString rep,
+                                                    QWidget* parent)
+{
+    PlotWidget* ret = new PlotWidget(parent);
+    ret->setFromStringRepresentation(rep);
     return ret;
 }

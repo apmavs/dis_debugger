@@ -213,10 +213,11 @@ QString WatchList::getStringRepresentation() const
     return rep;
 }
 
-WatchList* WatchList::createFromStringRepresentation(QString rep,
-                                                 QWidget* parent)
+void WatchList::setFromStringRepresentation(QString rep)
 {
-    WatchList* ret = new WatchList(parent);
+    // Clear out old items and replace with items from string
+    clear();
+
     QString guts = QString(Configuration::getTagValue(rep.toStdString(), "WatchList").c_str());
 
     // Get all watch items
@@ -245,9 +246,7 @@ WatchList* WatchList::createFromStringRepresentation(QString rep,
     }
 
     if(!items.empty())
-        ret->addItems(items, QModelIndex());
-
-    return ret;
+        addItems(items, QModelIndex());
 }
 
 

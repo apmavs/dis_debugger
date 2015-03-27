@@ -39,8 +39,7 @@ public:
 
     bool equivalentTo(PlotGroupBox* rhs);
     virtual QString getStringRepresentation() const;
-    static PlotGroupBox* createFromStringRepresentation(QString rep,
-                                             QWidget* parent = NULL);
+    void setFromStringRepresentation(QString rep);
 };
 
 #endif // PLOTGROUPBOX_H

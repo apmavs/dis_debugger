@@ -31,8 +31,7 @@ public:
 
     bool equivalentTo(WatchList* rhs);
     virtual QString getStringRepresentation() const;
-    static WatchList* createFromStringRepresentation(QString rep,
-                                          QWidget* parent = NULL);
+    void setFromStringRepresentation(QString rep);
 };
 
 #endif // WATCHLIST_H

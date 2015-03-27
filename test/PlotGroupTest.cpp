@@ -18,14 +18,30 @@ TEST(PlotGroupTest, RepresentationTest)
     EntityDatumItem* item1 = new EntityDatumItem(NULL, datum1);
     EntityDatumItem* item2 = new EntityDatumItem(NULL, datum2);
 
-    PlotWidget* TestPlotWidget1 = new PlotWidget(NULL);
-    PlotWidget* TestPlotWidget2 = new PlotWidget(NULL);
-    PlotWidget* TestPlotWidget3 = new PlotWidget(NULL);
-    PlotWidget* TestPlotWidget4 = new PlotWidget(NULL);
+    PlotWidget* TestPlotWidget1  = new PlotWidget(NULL);
+    PlotWidget* TestPlotWidget2  = new PlotWidget(NULL);
+    PlotWidget* TestPlotWidget3  = new PlotWidget(NULL);
+    PlotWidget* TestPlotWidget4  = new PlotWidget(NULL);
+    PlotWidget* TestPlotWidget5  = new PlotWidget(NULL);
+    PlotWidget* TestPlotWidget6  = new PlotWidget(NULL);
+    PlotWidget* TestPlotWidget7  = new PlotWidget(NULL);
+    PlotWidget* TestPlotWidget8  = new PlotWidget(NULL);
+    PlotWidget* TestPlotWidget9  = new PlotWidget(NULL);
+    PlotWidget* TestPlotWidget10 = new PlotWidget(NULL);
     TestPlotWidget1->addCurve(item1);
     TestPlotWidget1->addCurve(item2);
     TestPlotWidget2->addCurve(item2);
     TestPlotWidget3->addCurve(item1);
+
+    TestPlotWidget5->addCurve(item2);
+
+    TestPlotWidget6->addCurve(item1);
+    TestPlotWidget6->addCurve(item2);
+    TestPlotWidget7->addCurve(item2);
+    TestPlotWidget8->addCurve(item1);
+
+    TestPlotWidget10->addCurve(item1);
+    TestPlotWidget10->addCurve(item2);
 
     PlotGroupBox* TestBox1 = new PlotGroupBox();
     PlotGroupBox* TestBox2 = new PlotGroupBox();
@@ -38,16 +54,16 @@ TEST(PlotGroupTest, RepresentationTest)
 
     TestBox1->addToFirstPlot(firstItems);
     TestBox1->addPlot(TestPlotWidget1);
-    //TestBox1->addPlot(TestPlotWidget2);
-    //TestBox1->addPlot(TestPlotWidget3);
-    //TestBox1->addPlot(TestPlotWidget4);
+    TestBox1->addPlot(TestPlotWidget2);
+    TestBox1->addPlot(TestPlotWidget3);
+    TestBox1->addPlot(TestPlotWidget4);
 
-    TestBox2->addPlot(TestPlotWidget2);
+    TestBox2->addPlot(TestPlotWidget5);
 
-    TestBox3->addPlot(TestPlotWidget4);
-    TestBox3->addPlot(TestPlotWidget3);
-    TestBox3->addPlot(TestPlotWidget2);
-    TestBox3->addPlot(TestPlotWidget1);
+    TestBox3->addPlot(TestPlotWidget6);
+    TestBox3->addPlot(TestPlotWidget7);
+    TestBox3->addPlot(TestPlotWidget8);
+    TestBox3->addPlot(TestPlotWidget9);
 
     // Keep TestBox4 empty
 
@@ -56,10 +72,18 @@ TEST(PlotGroupTest, RepresentationTest)
     QString rep3 = TestBox3->getStringRepresentation();
     QString rep4 = TestBox4->getStringRepresentation();
 
-    PlotGroupBox* repBox1 = PlotGroupBox::createFromStringRepresentation(rep1);
-    PlotGroupBox* repBox2 = PlotGroupBox::createFromStringRepresentation(rep2);
-    PlotGroupBox* repBox3 = PlotGroupBox::createFromStringRepresentation(rep3);
-    PlotGroupBox* repBox4 = PlotGroupBox::createFromStringRepresentation(rep4);
+    PlotGroupBox* repBox1 = new PlotGroupBox();
+    PlotGroupBox* repBox2 = new PlotGroupBox();
+    PlotGroupBox* repBox3 = new PlotGroupBox();
+    PlotGroupBox* repBox4 = new PlotGroupBox();
+
+    // Test to make sure setFromStringRep clears old plot widgets
+    repBox4->addPlot(TestPlotWidget10);
+
+    repBox1->setFromStringRepresentation(rep1);
+    repBox2->setFromStringRepresentation(rep2);
+    repBox3->setFromStringRepresentation(rep3);
+    repBox4->setFromStringRepresentation(rep4);
 
     EXPECT_TRUE (TestBox1->equivalentTo(repBox1));
     EXPECT_FALSE(TestBox1->equivalentTo(repBox2));

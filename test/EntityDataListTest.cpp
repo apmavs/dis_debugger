@@ -16,10 +16,15 @@ TEST(EntityDataListTest, RepresentationTest)
 
     QString rep = list->getStringRepresentation();
 
-    EntityDataList* repList = EntityDataList::createFromStringRepresentation(rep, NULL);
-
+    EntityDataList* repList = new EntityDataList(NULL);
+    repList->filterList("different");
     QString filter    = list->getActiveFilter();
     QString repFilter = repList->getActiveFilter();
+    EXPECT_TRUE(filter != repFilter);
+
+    repList->setFromStringRepresentation(rep);
+    filter    = list->getActiveFilter();
+    repFilter = repList->getActiveFilter();
     EXPECT_TRUE (filter == repFilter);
 
     delete list;
