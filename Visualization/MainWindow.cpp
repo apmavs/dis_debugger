@@ -47,8 +47,24 @@ void MainWindow::newDatumSlot(const DatumInfo* datum)
 {
     QString newEntityName = QString(datum->getEntityName().c_str());
     mutex.lock();
-    QList<QListWidgetItem*> knownEntities = ui->EntityView->findItems(newEntityName, 0);
-    if(knownEntities.isEmpty())
+    bool foundEntity = false;
+    int disIdPos = newEntityName.lastIndexOf("(");
+    QString newDisId = newEntityName.mid(disIdPos);
+    for(int idx = 0; idx < ui->EntityView->count(); idx++)
+    {
+        QListWidgetItem* item = ui->EntityView->item(idx);
+        QString name = item->text();
+
+        // Check if name has changed or name is already in the list
+        if(name.endsWith(newDisId))
+        {
+            item->setText(newEntityName);
+            foundEntity = true;
+            break;
+        }
+    }
+
+    if(!foundEntity)
         ui->EntityView->addItem(newEntityName);
     mutex.unlock();
 }
