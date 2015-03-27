@@ -37,27 +37,34 @@ win32 {
     qwt_root      = C:/Qwt-6.1.2
     qwt_lib_path  = C:/Qwt-6.1.2/lib
     qwt_inc_path  = C:/Qwt-6.1.2/include
+
+    include ( $$qwt_root/features/qwt.prf )
+
+    QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
+
+    INCLUDEPATH += ../RDM
+    INCLUDEPATH += ../Visualization
+    INCLUDEPATH += $$quote($$kdis_inc_path)
+    INCLUDEPATH += $$quote($$qwt_inc_path)
+    DEPENDPATH += ../RDM
+    DEPENDPATH += ../Visualization
+    DEPENDPATH += $$quote($$kdis_inc_path)
+    DEPENDPATH += $$quote($$qwt_inc_path)
+
+    LIBS += $$quote($$visualization_lib_path/$$visualization_lib_name)
+    LIBS += $$quote($$rdm_lib_path/$$rdm_lib_name)
+    LIBS += $$quote($$kdis_lib_path/$$kdis_lib_name)
+    LIBS -= -lqwt
+    LIBS += $$quote($$qwt_lib_path/$$qwt_lib_name)
+    LIBS += -lws2_32
 }
 
-include ( $$qwt_root/features/qwt.prf )
-
-QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
-
-INCLUDEPATH += ../RDM
-INCLUDEPATH += ../Visualization
-INCLUDEPATH += $$quote($$kdis_inc_path)
-INCLUDEPATH += $$quote($$qwt_inc_path)
-DEPENDPATH += ../RDM
-DEPENDPATH += ../Visualization
-DEPENDPATH += $$quote($$kdis_inc_path)
-DEPENDPATH += $$quote($$qwt_inc_path)
-
-LIBS += $$quote($$visualization_lib_path/$$visualization_lib_name)
-LIBS += $$quote($$rdm_lib_path/$$rdm_lib_name)
-LIBS += $$quote($$kdis_lib_path/$$kdis_lib_name)
-LIBS -= -lqwt
-LIBS += $$quote($$qwt_lib_path/$$qwt_lib_name)
-win32:LIBS += -lws2_32
+unix {
+    INCLUDEPATH += ../RDM
+    LIBS += ../Visualization/libdis_visualization.a
+    LIBS += ../RDM/librdm.a
+    LIBS += -lkdis -lqwt 
+}
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

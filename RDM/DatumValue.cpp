@@ -2,7 +2,8 @@
 #include "Configuration.h"
 
 #include <QString>
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdio>
 
 DatumValue::DatumValue()
 {

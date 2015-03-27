@@ -11,14 +11,15 @@ QT       -= gui
 DEFINES += DIS_VERSION=6
 
 TARGET = rdm
-CONFIG   += console
-CONFIG   -= app_bundle
+CONFIG += console
+CONFIG -= app_bundle
+CONFIG += debug
 
-win32:kdis_inc_path = C:/Program Files (x86)/KDIS/include
-
-QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
-
-INCLUDEPATH += $$quote($$kdis_inc_path)
+win32 {
+    kdis_inc_path = C:/Program Files (x86)/KDIS/include
+    INCLUDEPATH += $$quote($$kdis_inc_path)
+    QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
+}
 
 TEMPLATE = lib
 

@@ -32,39 +32,46 @@ win32 {
     qwt_root      = C:/Qwt-6.1.2
     qwt_lib_path  = C:/Qwt-6.1.2/lib
     qwt_inc_path  = C:/Qwt-6.1.2/include
+
+    include ( $$qwt_root/features/qwt.prf )
+
+    QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
+
+    INCLUDEPATH += $$quote($$kdis_inc_path)
+    INCLUDEPATH += $$quote($$qwt_inc_path)
+    DEPENDPATH += $$quote($$kdis_inc_path)
+    DEPENDPATH += $$quote($$qwt_inc_path)
+
+    PRE_TARGETDEPS += $$quote($$qwt_lib_path)/$$qwt_lib_name
+
+    INCLUDEPATH += ../RDM \
+                   ../Visualization
+
+    CONFIG(debug, debug|release){
+        LIBS += -L../../gtest/debug
+        LIBS += ../../build/Visualization/debug/libdis_visualization.a
+        LIBS += ../../build/RDM/debug/librdm.a
+    }
+    CONFIG(release, debug|release){
+        LIBS += -L../../gtest/release
+        LIBS += ../../build/Visualization/release/libdis_visualization.a
+        LIBS += ../../build/RDM/release/librdm.a
+    }
+
+    LIBS += -lgtest
+    LIBS += -lgtest_main
+    LIBS += $$quote($$kdis_lib_path/$$kdis_lib_name)
+    LIBS -= -lqwt
+    LIBS += $$quote($$qwt_lib_path/$$qwt_lib_name)
+    LIBS += -lws2_32
 }
 
-include ( $$qwt_root/features/qwt.prf )
-
-QMAKE_CXXFLAGS += -isystem \"$$kdis_inc_path\"
-
-INCLUDEPATH += $$quote($$kdis_inc_path)
-INCLUDEPATH += $$quote($$qwt_inc_path)
-DEPENDPATH += $$quote($$kdis_inc_path)
-DEPENDPATH += $$quote($$qwt_inc_path)
-
-PRE_TARGETDEPS += $$quote($$qwt_lib_path)/$$qwt_lib_name
-
-INCLUDEPATH += ../RDM \
-               ../Visualization
-
-CONFIG(debug, debug|release){
-    LIBS += -L../../gtest/debug
-    LIBS += ../../build/Visualization/debug/libdis_visualization.a
-    LIBS += ../../build/RDM/debug/librdm.a
+unix {
+    INCLUDEPATH += ../RDM /usr/include/qwt
+    LIBS += ../RDM/librdm.a
+    LIBS += ../Visualization/libdis_visualization.a
+    LIBS += -L /usr/src/gtest/build -lqwt -lkdis -lgtest -lgtest_main
 }
-CONFIG(release, debug|release){
-    LIBS += -L../../gtest/release
-    LIBS += ../../build/Visualization/release/libdis_visualization.a
-    LIBS += ../../build/RDM/release/librdm.a
-}
-
-LIBS += -lgtest
-LIBS += -lgtest_main
-LIBS += $$quote($$kdis_lib_path/$$kdis_lib_name)
-LIBS -= -lqwt
-LIBS += $$quote($$qwt_lib_path/$$qwt_lib_name)
-win32:LIBS += -lws2_32
 
 SOURCES += main.cpp \
     NetworkPduSourceTest.cpp \

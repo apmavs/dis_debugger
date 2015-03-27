@@ -13,7 +13,8 @@ TEMPLATE = subdirs
 SUBDIRS += main \
     RDM \
     test \
-    Visualization
+    Visualization \
+    dis_playback
 
 Visualization.depends = RDM
 
