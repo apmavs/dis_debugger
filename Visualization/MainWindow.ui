@@ -413,6 +413,10 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen_XML"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_Layout"/>
+    <addaction name="actionLoad_Layout"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -452,6 +456,16 @@
   <action name="actionChangeBroadcastPort">
    <property name="text">
     <string>Change Broadcast Port</string>
+   </property>
+  </action>
+  <action name="actionSave_Layout">
+   <property name="text">
+    <string>Save Layout</string>
+   </property>
+  </action>
+  <action name="actionLoad_Layout">
+   <property name="text">
+    <string>Load Layout</string>
    </property>
   </action>
  </widget>
@@ -540,10 +554,44 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSave_Layout</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveLayout()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>416</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLoad_Layout</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadLayout()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>416</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>openXml()</slot>
   <slot>changeBroadcastIp()</slot>
   <slot>changeBroadcastPort()</slot>
+  <slot>saveLayout()</slot>
+  <slot>loadLayout()</slot>
  </slots>
 </ui>

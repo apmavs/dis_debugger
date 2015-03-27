@@ -24,6 +24,7 @@ private:
     DataModelController* controller;
     TextEntryPopup entry_dialog;
     QString last_entry_request;
+    QString layout_file_name;
 
 private slots:
     // These are slots to ensure GUI updates are done in GUI thread
@@ -38,6 +39,8 @@ private slots:
     void changeBroadcastIp();
     void changeBroadcastPort();
     void handleDialogEntry(QString value);
+    void saveLayout();
+    void loadLayout();
 
 signals:
     void newDatumSignal(const DatumInfo* datum);

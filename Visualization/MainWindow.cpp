@@ -4,6 +4,7 @@
 #include <iostream>
 #include <QFileDialog>
 #include <QMetaType>
+#include <QMessageBox>
 
 static QString REQ_BROADCAST_IP     = "Broadcast IP";
 static QString REQ_BROADCAST_PORT   = "Broadcast Port";
@@ -12,7 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     entry_dialog(this),
-    last_entry_request("")
+    last_entry_request(""),
+    layout_file_name("")
 {
     ui->setupUi(this);
     showMaximized();
@@ -132,3 +134,70 @@ void MainWindow::handleDialogEntry(QString value)
     else
         std::cerr << "Received edit for unknown request:" << value.toStdString() << std::endl;
 }
+
+void MainWindow::saveLayout()
+{
+    layout_file_name = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                    "./" + layout_file_name,
+                                                    tr("Layout files (*.lay)"));
+    if(layout_file_name != "")
+    {
+        if(!layout_file_name.endsWith(".lay"))
+            layout_file_name += ".lay";
+
+        QString layout = "<MainLayout>\n";
+        layout += ui->AttributeView->getStringRepresentation();
+        layout += ui->WatchView->getStringRepresentation();
+        layout += ui->PlotsGroup->getStringRepresentation();
+        layout += "</MainLayout>\n";
+
+        QFile writeFile(layout_file_name);
+        bool opened = writeFile.open(QIODevice::WriteOnly);
+        if(opened)
+        {
+            QTextStream stream(&writeFile);
+            stream << layout;
+            writeFile.close();
+        }
+        else
+        {
+            std::string msg = "Error: Unable to open ";
+            msg += layout_file_name.toStdString();
+            msg += " for writing!";
+            QMessageBox::information(this, tr("DIS Debugger"), tr(msg.c_str()));
+        }
+    }
+}
+
+void MainWindow::loadLayout()
+{
+    layout_file_name = QFileDialog::getOpenFileName(this, tr("Load File"),
+                                                    "./" + layout_file_name,
+                                                    tr("Layout files (*.lay)"));
+    if(layout_file_name != "")
+    {
+        QFile readFile(layout_file_name);
+        bool opened = readFile.open(QIODevice::ReadOnly);
+        if(opened)
+        {
+            QTextStream stream(&readFile);
+            QString layout = stream.readAll();
+            QString guts = QString(Configuration::getTagValue(layout.toStdString(),
+                                                              "MainLayout").c_str());
+            ui->AttributeView->setFromStringRepresentation(guts);
+            ui->FilterInput->setText(ui->AttributeView->getActiveFilter());
+            ui->WatchView->setFromStringRepresentation(guts);
+            ui->PlotsGroup->setFromStringRepresentation(guts);
+        }
+        else
+        {
+            std::string msg = "Error: Unable to open ";
+            msg += layout_file_name.toStdString();
+            msg += " for reading!";
+            QMessageBox::information(this, tr("DIS Debugger"), tr(msg.c_str()));
+        }
+    }
+}
+
+
+
