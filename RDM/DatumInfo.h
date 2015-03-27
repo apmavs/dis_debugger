@@ -64,7 +64,7 @@ public:
     bool addValue(double time, QByteArray value);
     void truncateHistory(double currentTime);
 
-    std::string getStringRepresentation() const;
+    std::string getStringRepresentation(bool saveValues = false) const;
     static DatumInfo* createFromStringRepresentation(std::string rep);
 };
 

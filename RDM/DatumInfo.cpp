@@ -390,7 +390,7 @@ std::string getTagValue(std::string fromStr, std::string tag)
 }
 
 // Return string representation so that object can be saved and loaded.
-std::string DatumInfo::getStringRepresentation() const
+std::string DatumInfo::getStringRepresentation(bool saveValues) const
 {
     mutex->lock();
 
@@ -408,8 +408,11 @@ std::string DatumInfo::getStringRepresentation() const
         rep += "<Maximum>" + maximum->getStringRepresentation() + "</Maximum>\n";
 
     // Save off each stored value
-    for(size_t i = 0; i < values.size(); i++)
-        rep += "<Value>" + values[i]->getStringRepresentation() + "</Value>\n";
+    if(saveValues)
+    {
+        for(size_t i = 0; i < values.size(); i++)
+            rep += "<Value>" + values[i]->getStringRepresentation() + "</Value>\n";
+    }
 
 
     rep += "</DatumInfo>\n";
