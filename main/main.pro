@@ -45,6 +45,8 @@ win32 {
     INCLUDEPATH += ../Visualization
     INCLUDEPATH += $$quote($$kdis_inc_path)
     INCLUDEPATH += $$quote($$qwt_inc_path)
+    PRE_TARGETDEPS += $$quote($$visualization_lib_path/$$visualization_lib_name)
+    PRE_TARGETDEPS += $$quote($$rdm_lib_path/$$rdm_lib_name)
     DEPENDPATH += ../RDM
     DEPENDPATH += ../Visualization
     DEPENDPATH += $$quote($$kdis_inc_path)

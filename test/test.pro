@@ -43,6 +43,8 @@ win32 {
     DEPENDPATH += $$quote($$qwt_inc_path)
 
     PRE_TARGETDEPS += $$quote($$qwt_lib_path)/$$qwt_lib_name
+    PRE_TARGETDEPS += $$quote($$visualization_lib_path/$$visualization_lib_name)
+    PRE_TARGETDEPS += $$quote($$rdm_lib_path/$$rdm_lib_name)
 
     INCLUDEPATH += ../RDM \
                    ../Visualization
