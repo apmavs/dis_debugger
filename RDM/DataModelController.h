@@ -51,6 +51,7 @@ public:
     bool changeBroadcastIp(std::string newIp, bool save = true);
     bool changeBroadcastPort(uint32_t newPort, bool save = true);
     DatumInfo* getDatumInfoPtr(std::string datumRep);
+    const UnitClassDef *getUnitClassDef(const std::string & className);
 
 };
 

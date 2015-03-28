@@ -230,13 +230,18 @@ std::string DatumInfo::getDescription() const
 // Get the most recent value
 std::string DatumInfo::getValue() const
 {
+    return getValue(NULL, "", "");
+}
+
+std::string DatumInfo::getValue(const UnitClassDef *unitClass, const std::string & fromUnit, const std::string & toUnit) const
+{
     std::string data;
 
     mutex->lock();
     // Get most current value if any values exist
     std::vector<DatumValue*>::const_reverse_iterator it = values.rbegin();
     if(it != values.rend())
-        data = (*it)->getValue();
+        data = (*it)->getValue(unitClass, fromUnit, toUnit);
 
     mutex->unlock();
 

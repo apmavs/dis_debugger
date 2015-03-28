@@ -417,3 +417,8 @@ DatumInfo* DataModelController::getDatumInfoPtr(std::string datumRep)
 
     return datum;
 }
+
+const UnitClassDef *DataModelController::getUnitClassDef(const std::string & className) {
+    if(!deconstructor) return NULL;
+    return deconstructor->getUnitClassDef(className);
+}

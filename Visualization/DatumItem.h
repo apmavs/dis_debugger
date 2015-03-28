@@ -31,6 +31,8 @@ protected:
     DataModelController* controller;
     std::set<const void*> interested_widgets;
     const DatumInfo* const watched_datum;
+    const UnitClassDef *unit_class;
+
     QString category_name;
     bool constant_updates;
 

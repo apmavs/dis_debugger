@@ -55,6 +55,7 @@ public:
     std::string getCategory() const;
     std::string getDescription() const;
     std::string getValue() const;
+    std::string getValue(const UnitClassDef *unitClass, const std::string & fromUnit, const std::string & toUnit) const;
     std::map<double, std::string> getHistory() const;
     bool isLessThanMin() const;    // Current value is less than min
     bool isGreaterThanMax() const; // Current value is greater than max

@@ -1,5 +1,4 @@
 #include "PduDeconstructor.h"
-#include "VehicleMetadataLoader.h"
 
 #include <iostream>
 #include <KDIS/PDU/Entity_Info_Interaction/Entity_State_PDU.h>
@@ -25,7 +24,11 @@ bool PduDeconstructor::loadXml(std::string filename)
         PduDef* def = it->second;
         delete def;
     }
-    definitions = loader->getDefinitions();
+
+    definitions.clear();
+    unitClasses.clear();
+
+    loader->load(definitions, unitClasses);
     mutex.unlock();
 
     if(loader->errorDetected())
@@ -88,4 +91,9 @@ std::string PduDeconstructor::getEntityIdentifier(uint16_t site, uint16_t app, u
                                                   .arg(entity)
                                                   .toStdString();
     return entityIdentifier;
+}
+
+const UnitClassDef *PduDeconstructor::getUnitClassDef(const std::string & className) {
+    UnitClassDefMap::const_iterator it = unitClasses.find(className);
+    return it == unitClasses.end() ? NULL : &it->second;
 }

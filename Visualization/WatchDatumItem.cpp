@@ -52,10 +52,8 @@ void WatchDatumItem::setDisplay()
         QString entityName(watched_datum->getEntityName().c_str());
         setText(0, entityName);
         setText(1, watched_datum->getName().c_str());
-        std::string curVal = watched_datum->getValue() + " ";
-        curVal += watched_datum->getUnit();
-        setText(2, curVal.c_str());
-        setText(3, curVal.c_str());
+        setText(2, watched_datum->getValue(unit_class, watched_datum->getUnit(), watched_datum->getUnit()).c_str());
+        setText(3, watched_datum->getUnit().c_str());
     }
     setColor(2);
     mutex.unlock();

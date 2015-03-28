@@ -6,6 +6,7 @@
 #include <QString>
 #include <string>
 #include <stdint.h>
+#include "UnitClassDef.h"
 
 class DatumValue
 {
@@ -30,6 +31,7 @@ public:
     double getTimestamp() const;
     virtual std::string getType() const = 0;
     virtual std::string getValue() const = 0;
+    virtual std::string getValue(const UnitClassDef *unitClass, const std::string & unitIn, const std::string & unitOut) const = 0;
     QByteArray getRawData() const;
     virtual DatumValue* createCopy() const = 0;
 
@@ -57,6 +59,11 @@ private:
 public:
     DatumValueTemplate() : DatumValue() {}
     virtual ~DatumValueTemplate() {}
+
+    virtual std::string getValue(const UnitClassDef *unitClass, const std::string & unitFrom, const std::string & unitTo) const
+    {
+        return unitClass ? unitClass->getConversion<DatumType>(unitFrom, unitTo, getVal()) : getValue();
+    }
 
     virtual std::string getValue() const
     {
@@ -125,6 +132,14 @@ public:
     StringValue();
     virtual ~StringValue();
     virtual std::string getValue() const;
+    virtual std::string getValue(const UnitClassDef *unitClass, const std::string & unitFrom, const std::string & unitTo) const
+    {
+        (void)unitClass;
+        (void)unitFrom;
+        (void)unitTo;
+
+        return getValue();
+    }
     virtual std::string getType() const;
     virtual DatumValue* createCopy() const;
     virtual bool lessThan(DatumValue* rhs) const;
