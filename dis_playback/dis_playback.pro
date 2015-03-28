@@ -13,7 +13,6 @@ DEFINES += DIS_VERSION=6
 TARGET = dis_playback
 CONFIG += console
 CONFIG -= app_bundle
-CONFIG += debug
 
 TEMPLATE = app
 

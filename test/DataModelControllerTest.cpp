@@ -75,20 +75,20 @@ TEST(DataModelControllerTest, PduTest)
     QFile f(qFileName);
     bool fileOpened = f.open(QIODevice::WriteOnly);
     ASSERT_TRUE(fileOpened);
-    const char line1[] = "<DatumDefinitions>\n";
-    const char line2[] =
-            "<DatumInfo source=\"EntityState\" type=\"float\" offset=\"36\" "
-            "size=\"4\" byte_order=\"network\">\n";
-    const char line3[] = "<Name>X</Name>\n";
-    const char line4[] = "<Category>Velocity</Category>\n";
-    const char line5[] = "</DatumInfo>\n";
-    const char line6[] = "</DatumDefinitions>\n";
-    f.write(line1);
-    f.write(line2);
-    f.write(line3);
-    f.write(line4);
-    f.write(line5);
-    f.write(line6);
+    const std::string lines[] = {
+        "<VehicleMetadata>\n",
+        "<DatumDefinitions>\n",
+        "<DatumInfo source=\"EntityState\" type=\"float\" offset=\"36\"",
+        "size=\"4\" byte_order=\"network\">\n",
+        "<Name>X</Name>\n",
+        "<Category>Velocity</Category>\n",
+        "</DatumInfo>\n",
+        "</DatumDefinitions>\n",
+        "</VehicleMetadata>\n"  };
+
+    int numStrings = sizeof(lines) / sizeof(lines[0]);
+    for(int idx = 0; idx < numStrings; idx++)
+        f.write(lines[idx].c_str());
     f.close();
     controller->loadMetadataXml(FILE_NAME, false);
 
