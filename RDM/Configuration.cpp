@@ -12,6 +12,7 @@ Configuration::Configuration() :
     config_values[CONFIG::BROADCAST_IP] = "127.0.0.1";
     config_values[CONFIG::BROADCAST_PORT] = "6993";
     config_values[CONFIG::METADATA_XML] = "dis_definitions.xml";
+    config_values[CONFIG::LAYOUT_FILE_NAME] = "";
     loadConfigFile(file_name);
     saveConfig(); // Create config file if it did not exist
 }

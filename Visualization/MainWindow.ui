@@ -17,8 +17,15 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="MsgToUser">
+      <property name="text">
+       <string>Display a message to user here</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
      <widget class="QSplitter" name="MainSplitter">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">

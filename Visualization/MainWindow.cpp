@@ -5,9 +5,12 @@
 #include <QFileDialog>
 #include <QMetaType>
 #include <QMessageBox>
+#include <QTimer>
 
 static QString REQ_BROADCAST_IP     = "Broadcast IP";
 static QString REQ_BROADCAST_PORT   = "Broadcast Port";
+
+int MainWindow::USER_MSG_TIMEOUT_MS = 5000;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     showMaximized();
+
+    config = Configuration::getInstance();
 
     // Set up default ratios of main sections
     ui->MainSplitter->setStretchFactor(0, 1);
@@ -44,6 +49,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionExit->setShortcut               (Qt::CTRL + Qt::Key_Q);
     ui->actionChangeBroadcastIP->setShortcut  (Qt::CTRL + Qt::Key_I);
     ui->actionChangeBroadcastPort->setShortcut(Qt::CTRL + Qt::Key_P);
+
+    user_msg_count = 0;
+    hideUserMessage();
+
+    // Load layout if saved in configuration file
+    layout_file_name = QString(config->
+            getValue(CONFIG::LAYOUT_FILE_NAME).c_str());
+    if(layout_file_name != "")
+        loadLayout(layout_file_name);
 }
 
 MainWindow::~MainWindow()
@@ -152,11 +166,41 @@ void MainWindow::changeBroadcastPort()
 void MainWindow::handleDialogEntry(QString value)
 {
     if(last_entry_request == REQ_BROADCAST_IP)
-        controller->changeBroadcastIp(value.toStdString());
+    {
+        bool changed = controller->changeBroadcastIp(value.toStdString());
+        QString newIp = QString(controller->getBroadcastIp().c_str());
+        if(changed)
+        {
+            QString msg = "Changed broadcast IP to " + newIp;
+            writeUserMsg(msg, QColor(Qt::darkGreen));
+        }
+        else
+        {
+            QString msg = "Broadcast IP change FAILED, IP is currently: " + newIp;
+            writeUserMsg(msg, QColor(Qt::red));
+        }
+    }
     else if(last_entry_request == REQ_BROADCAST_PORT)
-        controller->changeBroadcastPort(value.toUInt());
+    {
+        bool changed = controller->changeBroadcastPort(value.toUInt());
+        QString newPort = QString::number(controller->getBroadcastPort());
+        if(changed)
+        {
+            QString msg = "Changed broadcast port to " + newPort;
+            writeUserMsg(msg, QColor(Qt::darkGreen));
+        }
+        else
+        {
+            QString msg = "Broadcast port change FAILED, port is currently: " + newPort;
+            writeUserMsg(msg, QColor(Qt::red));
+        }
+    }
     else
+    {
+        QString msg = "Nobody should ever see me";
+        writeUserMsg(msg, QColor(Qt::red));
         std::cerr << "Received edit for unknown request:" << value.toStdString() << std::endl;
+    }
 }
 
 void MainWindow::saveLayout()
@@ -179,6 +223,9 @@ void MainWindow::saveLayout()
             QTextStream stream(&writeFile);
             stream << layout;
             writeFile.close();
+            QString msg = "Saved layout to " + layout_file_name + "!";
+            writeUserMsg(msg, QColor(Qt::darkGreen));
+            config->setValue(CONFIG::LAYOUT_FILE_NAME, layout_file_name.toStdString());
         }
         else
         {
@@ -186,6 +233,8 @@ void MainWindow::saveLayout()
             msg += layout_file_name.toStdString();
             msg += " for writing!";
             QMessageBox::information(this, tr("DIS Debugger"), tr(msg.c_str()));
+            QString msg2 = "Failed saving layout to " + layout_file_name + "!";
+            writeUserMsg(msg2, QColor(Qt::red));
         }
     }
     else
@@ -205,14 +254,30 @@ void MainWindow::saveLayoutAs()
                                                     "./" + layout_file_name,
                                                     tr("Layout files (*.lay)"));
     if(layout_file_name != "") // User didn't click cancel
+    {
         saveLayout();
+    }
+    else
+    {
+        QString msg = "Not saving layout.";
+        writeUserMsg(msg, QColor(Qt::black));
+    }
 }
 
-void MainWindow::loadLayout()
+void MainWindow::loadLayout(QString filename)
 {
-    layout_file_name = QFileDialog::getOpenFileName(this, tr("Load File"),
-                                                    "./" + layout_file_name,
-                                                    tr("Layout files (*.lay)"));
+    if(filename != "")
+    {
+        layout_file_name = filename;
+    }
+    else
+    {
+        // No filename specified, prompt for one
+        layout_file_name = QFileDialog::getOpenFileName(this, tr("Load File"),
+                                                        "./" + layout_file_name,
+                                                        tr("Layout files (*.lay)"));
+    }
+
     if(layout_file_name != "")
     {
         QFile readFile(layout_file_name);
@@ -227,6 +292,10 @@ void MainWindow::loadLayout()
             ui->FilterInput->setText(ui->AttributeView->getActiveFilter());
             ui->WatchView->setFromStringRepresentation(guts);
             ui->PlotsGroup->setFromStringRepresentation(guts);
+
+            QString msg = "Successfully loaded layout " + layout_file_name + "!";
+            writeUserMsg(msg, QColor(Qt::darkGreen));
+            config->setValue(CONFIG::LAYOUT_FILE_NAME, layout_file_name.toStdString());
         }
         else
         {
@@ -234,8 +303,38 @@ void MainWindow::loadLayout()
             msg += layout_file_name.toStdString();
             msg += " for reading!";
             QMessageBox::information(this, tr("DIS Debugger"), tr(msg.c_str()));
+
+            QString msg2 = "Failed to load layout " + layout_file_name + "!";
+            writeUserMsg(msg2, QColor(Qt::red));
         }
     }
+    else
+    {
+        QString msg = "Not loading a layout.";
+        writeUserMsg(msg, QColor(Qt::black));
+    }
+}
+
+// Decrement user_msg_count and hide the user message if count is zero
+// The count allows successive messages before the timeout to not timeout early
+// from the previous message's timeout
+void MainWindow::hideUserMessage()
+{
+    if(user_msg_count > 0) user_msg_count--;
+    if(user_msg_count == 0)
+        ui->MsgToUser->hide();
+}
+
+void MainWindow::writeUserMsg(QString msg, QColor color, int timeout)
+{
+    user_msg_count++;
+    // Update label's text with the message
+    ui->MsgToUser->setText(msg);
+    // Update style sheet with specified color
+    ui->MsgToUser->setStyleSheet("QLabel { color : " + color.name() + "; }");
+    ui->MsgToUser->show();
+    // Set timer to hide message after a timeout
+    QTimer::singleShot(timeout, this, SLOT(hideUserMessage()));
 }
 
 

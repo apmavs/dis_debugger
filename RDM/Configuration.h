@@ -11,14 +11,16 @@ namespace CONFIG
     {
         BROADCAST_IP = 0,
         BROADCAST_PORT,
-        METADATA_XML
+        METADATA_XML,
+        LAYOUT_FILE_NAME
     };
 
     static const std::string ConfigNames[] =
     {
         "BROADCAST_IP",
         "BROADCAST_PORT",
-        "METADATA_XML"
+        "METADATA_XML",
+        "LAYOUT_FILE_NAME"
     };
 }
 
