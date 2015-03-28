@@ -2,6 +2,7 @@
 
 #include <QFile>
 #include <iostream>
+#include "UnitClassDef.h"
 
 VehicleMetadataLoader::VehicleMetadataLoader(std::string filename)
 {
@@ -30,28 +31,34 @@ bool VehicleMetadataLoader::errorDetected()
     return file_error_detected;
 }
 
-std::map<uint8_t, PduDef*> VehicleMetadataLoader::getDefinitions()
+PduDefMap VehicleMetadataLoader::getDefinitions()
 {
-    std::map<uint8_t, PduDef*> pduDefs;
+    PduDefMap pduDefs;
+    UnitClassDefMap classDefs;
 
     // Parse contents of opened XML file
     QDomElement root = xml_doc.documentElement();
-    while(!root.isNull())
+    for(QDomNode n = root.firstChild(); !n.isNull(); n = n.nextSibling())
     {
-        if(root.tagName() == "DatumDefinitions")
-        {
-            createDatumDefinitions(root, &pduDefs);
-        }
-        root = root.nextSibling().toElement();
-    }
+        QDomElement e = n.toElement();
 
+        if(e.tagName() == "UnitDefinitions")
+        {
+            qDebug() << "Loading unit definitions";
+            loadUnitClassDefs(e, classDefs);
+        }
+        else if(e.tagName() == "DatumDefinitions")
+        {
+            qDebug() << "Loading datum definitions";
+            createDatumDefinitions(e, pduDefs);
+        }
+    }
 
     return pduDefs;
 }
 
 
-void VehicleMetadataLoader::createDatumDefinitions(QDomElement e,
-                                          std::map<uint8_t, PduDef*>* defs)
+void VehicleMetadataLoader::createDatumDefinitions(QDomElement e, PduDefMap & defs)
 {
     e = e.firstChild().toElement();
     while(!e.isNull())
@@ -559,7 +566,32 @@ void VehicleMetadataLoader::createDatumDefinitions(QDomElement e,
     }
 }
 
-void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, DatumDef* def)
+void VehicleMetadataLoader::loadUnitClassDefs(QDomNode unitDefsNode, UnitClassDefMap & classDefs)
+{
+    // Read Class elements
+    for(QDomNode classNode = unitDefsNode.firstChild(); !classNode.isNull(); classNode = classNode.nextSibling())
+    {
+        QDomElement classElem = classNode.toElement();
+        std::string className = classElem.attributeNode("name").value().toStdString();
+        std::string defaultUnitName = classElem.attributeNode("default").value().toStdString();
+
+        UnitClassDef unitClass = UnitClassDef(className, defaultUnitName);
+        
+        // Read Unit subelements
+        for(QDomNode n = classNode.firstChild(); !n.isNull(); n = n.nextSibling())
+        {
+            QDomElement unitElem = n.toElement();
+            UnitDef unitDef = UnitDef(
+                unitElem.attribute("format").toStdString(),
+                unitElem.attribute("factor").toDouble());
+            unitClass.addUnit(unitElem.attributeNode("name").value().toStdString(), unitDef);
+        }
+
+        classDefs.insert(std::make_pair(className, unitClass));
+    }
+}
+
+void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, DatumDef *def)
 {
     // Parse attributes
     QString source, id, varType, offset, size, byteOrder;
@@ -617,18 +649,17 @@ void VehicleMetadataLoader::populateDatumInfo(QDomElement singleDatumInfo, Datum
     def->setEnumType(enumType.toStdString());
 }
 
-void VehicleMetadataLoader::addDefToPduDef(BaseDef* def, uint8_t pduType,
-                                          std::map<uint8_t, PduDef*>* defs)
+void VehicleMetadataLoader::addDefToPduDef(BaseDef* def, uint8_t pduType, PduDefMap & defs)
 {
     PduDef* mainDef;
-    if(defs->count(pduType) > 0)
+    if(defs.count(pduType) > 0)
     {
-        mainDef = (*defs)[pduType];
+        mainDef = defs[pduType];
     }
     else
     {
         mainDef = new PduDef();
-        (*defs)[pduType] = mainDef;
+        defs[pduType] = mainDef;
     }
     mainDef->add(def);
 }

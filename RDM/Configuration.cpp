@@ -11,7 +11,7 @@ Configuration::Configuration() :
     // Set defaults
     config_values[CONFIG::BROADCAST_IP] = "127.0.0.1";
     config_values[CONFIG::BROADCAST_PORT] = "6993";
-    config_values[CONFIG::METADATA_XML] = "C:\\Comp\\school_work\\CSE\\dis_debugger\\dis_definitions.xml";
+    config_values[CONFIG::METADATA_XML] = "dis_definitions.xml";
     loadConfigFile(file_name);
     saveConfig(); // Create config file if it did not exist
 }

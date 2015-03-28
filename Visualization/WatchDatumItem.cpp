@@ -55,6 +55,7 @@ void WatchDatumItem::setDisplay()
         std::string curVal = watched_datum->getValue() + " ";
         curVal += watched_datum->getUnit();
         setText(2, curVal.c_str());
+        setText(3, curVal.c_str());
     }
     setColor(2);
     mutex.unlock();

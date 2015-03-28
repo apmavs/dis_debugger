@@ -7,7 +7,6 @@
 QT       += core gui xml
 
 DEFINES += DIS_VERSION=6
-
 TARGET = DMLV
 CONFIG += console
 CONFIG -= app_bundle
@@ -61,6 +60,7 @@ win32 {
 
 unix {
     INCLUDEPATH += ../RDM
+    PRE_TARGETDEPS += ../Visualization/libdis_visualization.a ../RDM/librdm.a
     LIBS += ../Visualization/libdis_visualization.a
     LIBS += ../RDM/librdm.a
     LIBS += -lkdis -lqwt 

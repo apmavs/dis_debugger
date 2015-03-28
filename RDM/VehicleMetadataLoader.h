@@ -4,10 +4,14 @@
 #include "DatumDef.h"
 #include "PduDef.h"
 #include "BaseDef.h"
+#include "UnitClassDef.h"
 
 #include <map>
 #include <stdint.h>
 #include <QtXml>
+
+typedef std::map<uint8_t, PduDef *> PduDefMap;
+typedef std::map<std::string, UnitClassDef> UnitClassDefMap;
 
 class VehicleMetadataLoader
 {
@@ -17,11 +21,10 @@ private:
     bool file_error_detected;
 
     // Handle Datum definitions
-    void createDatumDefinitions(QDomElement e,
-                        std::map<uint8_t, PduDef*>* defs);
+    void loadUnitClassDefs(QDomNode unitDefsNode, UnitClassDefMap & classMap);
+    void createDatumDefinitions(QDomElement e, PduDefMap & defs);
     void populateDatumInfo(QDomElement singleDatumInfo, DatumDef* def);
-    void addDefToPduDef(BaseDef* def, uint8_t pduType,
-                        std::map<uint8_t, PduDef*>* defs);
+    void addDefToPduDef(BaseDef* def, uint8_t pduType, PduDefMap & defs);
 
     // Handle Unit definitions
     // Fill in once UnitDef class is defined

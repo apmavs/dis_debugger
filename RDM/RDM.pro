@@ -36,7 +36,8 @@ SOURCES += NetworkPduSource.cpp \
     PduDef.cpp \
     DatumDefId.cpp \
     BaseDef.cpp \
-    Configuration.cpp
+    Configuration.cpp \
+    UnitClassDef.cpp
 
 HEADERS += \
     NetworkPduSource.h \
@@ -53,7 +54,8 @@ HEADERS += \
     DatumDefId.h \
     BaseDef.h \
     DatumObserver.h \
-    Configuration.h
+    Configuration.h \
+    UnitClassDef.h
 
 win32 {
     LIBS += "-lws2_32"

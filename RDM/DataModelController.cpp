@@ -189,7 +189,7 @@ void DataModelController::notifyPdu(double timestamp, KDIS::PDU::Header* pdu)
             else // notify observers of new datum type
                 processNewDatum(newDatum);
         }
-     }
+    }
 }
 
 // Remove all datums to start with clean, empty history

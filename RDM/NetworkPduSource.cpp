@@ -4,7 +4,7 @@
 #include "KDIS/PDU/Header.h"
 
 // Max PDUs to store from network
-const uint32_t NetworkPduSource::MAX_BUFFER_SIZE = 100;
+const uint32_t NetworkPduSource::MAX_BUFFER_SIZE = 8192;
 
 NetworkPduSource::NetworkPduSource(std::string ifaceAddr, uint32_t ifacePort) :
     connection(ifaceAddr, ifacePort)

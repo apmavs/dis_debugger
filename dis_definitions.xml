@@ -1,248 +1,254 @@
-<DatumDefinitions>
-   <DatumInfo source="EntityState" type="string" offset="129" size="11" byte_order="string">
-      <Name>Entity Marking</Name>
-      <Category>Id</Category>
-      <Description>Name of entity</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="18" size="1" byte_order="network">
-      <Name>Force</Name>
-      <Category>Id</Category>
-      <Description>Force Identifier</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="20" size="1" byte_order="network">
-      <Name>Kind</Name>
-      <Category>DIS Identifier</Category>
-      <Description>DIS Kind</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="21" size="1" byte_order="network">
-      <Name>Domain</Name>
-      <Category>DIS Identifier</Category>
-      <Description>DIS Domain</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint16" offset="22" size="2" byte_order="network">
-      <Name>Country</Name>
-      <Category>DIS Identifier</Category>
-      <Description>DIS Country Code</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="24" size="1" byte_order="network">
-      <Name>Category</Name>
-      <Category>DIS Identifier</Category>
-      <Description>DIS Category</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="25" size="1" byte_order="network">
-      <Name>Subcategory</Name>
-      <Category>DIS Identifier</Category>
-      <Description>DIS Subcategory</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="26" size="1" byte_order="network">
-      <Name>Specific</Name>
-      <Category>DIS Identifier</Category>
-      <Description>DIS Specific Type</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="27" size="1" byte_order="network">
-      <Name>Extra</Name>
-      <Category>DIS Identifier</Category>
-      <Description>DIS Extra Identifier</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="28" size="1" byte_order="network">
-      <Name>Kind</Name>
-      <Category>Alt DIS Identifier</Category>
-      <Description>DIS Kind</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="29" size="1" byte_order="network">
-      <Name>Domain</Name>
-      <Category>Alt DIS Identifier</Category>
-      <Description>DIS Domain</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint16" offset="30" size="2" byte_order="network">
-      <Name>Country</Name>
-      <Category>Alt DIS Identifier</Category>
-      <Description>DIS Country Code</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="32" size="1" byte_order="network">
-      <Name>Category</Name>
-      <Category>Alt DIS Identifier</Category>
-      <Description>DIS Category</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="33" size="1" byte_order="network">
-      <Name>Subcategory</Name>
-      <Category>Alt DIS Identifier</Category>
-      <Description>DIS Subcategory</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="34" size="1" byte_order="network">
-      <Name>Specific</Name>
-      <Category>Alt DIS Identifier</Category>
-      <Description>DIS Specific Type</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="35" size="1" byte_order="network">
-      <Name>Extra</Name>
-      <Category>Alt DIS Identifier</Category>
-      <Description>DIS Extra Identifier</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="36" size="4" byte_order="network">
-      <Name>X</Name>
-      <Category>Velocity</Category>
-      <Description>X velocity of entity</Description>
-      <Unit>m/s</Unit>
-      <MinValue>-20.0</MinValue>
-      <MaxValue>100.0</MaxValue>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="40" size="4" byte_order="network">
-      <Name>Y</Name>
-      <Category>Velocity</Category>
-      <Description>Y velocity of entity</Description>
-      <Unit>m/s</Unit>
-      <MinValue>-20.0</MinValue>
-      <MaxValue>100.0</MaxValue>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="44" size="4" byte_order="network">
-      <Name>Z</Name>
-      <Category>Velocity</Category>
-      <Description>Z velocity of entity</Description>
-      <MinValue>-20.0</MinValue>
-      <MaxValue>100.0</MaxValue>
-      <Unit>m/s</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="double" offset="48" size="8" byte_order="network">
-      <Name>X</Name>
-      <Category>Location</Category>
-      <Description>X-coord of entity</Description>
-      <Unit>m</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="double" offset="56" size="8" byte_order="network">
-      <Name>Y</Name>
-      <Category>Location</Category>
-      <Description>Y-coord of entity</Description>
-      <Unit>m</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="double" offset="64" size="8" byte_order="network">
-      <Name>Z</Name>
-      <Category>Location</Category>
-      <Description>Z-coord of entity</Description>
-      <Unit>m</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="72" size="4" byte_order="network">
-      <Name>Psi</Name>
-      <Category>Attitude</Category>
-      <Description>Euler psi</Description>
-      <Unit>radians</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="76" size="4" byte_order="network">
-      <Name>Theta</Name>
-      <Category>Attitude</Category>
-      <Description>Euler theta</Description>
-      <Unit>radians</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="80" size="4" byte_order="network">
-      <Name>Phi</Name>
-      <Category>Attitude</Category>
-      <Description>Euler Phi</Description>
-      <Unit>radians</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="uint8" offset="88" size="4" byte_order="network">
-      <Name>Algorithm</Name>
-      <Category>Dead Reckoning</Category>
-      <Description>Dead reckoning algorithm</Description>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="92" size="4" byte_order="network">
-      <Name>X Acceleration</Name>
-      <Category>Dead Reckoning</Category>
-      <Description>Dead reckoning acceleration in X direction</Description>
-      <Unit>m/s/s</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="96" size="4" byte_order="network">
-      <Name>Y Acceleration</Name>
-      <Category>Dead Reckoning</Category>
-      <Description>Dead reckoning acceleration in Y direction</Description>
-      <Unit>m/s/s</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="100" size="4" byte_order="network">
-      <Name>Z Acceleration</Name>
-      <Category>Dead Reckoning</Category>
-      <Description>Dead reckoning acceleration in Z direction</Description>
-      <Unit>m/s/s</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="104" size="4" byte_order="network">
-      <Name>X Angular Velocity</Name>
-      <Category>Dead Reckoning</Category>
-      <Description>Dead reckoning velocity about X axis</Description>
-      <Unit>radians/s</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="108" size="4" byte_order="network">
-      <Name>Y Angular Velocity</Name>
-      <Category>Dead Reckoning</Category>
-      <Description>Dead reckoning velocity about Y axis</Description>
-      <Unit>radians/s</Unit>
-   </DatumInfo>
-   <DatumInfo source="EntityState" type="float" offset="112" size="4" byte_order="network">
-      <Name>Z Angular Velocity</Name>
-      <Category>Dead Reckoning</Category>
-      <Description>Dead reckoning velocity about Z axis</Description>
-      <Unit>radians/s</Unit>
-   </DatumInfo>
-   <DatumInfo source="FixedDatum" id="123456" type="uint32" offset="0" size="4" byte_order="network">
-      <Name>Barometric altitude</Name>
-      <Category>Indicators,Altitude,Barometric</Category>
-      <Description>Barometric altitude in feet</Description>
-      <UnitClass>length</UnitClass>
-      <Unit>feet</Unit>
-      <MinValue>-1000.0</MinValue>
-      <MaxValue>100000.0</MaxValue>
-   </DatumInfo>
-   <DatumInfo source="FixedDatum" id="123457" type="uint32" offset="0" size="4" byte_order="network">
-      <Name>Autopilot Attitude Switch</Name>
-      <Category>Switches,Autopilot,Attitude</Category>
-      <Description>Position of autopilot attitude switch</Description>
-      <EnumType>AutopilotAttiudeSwitchPosition</EnumType>
-   </DatumInfo>
-   <DatumInfo source="VariableDatum" id="123457" type="uint32" offset="0" size="4" byte_order="network">
-      <Name>Mode 1 Code</Name>
-      <Category>Radios,IFF</Category>
-      <Description>Mode 1 IFF Code</Description>
-      <UnitClass>integer</UnitClass>
-      <MinValue>0</MinValue>
-      <MaxValue>63</MaxValue>
-   </DatumInfo>
-   <DatumInfo source="VariableDatum" id="123457" type="uint32" offset="4" size="4" byte_order="network">
-      <Name>Mode 2 Code</Name>
-      <Category>Radios,IFF</Category>
-      <Description>Mode 2 IFF Code</Description>
-      <UnitClass>integer</UnitClass>
-      <MinValue>0</MinValue>
-     <MaxValue>4095</MaxValue>
-   </DatumInfo>
-   <DatumInfo source="VariableDatum" id="123459" type="double" offset="0" size="8" byte_order="network">
-      <Name>Designated latitude</Name>
-      <Category>Equipment,Targeting Pod,Laser Designator,Spot Latitude</Category>
-      <Description>Latitude of laser designator spot</Description>
-      <UnitClass>latlon</UnitClass>
-      <Unit>degrees</Unit>
-      <MinValue>-90.0</MinValue>
-      <MaxValue>90.0</MaxValue>
-   </DatumInfo>
-</DatumDefinitions>
-<UnitDefinitions>
-   <EnumType name="AutopilotAttitudeSwitchPosition">
-      <Value name="OFF" value="-1" />
-      <Value name="ALT_HOLD" value="0" />
-      <Value name="ATT_HOLD" value="1" />
-   </EnumType>
-   <UnitClass name="latlon" default="degrees">
-      <Unit name="degrees"   format="%.6f deg" factor="1.0" />
-      <Unit name="radians"   format="%.6f rad" factor="0.0174532925" />
-      <Unit name="DD MM.MMM" format_script="
-          deg = Math.floor(x);
-          min = (x - deg) * 60.0;
-          return deg + \"°\" + min.toFixed(3) + \"'\"" />
-   </UnitClass>
-   <UnitClass name="length" default="meters">
-      <Unit name="meters"     format="%.3f m"  factor="1.0" />
-      <Unit name="kilometers" format="%.3f km" factor="0.001" />
-      <Unit name="feet"       format="%.3f ft" factor="0.3048" />
-   </UnitClass>
-   <UnitClass name="integer" default="base10">
-      <Unit name="base10" format="%d" />
-      <Unit name="octal"  format="0%o" />
-      <Unit name="hex"    format="0x%x" />
-   </UnitClass>
-</UnitDefinitions>
+<VehicleMetadata>
+    <UnitDefinitions>
+       <EnumType name="AutopilotAttitudeSwitchPosition">
+          <Value name="OFF" value="-1" />
+          <Value name="ALT_HOLD" value="0" />
+          <Value name="ATT_HOLD" value="1" />
+       </EnumType>
+       <UnitClass name="latlon" default="degrees">
+          <Unit name="degrees"   format="%.6f deg" factor="1.0" />
+          <Unit name="radians"   format="%.6f rad" factor="0.0174532925" />
+          <Unit name="DD MM.MMM" format_script="
+              deg = Math.floor(x);
+              min = (x - deg) * 60.0;
+              return deg +  &quot;°&quot; + min.toFixed(3) + &quot;'&quot;" />
+       </UnitClass>
+       <UnitClass name="length" default="meters">
+          <Unit name="meters"     format="%.3f m"  factor="1.0" />
+          <Unit name="kilometers" format="%.3f km" factor="0.001" />
+          <Unit name="feet"       format="%.3f ft" factor="0.3048" />
+       </UnitClass>
+       <UnitClass name="integer" default="base10">
+          <Unit name="base10" format="%d" />
+          <Unit name="octal"  format="0%o" />
+          <Unit name="hex"    format="0x%x" />
+       </UnitClass>
+       <UnitClass name="velocity" default="m/s">
+          <Unit name="m/s" factor="1.0" />
+          <Unit name="ft/s" factor="2.0" />
+       </UnitClass>
+    </UnitDefinitions>
+    <DatumDefinitions>
+       <DatumInfo source="EntityState" type="string" offset="129" size="11" byte_order="string">
+          <Name>Entity Marking</Name>
+          <Category>Id</Category>
+          <Description>Name of entity</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="18" size="1" byte_order="network">
+          <Name>Force</Name>
+          <Category>Id</Category>
+          <Description>Force Identifier</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="20" size="1" byte_order="network">
+          <Name>Kind</Name>
+          <Category>DIS Identifier</Category>
+          <Description>DIS Kind</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="21" size="1" byte_order="network">
+          <Name>Domain</Name>
+          <Category>DIS Identifier</Category>
+          <Description>DIS Domain</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint16" offset="22" size="2" byte_order="network">
+          <Name>Country</Name>
+          <Category>DIS Identifier</Category>
+          <Description>DIS Country Code</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="24" size="1" byte_order="network">
+          <Name>Category</Name>
+          <Category>DIS Identifier</Category>
+          <Description>DIS Category</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="25" size="1" byte_order="network">
+          <Name>Subcategory</Name>
+          <Category>DIS Identifier</Category>
+          <Description>DIS Subcategory</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="26" size="1" byte_order="network">
+          <Name>Specific</Name>
+          <Category>DIS Identifier</Category>
+          <Description>DIS Specific Type</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="27" size="1" byte_order="network">
+          <Name>Extra</Name>
+          <Category>DIS Identifier</Category>
+          <Description>DIS Extra Identifier</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="28" size="1" byte_order="network">
+          <Name>Kind</Name>
+          <Category>Alt DIS Identifier</Category>
+          <Description>DIS Kind</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="29" size="1" byte_order="network">
+          <Name>Domain</Name>
+          <Category>Alt DIS Identifier</Category>
+          <Description>DIS Domain</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint16" offset="30" size="2" byte_order="network">
+          <Name>Country</Name>
+          <Category>Alt DIS Identifier</Category>
+          <Description>DIS Country Code</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="32" size="1" byte_order="network">
+          <Name>Category</Name>
+          <Category>Alt DIS Identifier</Category>
+          <Description>DIS Category</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="33" size="1" byte_order="network">
+          <Name>Subcategory</Name>
+          <Category>Alt DIS Identifier</Category>
+          <Description>DIS Subcategory</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="34" size="1" byte_order="network">
+          <Name>Specific</Name>
+          <Category>Alt DIS Identifier</Category>
+          <Description>DIS Specific Type</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="35" size="1" byte_order="network">
+          <Name>Extra</Name>
+          <Category>Alt DIS Identifier</Category>
+          <Description>DIS Extra Identifier</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="36" size="4" byte_order="network">
+          <Name>X</Name>
+          <Category>Velocity</Category>
+          <Description>X velocity of entity</Description>
+          <Unit>m/s</Unit>
+          <MinValue>-20.0</MinValue>
+          <MaxValue>100.0</MaxValue>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="40" size="4" byte_order="network">
+          <Name>Y</Name>
+          <Category>Velocity</Category>
+          <Description>Y velocity of entity</Description>
+          <Unit>m/s</Unit>
+          <MinValue>-20.0</MinValue>
+          <MaxValue>100.0</MaxValue>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="44" size="4" byte_order="network">
+          <Name>Z</Name>
+          <Category>Velocity</Category>
+          <Description>Z velocity of entity</Description>
+          <MinValue>-20.0</MinValue>
+          <MaxValue>100.0</MaxValue>
+          <Unit>m/s</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="double" offset="48" size="8" byte_order="network">
+          <Name>X</Name>
+          <Category>Location</Category>
+          <Description>X-coord of entity</Description>
+          <Unit>m</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="double" offset="56" size="8" byte_order="network">
+          <Name>Y</Name>
+          <Category>Location</Category>
+          <Description>Y-coord of entity</Description>
+          <Unit>m</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="double" offset="64" size="8" byte_order="network">
+          <Name>Z</Name>
+          <Category>Location</Category>
+          <Description>Z-coord of entity</Description>
+          <Unit>m</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="72" size="4" byte_order="network">
+          <Name>Psi</Name>
+          <Category>Attitude</Category>
+          <Description>Euler psi</Description>
+          <Unit>radians</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="76" size="4" byte_order="network">
+          <Name>Theta</Name>
+          <Category>Attitude</Category>
+          <Description>Euler theta</Description>
+          <Unit>radians</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="80" size="4" byte_order="network">
+          <Name>Phi</Name>
+          <Category>Attitude</Category>
+          <Description>Euler Phi</Description>
+          <Unit>radians</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="uint8" offset="88" size="4" byte_order="network">
+          <Name>Algorithm</Name>
+          <Category>Dead Reckoning</Category>
+          <Description>Dead reckoning algorithm</Description>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="92" size="4" byte_order="network">
+          <Name>X Acceleration</Name>
+          <Category>Dead Reckoning</Category>
+          <Description>Dead reckoning acceleration in X direction</Description>
+          <Unit>m/s/s</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="96" size="4" byte_order="network">
+          <Name>Y Acceleration</Name>
+          <Category>Dead Reckoning</Category>
+          <Description>Dead reckoning acceleration in Y direction</Description>
+          <Unit>m/s/s</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="100" size="4" byte_order="network">
+          <Name>Z Acceleration</Name>
+          <Category>Dead Reckoning</Category>
+          <Description>Dead reckoning acceleration in Z direction</Description>
+          <Unit>m/s/s</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="104" size="4" byte_order="network">
+          <Name>X Angular Velocity</Name>
+          <Category>Dead Reckoning</Category>
+          <Description>Dead reckoning velocity about X axis</Description>
+          <Unit>radians/s</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="108" size="4" byte_order="network">
+          <Name>Y Angular Velocity</Name>
+          <Category>Dead Reckoning</Category>
+          <Description>Dead reckoning velocity about Y axis</Description>
+          <Unit>radians/s</Unit>
+       </DatumInfo>
+       <DatumInfo source="EntityState" type="float" offset="112" size="4" byte_order="network">
+          <Name>Z Angular Velocity</Name>
+          <Category>Dead Reckoning</Category>
+          <Description>Dead reckoning velocity about Z axis</Description>
+          <Unit>radians/s</Unit>
+       </DatumInfo>
+       <DatumInfo source="FixedDatum" id="123456" type="uint32" offset="0" size="4" byte_order="network">
+          <Name>Barometric altitude</Name>
+          <Category>Indicators,Altitude,Barometric</Category>
+          <Description>Barometric altitude in feet</Description>
+          <UnitClass>length</UnitClass>
+          <Unit>feet</Unit>
+          <MinValue>-1000.0</MinValue>
+          <MaxValue>100000.0</MaxValue>
+       </DatumInfo>
+       <DatumInfo source="FixedDatum" id="123457" type="uint32" offset="0" size="4" byte_order="network">
+          <Name>Autopilot Attitude Switch</Name>
+          <Category>Switches,Autopilot,Attitude</Category>
+          <Description>Position of autopilot attitude switch</Description>
+          <EnumType>AutopilotAttiudeSwitchPosition</EnumType>
+       </DatumInfo>
+       <DatumInfo source="VariableDatum" id="123457" type="uint32" offset="0" size="4" byte_order="network">
+          <Name>Mode 1 Code</Name>
+          <Category>Radios,IFF</Category>
+          <Description>Mode 1 IFF Code</Description>
+          <UnitClass>integer</UnitClass>
+          <MinValue>0</MinValue>
+          <MaxValue>63</MaxValue>
+       </DatumInfo>
+       <DatumInfo source="VariableDatum" id="123457" type="uint32" offset="4" size="4" byte_order="network">
+          <Name>Mode 2 Code</Name>
+          <Category>Radios,IFF</Category>
+          <Description>Mode 2 IFF Code</Description>
+          <UnitClass>integer</UnitClass>
+          <MinValue>0</MinValue>
+         <MaxValue>4095</MaxValue>
+       </DatumInfo>
+       <DatumInfo source="VariableDatum" id="123459" type="double" offset="0" size="8" byte_order="network">
+          <Name>Designated latitude</Name>
+          <Category>Equipment,Targeting Pod,Laser Designator,Spot Latitude</Category>
+          <Description>Latitude of laser designator spot</Description>
+          <UnitClass>latlon</UnitClass>
+          <Unit>degrees</Unit>
+          <MinValue>-90.0</MinValue>
+          <MaxValue>90.0</MaxValue>
+       </DatumInfo>
+    </DatumDefinitions>
+</VehicleMetadata>
