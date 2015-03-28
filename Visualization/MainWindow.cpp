@@ -145,7 +145,22 @@ void MainWindow::openXml()
     {
         controller->removeAllDatums();
         xml_file = file.toStdString();
-        controller->loadMetadataXml(xml_file);
+        bool loaded = controller->loadMetadataXml(xml_file);
+        if(loaded)
+        {
+            QString msg = "Successfully loaded XML " + QString(xml_file.c_str());
+            writeUserMsg(msg, QColor(Qt::darkGreen));
+        }
+        else
+        {
+            QString msg = "Failed to load XML " + QString(xml_file.c_str());
+            writeUserMsg(msg, QColor(Qt::red));
+        }
+    }
+    else
+    {
+        QString msg = "Not loading xml file.";
+        writeUserMsg(msg, QColor(Qt::black));
     }
 }
 
@@ -223,7 +238,7 @@ void MainWindow::saveLayout()
             QTextStream stream(&writeFile);
             stream << layout;
             writeFile.close();
-            QString msg = "Saved layout to " + layout_file_name + "!";
+            QString msg = "Saved layout to " + layout_file_name;
             writeUserMsg(msg, QColor(Qt::darkGreen));
             config->setValue(CONFIG::LAYOUT_FILE_NAME, layout_file_name.toStdString());
         }
@@ -233,7 +248,7 @@ void MainWindow::saveLayout()
             msg += layout_file_name.toStdString();
             msg += " for writing!";
             QMessageBox::information(this, tr("DIS Debugger"), tr(msg.c_str()));
-            QString msg2 = "Failed saving layout to " + layout_file_name + "!";
+            QString msg2 = "Failed saving layout to " + layout_file_name;
             writeUserMsg(msg2, QColor(Qt::red));
         }
     }
@@ -293,7 +308,7 @@ void MainWindow::loadLayout(QString filename)
             ui->WatchView->setFromStringRepresentation(guts);
             ui->PlotsGroup->setFromStringRepresentation(guts);
 
-            QString msg = "Successfully loaded layout " + layout_file_name + "!";
+            QString msg = "Successfully loaded layout " + layout_file_name;
             writeUserMsg(msg, QColor(Qt::darkGreen));
             config->setValue(CONFIG::LAYOUT_FILE_NAME, layout_file_name.toStdString());
         }
@@ -304,7 +319,7 @@ void MainWindow::loadLayout(QString filename)
             msg += " for reading!";
             QMessageBox::information(this, tr("DIS Debugger"), tr(msg.c_str()));
 
-            QString msg2 = "Failed to load layout " + layout_file_name + "!";
+            QString msg2 = "Failed to load layout " + layout_file_name;
             writeUserMsg(msg2, QColor(Qt::red));
         }
     }
