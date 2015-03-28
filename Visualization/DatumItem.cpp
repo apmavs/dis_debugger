@@ -3,7 +3,8 @@
 // For category items with no datum
 DatumItem::DatumItem(QString categoryName)
     : QObject(),
-      watched_datum(NULL)
+      watched_datum(NULL),
+      unit_class(NULL)
 {
     controller = DataModelController::getInstance();
     interested_widgets.clear();
@@ -21,6 +22,7 @@ DatumItem::DatumItem(const DatumInfo* d, bool constantUpdates)
       constant_updates(constantUpdates)
 {
     controller = DataModelController::getInstance();
+    unit_class = controller->getUnitClassDef(watched_datum->getUnitClass());
     interested_widgets.clear();
     category_name = d->getCategory().c_str();
 

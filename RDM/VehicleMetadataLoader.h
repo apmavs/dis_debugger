@@ -9,9 +9,9 @@
 #include <map>
 #include <stdint.h>
 #include <QtXml>
+#include <QString>
 
 typedef std::map<uint8_t, PduDef *> PduDefMap;
-typedef std::map<std::string, UnitClassDef> UnitClassDefMap;
 
 class VehicleMetadataLoader
 {
@@ -19,6 +19,8 @@ private:
     std::string filename;
     QDomDocument xml_doc;
     bool file_error_detected;
+
+    static int lookupPduType(const QString & typeStr);
 
     // Handle Datum definitions
     void loadUnitClassDefs(QDomNode unitDefsNode, UnitClassDefMap & classMap);
@@ -33,7 +35,7 @@ public:
     VehicleMetadataLoader(std::string filename);
     ~VehicleMetadataLoader();
     bool errorDetected();
-    std::map<uint8_t, PduDef*> getDefinitions();
+    void load(PduDefMap & pduDefs, UnitClassDefMap & classDefs);
 };
 
 #endif // VEHICLEMETADATALOADER_H

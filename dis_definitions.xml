@@ -1,10 +1,5 @@
 <VehicleMetadata>
     <UnitDefinitions>
-       <EnumType name="AutopilotAttitudeSwitchPosition">
-          <Value name="OFF" value="-1" />
-          <Value name="ALT_HOLD" value="0" />
-          <Value name="ATT_HOLD" value="1" />
-       </EnumType>
        <UnitClass name="latlon" default="degrees">
           <Unit name="degrees"   format="%.6f deg" factor="1.0" />
           <Unit name="radians"   format="%.6f rad" factor="0.0174532925" />
@@ -24,8 +19,15 @@
           <Unit name="hex"    format="0x%x" />
        </UnitClass>
        <UnitClass name="velocity" default="m/s">
-          <Unit name="m/s" factor="1.0" />
+          <Unit name="m/s"  factor="1.0" />
           <Unit name="ft/s" factor="2.0" />
+       </UnitClass>
+       <UnitClass name="forceid" default="value">
+          <Unit name="name" />
+          <Unit name="value" map="
+             UNKNOWN = 0,
+             RED     = 1,
+             BLUE    = 2" />
        </UnitClass>
     </UnitDefinitions>
     <DatumDefinitions>
@@ -37,6 +39,8 @@
        <DatumInfo source="EntityState" type="uint8" offset="18" size="1" byte_order="network">
           <Name>Force</Name>
           <Category>Id</Category>
+          <UnitClass>forceid</UnitClass>
+          <Unit>value</Unit>
           <Description>Force Identifier</Description>
        </DatumInfo>
        <DatumInfo source="EntityState" type="uint8" offset="20" size="1" byte_order="network">
@@ -113,6 +117,7 @@
           <Name>X</Name>
           <Category>Velocity</Category>
           <Description>X velocity of entity</Description>
+          <UnitClass>velocity</UnitClass>
           <Unit>m/s</Unit>
           <MinValue>-20.0</MinValue>
           <MaxValue>100.0</MaxValue>
