@@ -40,6 +40,7 @@ private slots:
     void changeBroadcastPort();
     void handleDialogEntry(QString value);
     void saveLayout();
+    void saveLayoutAs();
     void loadLayout();
 
 signals:

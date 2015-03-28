@@ -36,6 +36,14 @@ MainWindow::MainWindow(QWidget *parent) :
                      SLOT(entitiesInvalidSlot()), Qt::QueuedConnection);
     QObject::connect(&entry_dialog, SIGNAL(confirmedEdit(QString)), this,
                      SLOT(handleDialogEntry(QString)), Qt::QueuedConnection);
+
+    ui->actionOpen_XML->setShortcut           (Qt::CTRL + Qt::Key_O);
+    ui->actionSave_Layout->setShortcut        (Qt::CTRL + Qt::Key_S);
+    ui->actionSave_Layout_As->setShortcut     (Qt::CTRL + Qt::Key_A);
+    ui->actionLoad_Layout->setShortcut        (Qt::CTRL + Qt::Key_L);
+    ui->actionExit->setShortcut               (Qt::CTRL + Qt::Key_Q);
+    ui->actionChangeBroadcastIP->setShortcut  (Qt::CTRL + Qt::Key_I);
+    ui->actionChangeBroadcastPort->setShortcut(Qt::CTRL + Qt::Key_P);
 }
 
 MainWindow::~MainWindow()
@@ -153,9 +161,6 @@ void MainWindow::handleDialogEntry(QString value)
 
 void MainWindow::saveLayout()
 {
-    layout_file_name = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                    "./" + layout_file_name,
-                                                    tr("Layout files (*.lay)"));
     if(layout_file_name != "")
     {
         if(!layout_file_name.endsWith(".lay"))
@@ -183,6 +188,24 @@ void MainWindow::saveLayout()
             QMessageBox::information(this, tr("DIS Debugger"), tr(msg.c_str()));
         }
     }
+    else
+    {
+        // User has not selected a layout to save under yet
+        // Call saveLayoutAs instead to prompt user
+        // (this will call back to this fxn once a layout has been selected
+        saveLayoutAs();
+    }
+}
+
+void MainWindow::saveLayoutAs()
+{
+    // Get layout filename from user, store into member variable
+    // Then call saveLayout to save it.
+    layout_file_name = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                    "./" + layout_file_name,
+                                                    tr("Layout files (*.lay)"));
+    if(layout_file_name != "") // User didn't click cancel
+        saveLayout();
 }
 
 void MainWindow::loadLayout()
