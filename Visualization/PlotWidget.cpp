@@ -137,7 +137,7 @@ void PlotWidget::on_HideBtn_clicked()
         ui->embedded_plot->setMinimumSize(min_plot_size);
         setMaximumHeight(max_height);
         setMinimumSize(normal_size); // force normal size
-        setMinimumSize(min_size);
+        setMinimumSize(min_size);    // allow user to shrink
         ui->embedded_plot->show();
         ui->ClearBtn->show();
         ui->ResetBtn->show();
@@ -148,6 +148,11 @@ void PlotWidget::on_HideBtn_clicked()
     }
     else // hide
     {
+        // Save unhidden sizes prior to hiding
+        min_plot_size   = ui->embedded_plot->minimumSize();
+        max_height      = maximumHeight();
+        normal_size     = size();
+        min_size        = minimumSize();
         ui->embedded_plot->setMinimumSize(0, 0);
         setMinimumHeight(0);
         setMaximumHeight(ui->ClearBtn->height() + 15);
@@ -261,12 +266,33 @@ bool PlotWidget::equivalentTo(PlotWidget* rhs)
 
 QString PlotWidget::getStringRepresentation() const
 {
+    // Get current sizes
+    // If hidden, use last saved sizes
+    QSize minPlotSize  = min_plot_size;
+    int   maxHeight    = max_height;
+    QSize normalSize   = normal_size;
+    QSize minSize      = min_size;
+    if(!hidden)
+    {   // If not hidden, get most up to date values
+        minPlotSize  = ui->embedded_plot->minimumSize();
+        maxHeight    = maximumHeight();
+        normalSize   = size();
+        minSize      = minimumSize();
+    }
+
     QString rep("<PlotWidget>\n");
-    rep += "<LastColor>"    + QString::number(color_index)          + "</LastColor>\n";
-    rep += "<DeleteHidden>" + QString::number(delete_always_hidden) + "</DeleteHidden>\n";
-    rep += "<Hidden>"       + QString::number(hidden) 				+ "</Hidden>\n";
+    rep += "<LastColor>"    + QString::number(color_index)            + "</LastColor>\n";
+    rep += "<DeleteHidden>" + QString::number(delete_always_hidden)   + "</DeleteHidden>\n";
+    rep += "<Hidden>"       + QString::number(hidden)                 + "</Hidden>\n";
+    rep += "<MinPlotSizeW>" + QString::number(minPlotSize.width())    + "</MinPlotSizeW>\n";
+    rep += "<MinPlotSizeH>" + QString::number(minPlotSize.height())   + "</MinPlotSizeH>\n";
+    rep += "<MaxHeight>"    + QString::number(maxHeight)              + "</MaxHeight>\n";
+    rep += "<NormalSizeW>"  + QString::number(normalSize.width())     + "</NormalSizeW>\n";
+    rep += "<NormalSizeH>"  + QString::number(normalSize.height())    + "</NormalSizeH>\n";
+    rep += "<MinSizeW>"     + QString::number(minSize.width())        + "</MinSizeW>\n";
+    rep += "<MinSizeH>"     + QString::number(minSize.height())       + "</MinSizeH>\n";
     for(int idx = 0; idx < curves.length(); idx++)
-        rep += "<Curve>" + curves.at(idx)->getStringRepresentation() + "</Curve>\n";
+        rep += "<Curve>" + curves.at(idx)->getStringRepresentation()  + "</Curve>\n";
     rep += "</PlotWidget>\n";
 
     return rep;
@@ -279,10 +305,33 @@ void PlotWidget::setFromStringRepresentation(QString rep)
 
     QString guts = QString(Configuration::getTagValue(rep.toStdString(), "PlotWidget").c_str());
     color_index = QString(Configuration::getTagValue(guts.toStdString(), "LastColor").c_str()).toInt();
+
+    int w = QString(Configuration::getTagValue(guts.toStdString(),
+                                             "MinPlotSizeW").c_str()).toInt();
+    int h = QString(Configuration::getTagValue(guts.toStdString(),
+                                             "MinPlotSizeH").c_str()).toInt();
+    min_plot_size = QSize(w, h);
+    max_height = QString(Configuration::getTagValue(guts.toStdString(),
+                                             "MaxHeight").c_str()).toInt();
+    w = QString(Configuration::getTagValue(guts.toStdString(),
+                                             "NormalSizeW").c_str()).toInt();
+    h = QString(Configuration::getTagValue(guts.toStdString(),
+                                             "NormalSizeH").c_str()).toInt();
+    normal_size = QSize(w, h);
+    w = QString(Configuration::getTagValue(guts.toStdString(),
+                                             "MinSizeW").c_str()).toInt();
+    h = QString(Configuration::getTagValue(guts.toStdString(),
+                                             "MinSizeH").c_str()).toInt();
+    min_size = QSize(w, h);
+    ui->embedded_plot->setMinimumSize(min_size);
+    setMaximumHeight(max_height);
+    setMinimumSize(normal_size); // force normal size
+    setMinimumSize(min_size); // allow user to shrink if desired
+
     bool cannotDelete = QString(Configuration::getTagValue(guts.toStdString(), "DeleteHidden").c_str()).toInt() != 0;
     if(cannotDelete) hideDelete();
     bool hide = QString(Configuration::getTagValue(guts.toStdString(), "Hidden").c_str()).toInt() != 0;
-    if(hide) on_HideBtn_clicked();
+    if(hide) QTimer::singleShot(500, this, SLOT(on_HideBtn_clicked()));
 
     // Get all curves
     QString endTag = "</Curve>";
