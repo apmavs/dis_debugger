@@ -77,8 +77,13 @@ void MainWindow::newDatumSlot(const DatumInfo* datum)
         QListWidgetItem* item = ui->EntityView->item(idx);
         QString name = item->text();
 
-        // Check if name has changed or name is already in the list
-        if(name.endsWith(newDisId))
+        // Check if name already exists
+        if(name == newEntityName)
+        {
+            foundEntity = true;
+            break;
+        }
+        else if(name.endsWith(newDisId)) // Name changed
         {
             item->setText(newEntityName);
             foundEntity = true;

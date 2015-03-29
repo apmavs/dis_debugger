@@ -146,16 +146,34 @@ QString EntityDataList::getActiveFilter()
 
 void EntityDataList::notifyNewDatum(const DatumInfo *datum)
 {
-    mutex.lock();
-
     std::vector<const DatumInfo*>* datums;
-
-    std::string entity = datum->getEntityName();
-    if(datum_map.count(entity))
+    QString newEntityName = QString(datum->getEntityName().c_str());
+    mutex.lock();
+    bool foundEntity = false;
+    int disIdPos = newEntityName.lastIndexOf("(");
+    QString newDisId = newEntityName.mid(disIdPos);
+    std::map<std::string, std::vector<const DatumInfo*>* >::iterator it;
+    for(it = datum_map.begin(); it != datum_map.end(); it++)
     {
-        datums = datum_map[entity];
+        QString name = QString(it->first.c_str());
+        if(name == newEntityName)
+        {
+            datums = it->second;
+            foundEntity = true;
+            break;
+        }
+        else if(name.endsWith(newDisId)) // name changed
+        {
+            datums = it->second;
+            datum_map.erase(it);
+            datum_map[newEntityName.toStdString()] = datums;
+            foundEntity = true;
+            break;
+        }
     }
-    else
+
+    std::string entity = newEntityName.toStdString();
+    if(!foundEntity)
     {
         datums = new std::vector<const DatumInfo*>();
         datum_map[entity] = datums;
