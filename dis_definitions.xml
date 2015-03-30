@@ -1,17 +1,18 @@
 <VehicleMetadata>
     <UnitDefinitions>
-       <UnitClass name="latlon" default="degrees">
-          <Unit name="degrees"   format="%.6f deg" factor="1.0" />
-          <Unit name="radians"   format="%.6f rad" factor="0.0174532925" />
-          <Unit name="DD MM.MMM" format_script="
-              deg = Math.floor(x);
-              min = (x - deg) * 60.0;
-              return deg +  &quot;°&quot; + min.toFixed(3) + &quot;'&quot;" />
+       <UnitClass name="angle" default="deg">
+          <Unit name="deg"   factor="1.0" />
+          <Unit name="rad"   factor="0.0174532925" />
+       </UnitClass>
+       <UnitClass name="angular_velocity" default="deg/s">
+          <Unit name="deg/s"   factor="1.0" />
+          <Unit name="rad/s"   factor="0.0174532925" />
        </UnitClass>
        <UnitClass name="length" default="meters">
-          <Unit name="meters"     format="%.3f m"  factor="1.0" />
-          <Unit name="kilometers" format="%.3f km" factor="0.001" />
-          <Unit name="feet"       format="%.3f ft" factor="0.3048" />
+          <Unit name="m"   factor="1.0" />
+          <Unit name="km"  factor="0.001" />
+          <Unit name="ft"  factor="0.3048" />
+          <Unit name="nmi" factor="0.000539957" />
        </UnitClass>
        <UnitClass name="integer" default="base10">
           <Unit name="base10" format="%d" />
@@ -19,15 +20,35 @@
           <Unit name="hex"    format="0x%x" />
        </UnitClass>
        <UnitClass name="velocity" default="m/s">
-          <Unit name="m/s"  factor="1.0" />
-          <Unit name="ft/s" factor="2.0" />
+          <Unit name="m/s"   factor="1.0" />
+          <Unit name="ft/s"  factor="0.3048" />
+          <Unit name="knots" factor="1.94384" />
+          <Unit name="mph"   factor="2.23694" />
        </UnitClass>
-       <UnitClass name="forceid" default="value">
-          <Unit name="name" />
-          <Unit name="value" map="
-             UNKNOWN = 0,
-             RED     = 1,
-             BLUE    = 2" />
+       <UnitClass name="acceleration" default="m/s^2">
+          <Unit name="m/s^2"   factor="1.0" />
+          <Unit name="ft/s^2"  factor="0.3048" />
+       </UnitClass>
+       <UnitClass name="force_id" default="name">
+          <Unit name="value" />
+          <Unit name="name" map="
+             Unknown = 0,
+             Blue    = 1,
+             Red     = 2" />
+       </UnitClass>
+       <UnitClass name="dead_reckoning_algorithm" default="name">
+          <Unit name="value" />
+          <Unit name="name" map="
+             Other   = 0,
+             Static  = 1,
+             DRM_FPW = 2,
+             DRM_RPW = 3,
+             DRM_RVW = 4,
+             DRM_FVW = 5,
+             DRM_FPB = 6,
+             DRM_RPB = 7,
+             DRM_RVB = 8,
+             DRM_FVB = 9" />
        </UnitClass>
     </UnitDefinitions>
     <DatumDefinitions>
@@ -39,8 +60,8 @@
        <DatumInfo source="EntityState" type="uint8" offset="18" size="1" byte_order="network">
           <Name>Force</Name>
           <Category>Id</Category>
-          <UnitClass>forceid</UnitClass>
-          <Unit>value</Unit>
+          <UnitClass>force_id</UnitClass>
+          <Unit>name</Unit>
           <Description>Force Identifier</Description>
        </DatumInfo>
        <DatumInfo source="EntityState" type="uint8" offset="20" size="1" byte_order="network">
@@ -117,18 +138,19 @@
           <Name>X</Name>
           <Category>Velocity</Category>
           <Description>X velocity of entity</Description>
-          <UnitClass>velocity</UnitClass>
-          <Unit>m/s</Unit>
           <MinValue>-20.0</MinValue>
           <MaxValue>100.0</MaxValue>
+          <UnitClass>velocity</UnitClass>
+          <Unit>m/s</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="40" size="4" byte_order="network">
           <Name>Y</Name>
           <Category>Velocity</Category>
           <Description>Y velocity of entity</Description>
-          <Unit>m/s</Unit>
           <MinValue>-20.0</MinValue>
           <MaxValue>100.0</MaxValue>
+          <UnitClass>velocity</UnitClass>
+          <Unit>m/s</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="44" size="4" byte_order="network">
           <Name>Z</Name>
@@ -136,84 +158,99 @@
           <Description>Z velocity of entity</Description>
           <MinValue>-20.0</MinValue>
           <MaxValue>100.0</MaxValue>
+          <UnitClass>velocity</UnitClass>
           <Unit>m/s</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="double" offset="48" size="8" byte_order="network">
           <Name>X</Name>
           <Category>Location</Category>
           <Description>X-coord of entity</Description>
+          <UnitClass>length</UnitClass>
           <Unit>m</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="double" offset="56" size="8" byte_order="network">
           <Name>Y</Name>
           <Category>Location</Category>
           <Description>Y-coord of entity</Description>
+          <UnitClass>length</UnitClass>
           <Unit>m</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="double" offset="64" size="8" byte_order="network">
           <Name>Z</Name>
           <Category>Location</Category>
           <Description>Z-coord of entity</Description>
+          <UnitClass>length</UnitClass>
           <Unit>m</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="72" size="4" byte_order="network">
           <Name>Psi</Name>
           <Category>Attitude</Category>
           <Description>Euler psi</Description>
-          <Unit>radians</Unit>
+          <UnitClass>angle</UnitClass>
+          <Unit>rad</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="76" size="4" byte_order="network">
           <Name>Theta</Name>
           <Category>Attitude</Category>
           <Description>Euler theta</Description>
-          <Unit>radians</Unit>
+          <UnitClass>angle</UnitClass>
+          <Unit>rad</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="80" size="4" byte_order="network">
           <Name>Phi</Name>
           <Category>Attitude</Category>
           <Description>Euler Phi</Description>
-          <Unit>radians</Unit>
+          <UnitClass>angle</UnitClass>
+          <Unit>rad</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="uint8" offset="88" size="4" byte_order="network">
           <Name>Algorithm</Name>
           <Category>Dead Reckoning</Category>
           <Description>Dead reckoning algorithm</Description>
+          <UnitClass>dead_reckoning_algorithm</UnitClass>
+          <Unit>name</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="92" size="4" byte_order="network">
           <Name>X Acceleration</Name>
           <Category>Dead Reckoning</Category>
           <Description>Dead reckoning acceleration in X direction</Description>
-          <Unit>m/s/s</Unit>
+          <UnitClass>acceleration</UnitClass>
+          <Unit>m/s^2</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="96" size="4" byte_order="network">
           <Name>Y Acceleration</Name>
           <Category>Dead Reckoning</Category>
           <Description>Dead reckoning acceleration in Y direction</Description>
-          <Unit>m/s/s</Unit>
+          <UnitClass>acceleration</UnitClass>
+          <Unit>m/s^2</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="100" size="4" byte_order="network">
           <Name>Z Acceleration</Name>
           <Category>Dead Reckoning</Category>
           <Description>Dead reckoning acceleration in Z direction</Description>
-          <Unit>m/s/s</Unit>
+          <UnitClass>acceleration</UnitClass>
+          <Unit>m/s^2</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="104" size="4" byte_order="network">
           <Name>X Angular Velocity</Name>
           <Category>Dead Reckoning</Category>
           <Description>Dead reckoning velocity about X axis</Description>
-          <Unit>radians/s</Unit>
+          <UnitClass>angular_velocity</UnitClass>
+          <Unit>rad/s</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="108" size="4" byte_order="network">
           <Name>Y Angular Velocity</Name>
           <Category>Dead Reckoning</Category>
           <Description>Dead reckoning velocity about Y axis</Description>
-          <Unit>radians/s</Unit>
+          <UnitClass>angular_velocity</UnitClass>
+          <Unit>rad/s</Unit>
        </DatumInfo>
        <DatumInfo source="EntityState" type="float" offset="112" size="4" byte_order="network">
           <Name>Z Angular Velocity</Name>
           <Category>Dead Reckoning</Category>
           <Description>Dead reckoning velocity about Z axis</Description>
-          <Unit>radians/s</Unit>
+          <UnitClass>angular_velocity</UnitClass>
+          <Unit>rad/s</Unit>
        </DatumInfo>
        <DatumInfo source="FixedDatum" id="123456" type="uint32" offset="0" size="4" byte_order="network">
           <Name>Barometric altitude</Name>
@@ -251,7 +288,7 @@
           <Category>Equipment,Targeting Pod,Laser Designator,Spot Latitude</Category>
           <Description>Latitude of laser designator spot</Description>
           <UnitClass>latlon</UnitClass>
-          <Unit>degrees</Unit>
+          <Unit>deg</Unit>
           <MinValue>-90.0</MinValue>
           <MaxValue>90.0</MaxValue>
        </DatumInfo>

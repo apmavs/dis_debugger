@@ -31,7 +31,6 @@ protected:
     DataModelController* controller;
     std::set<const void*> interested_widgets;
     const DatumInfo* const watched_datum;
-    const UnitClassDef *unit_class;
 
     QString category_name;
     bool constant_updates;
@@ -44,6 +43,7 @@ public:
 
     const DatumInfo* getWatchedDatum();
     QString getCategoryName();
+    const UnitClassDef *getUnitClass() { return controller->getUnitClassDef(watched_datum->getUnitClass()); }
 
     // Satisfy DatumObserver interface
     virtual void notifyNewDatum(const DatumInfo*);

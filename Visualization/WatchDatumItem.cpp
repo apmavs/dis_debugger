@@ -1,13 +1,46 @@
 #include "WatchDatumItem.h"
 
 WatchDatumItem::WatchDatumItem(EntityDatumItem* parent, QString categoryName)
-    : EntityDatumItem(parent, categoryName)
+    : EntityDatumItem(parent, categoryName), unitBox(NULL)
 {
 }
 
 WatchDatumItem::WatchDatumItem(EntityDatumItem* parent, const DatumInfo* d)
-    : EntityDatumItem(parent, d)
+    : EntityDatumItem(parent, d), unitBox(NULL)
 {
+}
+
+void WatchDatumItem::addUnitSelectionBox(QTreeWidget *parentTree)
+{
+    // Add boxes for all children too
+    for(int i = 0; i < childCount(); i++)
+    {
+        WatchDatumItem *c = dynamic_cast<WatchDatumItem *>(child(i));
+        if(c)
+        {
+            c->addUnitSelectionBox(parentTree);
+        }
+    }
+
+    if(!watched_datum) return;
+    if(!getUnitClass()) return;
+
+    // Add units to combo box
+    const UnitDefMap & units = getUnitClass()->getUnits();
+
+    unitBox = new QComboBox();
+    for(UnitDefMap::const_iterator it = units.begin(); it != units.end(); ++it)
+    {
+        unitBox->addItem(QString(it->first.c_str()));
+    }
+
+    // Default to datum's native unit
+    unitBox->setCurrentIndex(unitBox->findText(watched_datum->getUnit().c_str()));
+
+    // Update displayed value on unit change
+    connect(unitBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setDisplay()));
+
+    parentTree->setItemWidget(this, 3, unitBox);
 }
 
 WatchDatumItem* WatchDatumItem::createWatchItem(EntityDatumItem* fromThis)
@@ -17,9 +50,11 @@ WatchDatumItem* WatchDatumItem::createWatchItem(EntityDatumItem* fromThis)
     if(datum != NULL)
     {
         newItem = new WatchDatumItem(NULL, datum);
-        newItem->setToolTip(0, QString(datum->getDescription().c_str()));
-        newItem->setToolTip(1, QString(datum->getDescription().c_str()));
-        newItem->setToolTip(2, QString(datum->getDescription().c_str()));
+
+        for(int i = 0; i < 4; i++)
+        {
+            newItem->setToolTip(i, QString(datum->getDescription().c_str()));
+        }
     }
     else
         newItem = new WatchDatumItem(NULL, fromThis->getCategoryName());
@@ -52,8 +87,20 @@ void WatchDatumItem::setDisplay()
         QString entityName(watched_datum->getEntityName().c_str());
         setText(0, entityName);
         setText(1, watched_datum->getName().c_str());
-        setText(2, watched_datum->getValue(unit_class, watched_datum->getUnit(), watched_datum->getUnit()).c_str());
-        setText(3, watched_datum->getUnit().c_str());
+
+        if(unitBox)
+        {
+            setText(2, watched_datum->getValue(getUnitClass(), watched_datum->getUnit(), unitBox->currentText().toStdString()).c_str());
+        }
+        else
+        {
+            setText(2, watched_datum->getValue().c_str());
+            setText(3, watched_datum->getUnit().c_str());
+            //setText(2, watched_datum->getValue(getUnitClass(), watched_datum->getUnit(), watched_datum->getUnit());
+        }
+
+        //std::string toUnit = unitBox ? unitBox.currentText().toStdString() : watched_datum->getUnit();
+        //setText(3, watched_datum->getUnit().c_str());
     }
     setColor(2);
     mutex.unlock();

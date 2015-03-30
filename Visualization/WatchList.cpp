@@ -51,6 +51,7 @@ void WatchList::addItems(QList<QTreeWidgetItem*> items, QModelIndex toIdx)
             WatchDatumItem* watchItem = WatchDatumItem::createWatchItem(item);
             newItems.append(watchItem);
             addTopLevelItem(watchItem);
+            watchItem->addUnitSelectionBox(this); // Must be done after adding to tree
         }
     }
 

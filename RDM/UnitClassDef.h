@@ -24,6 +24,7 @@ public:
 
 typedef std::map<std::string, UnitDef> UnitDefMap;
 
+// Container for a list of unit definitions
 class UnitClassDef
 {
 protected:
@@ -38,8 +39,11 @@ public:
     void addUnit(std::string name, UnitDef unit) { units.insert(std::make_pair(name, unit)); }
 
     bool isNull() { return !name.empty() && !units.empty(); }
-    std::string getName() const {return name;};
 
+    std::string getName() const {return name;};
+    const UnitDefMap & getUnits() const {return units;}
+
+    // Get a string representing val in toUnit units
     template <typename T>
     std::string getConversion(const std::string & fromUnit, const std::string & toUnit, T val) const
     {
