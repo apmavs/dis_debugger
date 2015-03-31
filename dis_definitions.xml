@@ -11,7 +11,7 @@
        <UnitClass name="length" default="meters">
           <Unit name="m"   factor="1.0" />
           <Unit name="km"  factor="0.001" />
-          <Unit name="ft"  factor="0.3048" />
+          <Unit name="ft"  factor="3.28084" />
           <Unit name="nmi" factor="0.000539957" />
        </UnitClass>
        <UnitClass name="integer" default="base10">
@@ -21,13 +21,13 @@
        </UnitClass>
        <UnitClass name="velocity" default="m/s">
           <Unit name="m/s"   factor="1.0" />
-          <Unit name="ft/s"  factor="0.3048" />
+          <Unit name="ft/s"  factor="3.28084" />
           <Unit name="knots" factor="1.94384" />
           <Unit name="mph"   factor="2.23694" />
        </UnitClass>
        <UnitClass name="acceleration" default="m/s^2">
           <Unit name="m/s^2"   factor="1.0" />
-          <Unit name="ft/s^2"  factor="0.3048" />
+          <Unit name="ft/s^2"  factor="3.28084" />
        </UnitClass>
        <UnitClass name="force_id" default="name">
           <Unit name="value" />
