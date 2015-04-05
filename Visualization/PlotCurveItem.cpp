@@ -29,11 +29,14 @@ PlotCurveItem::PlotCurveItem(QwtPlot* plot, const DatumInfo* d, QColor c)
     bad_value_dots->setStyle(QwtPlotCurve::Sticks);
     bad_value_dots->setItemAttribute(QwtPlotItem::Legend, false);
 
-    double time   = d->getLastTimestamp();
-    double curVal = convertToDouble(d->getValue());
-    datum_points.append(QPointF(time, curVal));
-    if(d->isLessThanMin() || d->isGreaterThanMax())
-        bad_points.append(QPointF(time, curVal));
+    if(d->getValue() != "")
+    {
+        double time   = d->getLastTimestamp();
+        double curVal = convertToDouble(d->getValue());
+        datum_points.append(QPointF(time, curVal));
+        if(d->isLessThanMin() || d->isGreaterThanMax())
+            bad_points.append(QPointF(time, curVal));
+    }
     attach(plot);
     curve_dots->attach(plot);
     bad_value_dots->attach(plot);
