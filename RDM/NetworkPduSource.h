@@ -1,5 +1,5 @@
-#ifndef NETWORKTHREAD_H
-#define NETWORKTHREAD_H
+#ifndef NETWORKPDUSOURCE_H
+#define NETWORKPDUSOURCE_H
 
 #include <QThread>
 #include <QMutex>
@@ -21,6 +21,7 @@ protected:
     std::string address;
     uint32_t port;
     KDIS::NETWORK::Connection connection;
+    std::vector<LoggedPdu> pdus_to_log;
 
 
 public:
@@ -30,6 +31,8 @@ public:
     virtual void run();
     std::string getBroadcastAddress();
     uint32_t    getBroadcastPort();
+
+    bool saveToLog(std::string filePath);
 };
 
 #endif // NETWORKTHREAD_H

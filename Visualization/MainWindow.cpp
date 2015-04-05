@@ -42,13 +42,17 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(&entry_dialog, SIGNAL(confirmedEdit(QString)), this,
                      SLOT(handleDialogEntry(QString)), Qt::QueuedConnection);
 
-    ui->actionOpen_XML->setShortcut           (Qt::CTRL + Qt::Key_O);
-    ui->actionSave_Layout->setShortcut        (Qt::CTRL + Qt::Key_S);
-    ui->actionSave_Layout_As->setShortcut     (Qt::CTRL + Qt::Key_A);
-    ui->actionLoad_Layout->setShortcut        (Qt::CTRL + Qt::Key_L);
-    ui->actionExit->setShortcut               (Qt::CTRL + Qt::Key_Q);
-    ui->actionChangeBroadcastIP->setShortcut  (Qt::CTRL + Qt::Key_I);
-    ui->actionChangeBroadcastPort->setShortcut(Qt::CTRL + Qt::Key_P);
+    ui->actionOpen_XML->setShortcut                 (Qt::CTRL + Qt::Key_O);
+    ui->actionSave_Layout->setShortcut              (Qt::CTRL + Qt::Key_S);
+    ui->actionSave_Layout_As->setShortcut           (Qt::CTRL + Qt::Key_A);
+    ui->actionLoad_Layout->setShortcut              (Qt::CTRL + Qt::Key_L);
+    ui->actionExit->setShortcut                     (Qt::CTRL + Qt::Key_Q);
+    ui->actionChangeBroadcastIP->setShortcut        (Qt::CTRL + Qt::Key_I);
+    ui->actionChangeBroadcastPort->setShortcut      (Qt::CTRL + Qt::Key_P);
+    ui->actionRecord_current_data->setShortcut      (Qt::CTRL + Qt::Key_R);
+    ui->actionPlayback_a_recording->setShortcut     (Qt::CTRL + Qt::Key_B);
+    ui->actionFast_playback_a_recording->setShortcut(Qt::CTRL + Qt::Key_F);
+    ui->actionListen_to_live_traffic->setShortcut   (Qt::CTRL + Qt::Key_E);
 
     user_msg_count = 0;
     hideUserMessage();
@@ -333,6 +337,61 @@ void MainWindow::loadLayout(QString filename)
         QString msg = "Not loading a layout.";
         writeUserMsg(msg, QColor(Qt::black));
     }
+}
+
+void MainWindow::saveRecording()
+{
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Save Recording"),
+                                                    "./",
+                                                    tr("DIS PDU files (*.dis)"));
+    if(filePath != "")
+    {
+        if(controller->saveExercisePdus(filePath.toStdString()))
+        {
+            QString msg = "Successfully saved DIS traffic recording to " + filePath;
+            writeUserMsg(msg, QColor(Qt::darkGreen));
+        }
+        else
+        {
+            QString msg = "Failed saving DIS traffic recording to " + filePath;
+            writeUserMsg(msg, QColor(Qt::red));
+        }
+    }
+}
+
+void MainWindow::playRecording(bool fast)
+{
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open Recording"),
+                                                    "./",
+                                                    tr("DIS PDU files (*.dis)"));
+    if(filePath != "")
+    {
+        if(controller->startPlayback(filePath.toStdString(), fast))
+        {
+            QString msg = "Successfully started DIS playback from " + filePath;
+            writeUserMsg(msg, QColor(Qt::darkGreen));
+        }
+        else
+        {
+            QString msg = "Failed starting DIS playback to " + filePath;
+            writeUserMsg(msg, QColor(Qt::red));
+        }
+    }
+}
+
+void MainWindow::playRecording()
+{
+    playRecording(false);
+}
+
+void MainWindow::fastPlayRecording()
+{
+    playRecording(true);
+}
+
+void MainWindow::liveExercise()
+{
+    controller->liveExercise();
 }
 
 // Decrement user_msg_count and hide the user message if count is zero

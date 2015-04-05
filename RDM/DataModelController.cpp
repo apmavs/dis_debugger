@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include "DataModelController.h"
+#include "PlaybackPduSource.h"
 
 DataModelController* DataModelController::instance = NULL;
 
@@ -421,4 +422,36 @@ DatumInfo* DataModelController::getDatumInfoPtr(std::string datumRep)
 const UnitClassDef *DataModelController::getUnitClassDef(const std::string & className) {
     if(!deconstructor) return NULL;
     return deconstructor->getUnitClassDef(className);
+}
+
+bool DataModelController::saveExercisePdus(std::string filePath)
+{
+    bool saved = false;
+    NetworkPduSource* netSource = dynamic_cast<NetworkPduSource*>(pdu_source);
+    if(netSource != NULL)
+        saved = netSource->saveToLog(filePath);
+    return saved;
+}
+
+bool DataModelController::startPlayback(std::string filename, bool fastPlay)
+{
+    // Delete source if it already exists
+    if(pdu_source != NULL)
+    {
+        pdu_source->terminate();
+        delete pdu_source;
+    }
+
+    PlaybackPduSource* playback = new PlaybackPduSource();
+    pdu_source = playback;
+    pdu_source->registerPduObserver(this);
+    return playback->startPlayback(filename, fastPlay);
+}
+
+// Return to listening to live exercise
+void DataModelController::liveExercise()
+{
+    std::string ip = config->getValue(CONFIG::BROADCAST_IP);
+    uint32_t port = atoi(config->getValue(CONFIG::BROADCAST_PORT).c_str());
+    createNetworkConnection(ip, port);
 }

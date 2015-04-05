@@ -52,6 +52,10 @@ public:
     bool changeBroadcastPort(uint32_t newPort, bool save = true);
     DatumInfo* getDatumInfoPtr(std::string datumRep);
     const UnitClassDef *getUnitClassDef(const std::string & className);
+    bool saveExercisePdus(std::string filename);
+    // fastPlay triggers immediate playback of entire file
+    bool startPlayback(std::string filename, bool fastPlay);
+    void liveExercise();
 
 };
 

@@ -6,12 +6,19 @@
 // KDIS includes
 #include "KDIS/Extras/PDU_Factory.h"
 
-// Set current time
-time_t PduSource::start_time = time(NULL);
+QTime PduSource::start_time;
+bool  PduSource::set_start_time = false;
 
 PduSource::PduSource()
 {
     unknown_pdu_count = 0;
+
+    // Set the start time once for the first pdu source created
+    if(!set_start_time)
+    {
+        start_time.start();
+        set_start_time = true;
+    }
 }
 
 PduSource::~PduSource()
@@ -89,5 +96,5 @@ void PduSource::removePduObserver(PduObserver *obs)
 
 double PduSource::getTimeSinceStart()
 {
-   return difftime(time(NULL), start_time);
+   return start_time.elapsed() * 0.001;
 }

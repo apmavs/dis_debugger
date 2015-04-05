@@ -30,6 +30,8 @@ private:
     QString layout_file_name;
     unsigned int user_msg_count;
 
+    void playRecording(bool fast);
+
 private slots:
     // These are slots to ensure GUI updates are done in GUI thread
     void newDatumSlot(const DatumInfo* datum);
@@ -46,6 +48,10 @@ private slots:
     void saveLayout();
     void saveLayoutAs();
     void loadLayout(QString filename = "");
+    void saveRecording();
+    void playRecording();
+    void fastPlayRecording();
+    void liveExercise();
 
     void hideUserMessage();
 

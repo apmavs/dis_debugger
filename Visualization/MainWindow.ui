@@ -439,8 +439,24 @@
     <addaction name="actionChangeBroadcastIP"/>
     <addaction name="actionChangeBroadcastPort"/>
    </widget>
+   <widget class="QMenu" name="menuRecord_Playback">
+    <property name="title">
+     <string>Record/Playback</string>
+    </property>
+    <addaction name="actionRecord_current_data"/>
+    <addaction name="actionPlayback_a_recording"/>
+    <addaction name="actionFast_playback_a_recording"/>
+   </widget>
+   <widget class="QMenu" name="menuLive_Exercise">
+    <property name="title">
+     <string>Live Exercise</string>
+    </property>
+    <addaction name="actionListen_to_live_traffic"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuLive_Exercise"/>
+   <addaction name="menuRecord_Playback"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -484,6 +500,31 @@
   <action name="actionSave_Layout_As">
    <property name="text">
     <string>Save Layout As</string>
+   </property>
+  </action>
+  <action name="actionSave_Recording">
+   <property name="text">
+    <string>Save Recording</string>
+   </property>
+  </action>
+  <action name="actionRecord_current_data">
+   <property name="text">
+    <string>Record current data</string>
+   </property>
+  </action>
+  <action name="actionPlayback_a_recording">
+   <property name="text">
+    <string>Playback a recording</string>
+   </property>
+  </action>
+  <action name="actionListen_to_live_traffic">
+   <property name="text">
+    <string>Listen to live traffic</string>
+   </property>
+  </action>
+  <action name="actionFast_playback_a_recording">
+   <property name="text">
+    <string>Fast playback a recording</string>
    </property>
   </action>
  </widget>
@@ -620,6 +661,70 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionRecord_current_data</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveRecording()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>416</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionPlayback_a_recording</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>playRecording()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>416</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionListen_to_live_traffic</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>liveExercise()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>416</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionFast_playback_a_recording</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>fastPlayRecording()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>416</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>openXml()</slot>
@@ -628,5 +733,9 @@
   <slot>saveLayout()</slot>
   <slot>loadLayout()</slot>
   <slot>saveLayoutAs()</slot>
+  <slot>saveRecording()</slot>
+  <slot>playRecording()</slot>
+  <slot>liveExercise()</slot>
+  <slot>fastPlayRecording()</slot>
  </slots>
 </ui>

@@ -3,14 +3,21 @@
 
 #include <QThread>
 #include <QMutex>
-#include <time.h>
+#include <QTime>
 
 #include "PduObserver.h"
+
+struct LoggedPdu
+{
+    double timestamp;
+    KDIS::KDataStream pduStream;
+};
 
 class PduSource : public QThread
 {
 private:
-    static time_t start_time;
+    static QTime start_time;
+    static bool set_start_time;
 
 protected:
     uint64_t unknown_pdu_count;
